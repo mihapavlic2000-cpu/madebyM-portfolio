@@ -28,7 +28,9 @@
             surface: '#1E1A15', // raised surface (used sparingly)
             bone:    '#EDE5D6', // primary warm text
             stone:   '#A99E8C', // muted warm text
-            clay:    '#C26B3F', // accent — tiny marks + hovers only
+            clay:         '#C26B3F', // accent — tiny marks + hovers only
+            'clay-light': '#D68A5C', // brighter shade — logo M, highlight tags
+            'clay-deep':  '#9A5431', // deeper shade — numerals, dark-on-light accents
             line:    'rgba(237,229,214,0.12)',
           },
           fontFamily: {
@@ -67,6 +69,12 @@
     }
     .link:hover, .link:focus-visible { color:#C26B3F; }
     .link:hover::after, .link:focus-visible::after { opacity:1; background:#C26B3F; }
+
+    /* Brand logo fades out on scroll — phones only (below md breakpoint) */
+    #brandLogo { transition: opacity .3s ease, visibility .3s ease; }
+    @media (max-width: 767px) {
+      header.is-scrolled #brandLogo { opacity: 0; visibility: hidden; }
+    }
 
     /* Nav link: underline draws in from left */
     .nav-link { position:relative; color:#A99E8C; transition: color .25s ease; }
@@ -117,6 +125,7 @@
       .reveal { opacity:1; transform:none; transition:none; }
       .work-img { transition:none; }
       #briefForm, #formSuccess { transition:none; }
+      #brandLogo { transition:none; }
       html { scroll-behavior:auto; }
     }
   </style>
@@ -131,8 +140,8 @@
   <header class="fixed top-0 left-0 w-full z-50">
     <div class="px-6 md:px-12">
       <nav class="flex items-center justify-between py-5">
-        <a href="#top" class="group font-display text-xl font-black tracking-tight">
-          <span class="text-bone">made</span><span class="text-stone transition-colors group-hover:text-bone">by</span><span class="italic text-clay">M</span>
+        <a href="#top" id="brandLogo" class="group font-display text-xl font-black tracking-tight">
+          <span class="text-bone">madeby</span><span class="italic text-clay-light">M</span>
         </a>
 
         <div class="hidden items-center gap-9 text-sm md:flex">
@@ -148,12 +157,12 @@
         </button>
       </nav>
 
-      <div id="mobileMenu" class="md:hidden hidden bg-white px-5 pb-4 pt-2">
-        <a href="#work" class="block py-3 text-neutral-900 hover:text-clay">Work</a>
-        <a href="#services" class="block py-3 text-neutral-900 hover:text-clay">Services</a>
-        <a href="#pricing" class="block py-3 text-neutral-900 hover:text-clay">Pricing</a>
-        <a href="#about" class="block py-3 text-neutral-900 hover:text-clay">Studio</a>
-        <a href="#contact" class="block py-3 font-medium text-clay">Start a project →</a>
+      <div id="mobileMenu" class="md:hidden hidden bg-[#F5F2EB] px-5 pb-4 pt-2">
+        <a href="#work" class="block py-3 text-bg hover:text-clay-deep">Work</a>
+        <a href="#services" class="block py-3 text-bg hover:text-clay-deep">Services</a>
+        <a href="#pricing" class="block py-3 text-bg hover:text-clay-deep">Pricing</a>
+        <a href="#about" class="block py-3 text-bg hover:text-clay-deep">Studio</a>
+        <a href="#contact" class="block py-3 font-medium text-clay-deep">Start a project →</a>
       </div>
     </div>
   </header>
@@ -328,7 +337,7 @@
           <div class="sm:sticky sm:top-28">
             <p class="reveal eyebrow">What I do</p>
             <h2 class="reveal mt-5 font-display text-3xl font-black uppercase leading-[1.02] tracking-tight sm:text-4xl lg:text-5xl">
-              Three ways to<br /><span class="italic text-clay">look the part.</span>
+              Three ways to<br /><span class="italic text-clay-light">look the part.</span>
             </h2>
             <p class="reveal prose-body mt-6 max-w-xs text-stone">Each engagement is built to win attention, sponsors, and recognition for the people who wear the brand.</p>
           </div>
@@ -338,21 +347,21 @@
         <div class="sm:col-span-8">
           <div class="reveal flex flex-col">
             <div class="grid gap-4 py-9 sm:grid-cols-12 sm:items-baseline">
-              <span class="font-display text-2xl font-black text-clay sm:col-span-1">I</span>
+              <span class="font-display text-2xl font-black text-clay-deep sm:col-span-1">I</span>
               <div class="sm:col-span-11">
                 <h3 class="font-display text-2xl font-black uppercase leading-none tracking-tight sm:text-3xl lg:text-4xl">Matchday Systems</h3>
                 <p class="prose-body mt-4 max-w-md text-stone">Social graphics for clubs — fixtures, scorelines, line-ups, and transfers. A consistent system that builds a recognisable identity, week after week.</p>
               </div>
             </div>
             <div class="grid gap-4 border-t border-line py-9 sm:grid-cols-12 sm:items-baseline">
-              <span class="font-display text-2xl font-black text-clay sm:col-span-1">II</span>
+              <span class="font-display text-2xl font-black text-clay-deep sm:col-span-1">II</span>
               <div class="sm:col-span-11">
                 <h3 class="font-display text-2xl font-black uppercase leading-none tracking-tight sm:text-3xl lg:text-4xl">Athlete Branding</h3>
                 <p class="prose-body mt-4 max-w-md text-stone">A personal visual identity for professional athletes — logomark, custom backgrounds, and thumbnails that turn a player into a brand.</p>
               </div>
             </div>
             <div class="grid gap-4 border-t border-line py-9 sm:grid-cols-12 sm:items-baseline">
-              <span class="font-display text-2xl font-black text-clay sm:col-span-1">III</span>
+              <span class="font-display text-2xl font-black text-clay-deep sm:col-span-1">III</span>
               <div class="sm:col-span-11">
                 <h3 class="font-display text-2xl font-black uppercase leading-none tracking-tight sm:text-3xl lg:text-4xl">Social Media Management</h3>
                 <p class="prose-body mt-4 max-w-md text-stone">End-to-end social support — a steady flow of matchday posts, stories, and reels, planned on a content calendar and delivered ready to publish, so your channels never go quiet.</p>
@@ -394,7 +403,7 @@
         <div class="reveal border-t-2 border-clay/60 pt-8">
           <div class="flex items-center justify-between gap-4">
             <h3 class="font-display text-2xl font-black uppercase tracking-tight sm:text-3xl">Gameday</h3>
-            <span class="shrink-0 text-[11px] uppercase tracking-[0.18em] text-clay">Best value</span>
+            <span class="shrink-0 text-[11px] uppercase tracking-[0.18em] text-clay-light">Best value</span>
           </div>
           <p class="mt-6 font-display text-4xl font-black tracking-tight sm:text-5xl">€180–220</p>
           <p class="eyebrow mt-2">per month</p>
@@ -446,15 +455,15 @@
           <p class="eyebrow">Process</p>
           <ol class="mt-6 divide-y divide-line border-t border-line">
             <li class="flex gap-5 py-5">
-              <span class="font-display text-lg font-black text-clay">01</span>
+              <span class="font-display text-lg font-black text-clay-deep">01</span>
               <div><h3 class="font-display text-lg font-black uppercase tracking-tight">Briefing &amp; idea</h3><p class="prose-body mt-1 text-sm text-stone">We define the goal, the audience, and the look.</p></div>
             </li>
             <li class="flex gap-5 py-5">
-              <span class="font-display text-lg font-black text-clay">02</span>
+              <span class="font-display text-lg font-black text-clay-deep">02</span>
               <div><h3 class="font-display text-lg font-black uppercase tracking-tight">Design &amp; feedback</h3><p class="prose-body mt-1 text-sm text-stone">Concepts and refinement until every detail earns its place.</p></div>
             </li>
             <li class="flex gap-5 py-5">
-              <span class="font-display text-lg font-black text-clay">03</span>
+              <span class="font-display text-lg font-black text-clay-deep">03</span>
               <div><h3 class="font-display text-lg font-black uppercase tracking-tight">Delivery</h3><p class="prose-body mt-1 text-sm text-stone">Final assets, ready for print, social, and broadcast.</p></div>
             </li>
           </ol>
@@ -535,7 +544,7 @@
   <!-- ================= FOOTER ================= -->
   <footer class="border-t border-line py-10">
     <div class="flex flex-col items-center justify-between gap-4 px-6 sm:flex-row md:px-12">
-      <a href="#top" class="group font-display text-lg font-black"><span class="text-bone">made</span><span class="text-stone">by</span><span class="italic text-clay">M</span></a>
+      <a href="#top" class="group font-display text-lg font-black"><span class="text-bone">madeby</span><span class="italic text-clay-light">M</span></a>
       <p class="eyebrow text-stone/70">Sports Design Studio — © 2026</p>
       <p class="eyebrow text-stone/70">Built to look the part</p>
     </div>
@@ -571,6 +580,12 @@
       img.addEventListener('error', function () { img.classList.add('is-broken'); });
       if (img.complete && img.naturalWidth === 0) img.classList.add('is-broken');
     });
+
+    // Hide the brand logo while scrolled (CSS applies this on phones only)
+    var headerEl = document.querySelector('header');
+    function onScroll() { headerEl.classList.toggle('is-scrolled', window.scrollY > 40); }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
 
     // Mobile nav
     var navToggle = document.getElementById('navToggle');

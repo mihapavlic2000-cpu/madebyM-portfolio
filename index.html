@@ -3,26 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>made.bymp — Sports Design Studio</title>
-  <meta name="description" content="made.bymp — a sports design studio crafting matchday identities, athlete brands, and campaigns that look the part." />
+  <title>madebyM — Sports Design Studio</title>
+  <meta name="description" content="madebyM — a sports design studio crafting matchday identities, athlete brands, and social content that looks the part." />
 
   <!-- ============================================================= -->
-  <!--  made.bymp · Sports Design Studio — Warm Editorial Lookbook    -->
-  <!--  Stack: HTML + Tailwind (Play CDN) + Google Fonts (Fraunces/Inter)
-  <!--                                                                -->
-  <!--  >> ADD YOUR REAL CONTENT  (search this file for "EDIT:")      -->
-  <!--   1. Drop images in /assets:  work-1.jpg … work-6.jpg, profile.jpg
-  <!--      (sizes in assets/README.txt). Placeholders show until then.
-  <!--   2. Stats numbers ...... STATS section                       -->
-  <!--   3. Name / story ........ ABOUT section                       -->
-  <!--   4. Socials ............. CONTACT section                      -->
-  <!--   5. Email ............... <form data-email="…">               -->
+  <!--  madebyM · Sports Design Studio — Wide Athletic Editorial      -->
+  <!--  Stack: HTML + Tailwind (Play CDN) + Google Fonts (Archivo/Inter) -->
+  <!--  Display face: Archivo variable, expanded width (125%) + Black -->
+  <!--  Selected-work images live in /Slike · Email: <form data-email="…"> -->
   <!-- ============================================================= -->
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <!-- Fraunces: warm optical serif (display, roman + italic). Inter: clean body. -->
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <!-- Archivo: heavy expanded grotesque (athletic display). Inter: clean body. -->
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -38,10 +32,10 @@
             line:    'rgba(237,229,214,0.12)',
           },
           fontFamily: {
-            display: ['Fraunces', 'Georgia', 'serif'],
+            display: ['Archivo', '"Archivo Black"', 'system-ui', 'sans-serif'],
             sans:    ['Inter', 'system-ui', 'sans-serif'],
           },
-          maxWidth: { shell: '1240px' },
+          maxWidth: { shell: '1600px' },
         },
       },
     };
@@ -50,9 +44,9 @@
   <style>
     :root { color-scheme: dark; }
     html, body { background:#16130F; }
-    body { font-feature-settings: "ss01" on, "liga" on; }
 
-    .font-display { font-optical-sizing: auto; }
+    /* Display face: Archivo pushed to its expanded cut — wide, heavy, athletic */
+    .font-display { font-stretch: 125%; }
     .prose-body { line-height: 1.65; }
 
     /* Eyebrow / catalogue label */
@@ -96,13 +90,8 @@
     .budget input:checked + span { color:#16130F; background:#EDE5D6; border-color:#EDE5D6; }
     .budget span { transition: color .2s ease, background-color .2s ease, border-color .2s ease; }
 
-    /* Warm placeholder shown until real /assets images exist */
+    /* Image frame — neutral warm fallback if a file is missing (no text overlay) */
     .ph { position:relative; overflow:hidden; background:linear-gradient(150deg,#221d17 0%,#171410 100%); }
-    .ph::after {
-      content: attr(data-label); position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
-      font-family:Inter, sans-serif; font-size:11px; letter-spacing:.18em; text-transform:uppercase;
-      color:rgba(237,229,214,0.28); text-align:center; padding:1rem;
-    }
     img.is-broken { display:none; }
 
     /* Subtle film grain — warmth without glow. Static, very low opacity. */
@@ -117,9 +106,17 @@
     .work-img { transition: transform .7s cubic-bezier(.16,1,.3,1); }
     .work-item:hover .work-img { transform: scale(1.035); }
 
+    /* Contact form submission states */
+    #briefForm { transition: opacity .35s ease; }
+    #briefForm.is-sending { opacity:.6; pointer-events:none; }
+    #briefForm.is-leaving { opacity:0; }
+    #formSuccess { opacity:0; transform: translateY(12px); transition: opacity .5s ease, transform .5s ease; }
+    #formSuccess.show { opacity:1; transform:none; }
+
     @media (prefers-reduced-motion: reduce) {
       .reveal { opacity:1; transform:none; transition:none; }
       .work-img { transition:none; }
+      #briefForm, #formSuccess { transition:none; }
       html { scroll-behavior:auto; }
     }
   </style>
@@ -130,17 +127,18 @@
 
   <a href="#work" class="sr-only focus:not-sr-only focus:fixed focus:z-50 focus:top-3 focus:left-3 focus:bg-bone focus:text-bg focus:px-4 focus:py-2 focus:rounded-sm focus:text-sm">Skip to work</a>
 
-  <!-- ================= NAV ================= -->
+  <!-- ================= NAV (logo hard left · links hard right, full-bleed) ================= -->
   <header class="fixed inset-x-0 top-0 z-40">
-    <div class="mx-auto max-w-shell px-5 sm:px-8">
+    <div class="px-6 md:px-12">
       <nav class="flex items-center justify-between py-5">
-        <a href="#top" class="group inline-flex items-baseline gap-1 font-display text-xl tracking-tight text-bone">
-          <span>made</span><span class="mb-1 inline-block h-1.5 w-1.5 rounded-full bg-clay align-baseline"></span><span class="italic text-stone transition-colors group-hover:text-bone">bymp</span>
+        <a href="#top" class="group font-display text-xl font-black tracking-tight">
+          <span class="text-bone">made</span><span class="text-stone transition-colors group-hover:text-bone">by</span><span class="italic text-clay">M</span>
         </a>
 
         <div class="hidden items-center gap-9 text-sm md:flex">
           <a href="#work" class="nav-link">Work</a>
           <a href="#services" class="nav-link">Services</a>
+          <a href="#pricing" class="nav-link">Pricing</a>
           <a href="#about" class="nav-link">Studio</a>
           <a href="#contact" class="link text-sm">Start a project</a>
         </div>
@@ -153,6 +151,7 @@
       <div id="mobileMenu" class="md:hidden hidden border-t border-line pb-4 pt-2">
         <a href="#work" class="block py-3 text-stone hover:text-bone">Work</a>
         <a href="#services" class="block py-3 text-stone hover:text-bone">Services</a>
+        <a href="#pricing" class="block py-3 text-stone hover:text-bone">Pricing</a>
         <a href="#about" class="block py-3 text-stone hover:text-bone">Studio</a>
         <a href="#contact" class="block py-3 text-clay">Start a project →</a>
       </div>
@@ -160,22 +159,24 @@
   </header>
 
   <main id="top">
-  <!-- ================= HERO (centered, max focus) ================= -->
-  <section class="relative flex min-h-[100svh] flex-col items-center justify-center px-5 text-center sm:px-8">
-    <p class="reveal eyebrow">made.bymp — Sports Design Studio · Index ’24</p>
+  <!-- ================= HERO (wide poster block) ================= -->
+  <section class="relative flex min-h-[100svh] flex-col justify-center px-6 md:px-12">
+    <div class="mx-auto w-full max-w-shell">
+      <p class="reveal eyebrow">madebyM — Sports Design Studio</p>
 
-    <h1 class="reveal mt-8 max-w-5xl font-display font-light leading-[1.02] tracking-[-0.01em] text-bone" style="font-size:clamp(2.6rem,7.4vw,6.4rem)">
-      Design that makes athletes,<br class="hidden sm:block" />
-      clubs &amp; brands <span class="italic font-normal text-bone">impossible<br class="hidden sm:block" /> to ignore.</span>
-    </h1>
+      <h1 class="reveal mt-7 font-display font-black uppercase leading-[0.94] tracking-[-0.01em] text-bone" style="font-size:clamp(2.4rem,5vw,5.5rem);text-wrap:balance">
+        Design that makes athletes, clubs &amp; brands <span class="italic text-clay">impossible to ignore.</span>
+      </h1>
 
-    <p class="reveal prose-body mt-9 max-w-xl text-base text-stone sm:text-lg">
-      A sports design studio crafting matchday identities, athlete brands, and campaign work that looks the part — and earns the attention to prove it.
-    </p>
-
-    <div class="reveal mt-11 flex items-center gap-8">
-      <a href="#contact" class="link text-base">Start a project →</a>
-      <a href="#work" class="text-base text-stone transition-colors hover:text-bone">Selected work</a>
+      <div class="mt-10 grid gap-8 sm:grid-cols-12 sm:items-end">
+        <p class="reveal prose-body max-w-xl text-base text-stone sm:col-span-8 sm:text-lg">
+          A sports design studio crafting matchday identities, athlete brands, and social content that looks the part — and earns the attention to prove it.
+        </p>
+        <div class="reveal flex items-center gap-8 sm:col-span-4 sm:justify-end">
+          <a href="#contact" class="link text-base">Start a project →</a>
+          <a href="#work" class="text-base text-stone transition-colors hover:text-bone">Selected work</a>
+        </div>
+      </div>
     </div>
 
     <div aria-hidden="true" class="absolute bottom-8 left-1/2 -translate-x-1/2">
@@ -183,149 +184,134 @@
     </div>
   </section>
 
-  <!-- ================= STATS (asymmetric editorial row) ================= -->
-  <!-- EDIT: replace numbers + labels -->
-  <section aria-label="By the numbers" class="border-t border-line">
-    <div class="mx-auto max-w-shell px-5 py-16 sm:px-8 sm:py-20">
-      <div class="grid gap-10 sm:grid-cols-12 sm:items-end">
-        <p class="reveal eyebrow sm:col-span-3">By the numbers</p>
-        <dl class="reveal grid grid-cols-1 gap-10 sm:col-span-9 sm:grid-cols-3">
-          <div>
-            <dt class="sr-only">Designs shipped</dt>
-            <dd class="font-display text-5xl font-light leading-none text-bone sm:text-6xl">250<span class="text-clay">+</span></dd>
-            <p class="mt-3 text-sm text-stone">Designs shipped</p>
-          </div>
-          <div>
-            <dt class="sr-only">Clubs and athletes</dt>
-            <dd class="font-display text-5xl font-light leading-none text-bone sm:text-6xl">40<span class="text-clay">+</span></dd>
-            <p class="mt-3 text-sm text-stone">Clubs &amp; athletes</p>
-          </div>
-          <div>
-            <dt class="sr-only">Reach earned</dt>
-            <dd class="font-display text-5xl font-light leading-none text-bone sm:text-6xl">5<span class="text-clay">M+</span></dd>
-            <p class="mt-3 text-sm text-stone">Reach earned</p>
-          </div>
-        </dl>
-      </div>
-    </div>
-  </section>
-
-  <!-- ================= SELECTED WORK (alternating editorial rows) ================= -->
-  <!-- EDIT: drop images /assets/work-1.jpg … work-6.jpg ; edit case-study text on each .work-item -->
+  <!-- ================= SELECTED WORK (wide 2-column grid) ================= -->
+  <!-- Images come from /Slike. Case-study text lives on each .work-item (edit to taste). -->
   <section id="work" class="scroll-mt-24 border-t border-line py-20 sm:py-28">
-    <div class="mx-auto max-w-shell px-5 sm:px-8">
+    <div class="mx-auto max-w-shell px-6 md:px-12">
       <div class="reveal flex items-end justify-between">
-        <h2 class="font-display text-4xl font-light tracking-[-0.01em] sm:text-6xl">Selected work</h2>
+        <h2 class="font-display text-4xl font-black uppercase leading-none tracking-tight sm:text-6xl">Selected work</h2>
         <p class="eyebrow hidden sm:block">Index 01 — 06</p>
       </div>
 
-      <div class="mt-16 space-y-20 sm:space-y-28">
+      <div class="mt-14 grid grid-cols-1 gap-x-8 gap-y-16 md:grid-cols-2 lg:gap-x-10">
 
-        <!-- 01 — image left -->
-        <article class="work-item reveal grid cursor-pointer gap-6 sm:grid-cols-12 sm:items-center" tabindex="0" role="button"
-          data-title="Velocity FC — Matchday System" data-cat="Matchday System" data-client="Velocity FC" data-year="2024"
-          data-goal="Give a semi-pro club a matchday identity that looked Champions-League-grade on a grassroots budget."
-          data-approach="A modular template family with locked typography and a single warm accent, so every fixture, score, and line-up reads as the same club at a glance.">
-          <div class="overflow-hidden sm:col-span-7">
-            <div class="ph aspect-[16/11]" data-label="assets/work-1.jpg">
-              <img src="assets/work-1.jpg" alt="Velocity FC matchday graphics system" loading="lazy" class="work-img h-full w-full object-cover" />
+        <!-- 01 — Ekitike -->
+        <article class="work-item reveal cursor-pointer" tabindex="0" role="button"
+          data-title="Ekitike" data-cat="Player Graphic" data-client="Hugo Ekitike" data-year="2026"
+          data-goal="A scroll-stopping player edit that captures Ekitike's energy in a single frame."
+          data-approach="A clean cut-out subject, dramatic lighting, and a restrained warm palette — composed for instant recognition on a busy feed.">
+          <div class="overflow-hidden">
+            <div class="ph aspect-[4/5]">
+              <img src="Slike/ekitikike%20pt22.jpg" alt="Ekitike player graphic by madebyM" loading="lazy" class="work-img h-full w-full object-cover" />
             </div>
           </div>
-          <div class="sm:col-span-5 sm:pl-6">
-            <p class="eyebrow">01 — Matchday System</p>
-            <h3 class="mt-4 font-display text-3xl font-light leading-tight sm:text-4xl">Velocity FC</h3>
-            <p class="prose-body mt-4 max-w-sm text-stone">A full matchday identity — fixtures, scorelines, line-ups — built to feel elite on a grassroots budget.</p>
-            <span class="link mt-6 inline-block text-sm">Read case study →</span>
+          <div class="mt-6 flex items-end justify-between gap-6 border-t border-line pt-5">
+            <div>
+              <p class="eyebrow">01 — Player Graphic</p>
+              <h3 class="mt-2 font-display text-2xl font-black uppercase leading-none tracking-tight sm:text-3xl">Ekitike</h3>
+              <p class="prose-body mt-3 max-w-md text-sm text-stone">A high-impact player edit — bold composition, dramatic light, and a clean type lockup tuned for the feed.</p>
+            </div>
+            <span class="link mb-1 shrink-0 text-sm">Case study →</span>
           </div>
         </article>
 
-        <!-- 02 — image right, offset -->
-        <article class="work-item reveal grid cursor-pointer gap-6 sm:grid-cols-12 sm:items-center" tabindex="0" role="button"
-          data-title="J. Romero — Athlete Identity" data-cat="Athlete Branding" data-client="Jordan Romero" data-year="2024"
-          data-goal="Build a personal brand for a rising winger ahead of a transfer window and a new YouTube channel."
-          data-approach="A monogram, a confident wordmark, and a thumbnail system tuned for click-through — consistent across kit, socials, and video.">
-          <div class="order-2 sm:order-1 sm:col-span-5 sm:pr-6">
-            <p class="eyebrow">02 — Athlete Branding</p>
-            <h3 class="mt-4 font-display text-3xl font-light leading-tight sm:text-4xl"><span class="italic">J.</span> Romero</h3>
-            <p class="prose-body mt-4 max-w-sm text-stone">A personal identity for a rising winger — monogram, wordmark, and a thumbnail system that travels across every platform.</p>
-            <span class="link mt-6 inline-block text-sm">Read case study →</span>
-          </div>
-          <div class="order-1 overflow-hidden sm:order-2 sm:col-span-7">
-            <div class="ph aspect-[16/12]" data-label="assets/work-2.jpg">
-              <img src="assets/work-2.jpg" alt="Jordan Romero athlete branding identity" loading="lazy" class="work-img h-full w-full object-cover" />
+        <!-- 02 — Endrick -->
+        <article class="work-item reveal cursor-pointer" tabindex="0" role="button"
+          data-title="Endrick" data-cat="Player Graphic" data-client="Endrick" data-year="2026"
+          data-goal="A striker rendered as a brand — capturing the swagger of one of the game's brightest talents."
+          data-approach="A sharp cut-out, atmospheric light, and a confident lockup that holds up from thumbnail to full screen.">
+          <div class="overflow-hidden">
+            <div class="ph aspect-[4/5]">
+              <img src="Slike/endrick.png" alt="Endrick player graphic by madebyM" loading="lazy" class="work-img h-full w-full object-cover" />
             </div>
+          </div>
+          <div class="mt-6 flex items-end justify-between gap-6 border-t border-line pt-5">
+            <div>
+              <p class="eyebrow">02 — Player Graphic</p>
+              <h3 class="mt-2 font-display text-2xl font-black uppercase leading-none tracking-tight sm:text-3xl">Endrick</h3>
+              <p class="prose-body mt-3 max-w-md text-sm text-stone">A forward rendered as a brand — sharp cut-out, atmospheric light, and a confident lockup.</p>
+            </div>
+            <span class="link mb-1 shrink-0 text-sm">Case study →</span>
           </div>
         </article>
 
-        <!-- 03 — narrow image left, big caption (varied rhythm) -->
-        <article class="work-item reveal grid cursor-pointer gap-6 sm:grid-cols-12 sm:items-center" tabindex="0" role="button"
-          data-title="Derby Night — Campaign Poster" data-cat="Campaign" data-client="Northside Derby" data-year="2023"
-          data-goal="Sell out a local derby with a poster that felt like a title-fight promo."
-          data-approach="High-contrast duotone portraits, oversized condensed type, and a print-ready layout that scaled from story to A1.">
-          <div class="overflow-hidden sm:col-span-5">
-            <div class="ph aspect-[4/5]" data-label="assets/work-3.jpg">
-              <img src="assets/work-3.jpg" alt="Northside Derby campaign poster" loading="lazy" class="work-img h-full w-full object-cover" />
+        <!-- 03 — Kosi -->
+        <article class="work-item reveal cursor-pointer" tabindex="0" role="button"
+          data-title="Kosi" data-cat="Sports Graphic" data-client="Kosi" data-year="2025"
+          data-goal="Create a gritty, high-impact matchday poster that highlights the player's presence on the pitch using bold typography."
+          data-approach="Blended dynamic match action shots with aggressive, textured masking and a raw color scheme that matches the club's energy.">
+          <div class="overflow-hidden">
+            <div class="ph aspect-[4/5]">
+              <img src="Slike/kosi.png" alt="Kosi sports graphic by madebyM" loading="lazy" class="work-img h-full w-full object-cover" />
             </div>
           </div>
-          <div class="sm:col-span-7 sm:pl-6">
-            <p class="eyebrow">03 — Campaign</p>
-            <h3 class="mt-4 font-display text-3xl font-light leading-tight sm:text-5xl">Derby Night</h3>
-            <p class="prose-body mt-4 max-w-md text-stone">A title-fight promo for a local derby — duotone portraits and oversized type, built to sell out the stands.</p>
-            <span class="link mt-6 inline-block text-sm">Read case study →</span>
+          <div class="mt-6 flex items-end justify-between gap-6 border-t border-line pt-5">
+            <div>
+              <p class="eyebrow">03 — Sports Graphic</p>
+              <h3 class="mt-2 font-display text-2xl font-black uppercase leading-none tracking-tight sm:text-3xl">Kosi</h3>
+              <p class="prose-body mt-3 max-w-md text-sm text-stone">A gritty matchday poster — dynamic action shots, textured masking, and bold type with raw club energy.</p>
+            </div>
+            <span class="link mb-1 shrink-0 text-sm">Case study →</span>
           </div>
         </article>
 
-        <!-- 04 — image right -->
-        <article class="work-item reveal grid cursor-pointer gap-6 sm:grid-cols-12 sm:items-center" tabindex="0" role="button"
-          data-title="Apex Hoops — Transfer Reveal" data-cat="Matchday System" data-client="Apex Hoops" data-year="2024"
-          data-goal="Make a signing announcement fans would share before the official club account posted it."
-          data-approach="A cinematic reveal frame, jersey-number lockup, and a three-frame social sequence that built anticipation.">
-          <div class="order-2 sm:order-1 sm:col-span-5 sm:pr-6">
-            <p class="eyebrow">04 — Reveal</p>
-            <h3 class="mt-4 font-display text-3xl font-light leading-tight sm:text-4xl">Apex Hoops</h3>
-            <p class="prose-body mt-4 max-w-sm text-stone">A transfer reveal engineered to go wide — a cinematic frame and a three-part social sequence.</p>
-            <span class="link mt-6 inline-block text-sm">Read case study →</span>
-          </div>
-          <div class="order-1 overflow-hidden sm:order-2 sm:col-span-7">
-            <div class="ph aspect-[16/11]" data-label="assets/work-4.jpg">
-              <img src="assets/work-4.jpg" alt="Apex Hoops transfer reveal graphic" loading="lazy" class="work-img h-full w-full object-cover" />
+        <!-- 04 — PSG -->
+        <article class="work-item reveal cursor-pointer" tabindex="0" role="button"
+          data-title="PSG" data-cat="Club Graphic" data-client="Paris Saint-Germain" data-year="2025"
+          data-goal="Design a cinematic, atmospheric wallpaper piece celebrating the club's heritage over the iconic Paris skyline."
+          data-approach="Utilized deep cosmic blue tones, high-contrast city lighting effects, and clean, modern player placement to give it an epic, emotional feel.">
+          <div class="overflow-hidden">
+            <div class="ph aspect-[4/5]">
+              <img src="Slike/psg.png" alt="PSG club graphic by madebyM" loading="lazy" class="work-img h-full w-full object-cover" />
             </div>
+          </div>
+          <div class="mt-6 flex items-end justify-between gap-6 border-t border-line pt-5">
+            <div>
+              <p class="eyebrow">04 — Club Graphic</p>
+              <h3 class="mt-2 font-display text-2xl font-black uppercase leading-none tracking-tight sm:text-3xl">PSG</h3>
+              <p class="prose-body mt-3 max-w-md text-sm text-stone">A cinematic wallpaper piece — the club's heritage set over the Paris skyline in deep, atmospheric blue.</p>
+            </div>
+            <span class="link mb-1 shrink-0 text-sm">Case study →</span>
           </div>
         </article>
 
-        <!-- 05 — image left -->
-        <article class="work-item reveal grid cursor-pointer gap-6 sm:grid-cols-12 sm:items-center" tabindex="0" role="button"
-          data-title="Ironside Gym — Merch Line" data-cat="Print & Merch" data-client="Ironside Strength" data-year="2023"
-          data-goal="Launch a gym apparel drop with a mark members would actually wear in the street."
-          data-approach="A stripped-back wordmark, one warm hit of colour, and garment mockups that sold the drop before production.">
-          <div class="overflow-hidden sm:col-span-7">
-            <div class="ph aspect-[16/11]" data-label="assets/work-5.jpg">
-              <img src="assets/work-5.jpg" alt="Ironside Strength merch line design" loading="lazy" class="work-img h-full w-full object-cover" />
+        <!-- 05 — Cuber -->
+        <article class="work-item reveal cursor-pointer" tabindex="0" role="button"
+          data-title="Cuber" data-cat="Sports Graphic" data-client="Cuber" data-year="2026"
+          data-goal="A bold, graphic treatment built to read instantly — even at thumbnail size."
+          data-approach="High-contrast composition and confident cropping, finished with a warm, premium tone.">
+          <div class="overflow-hidden">
+            <div class="ph aspect-[4/5]">
+              <img src="Slike/cuber%20glavna.png" alt="Cuber sports graphic by madebyM" loading="lazy" class="work-img h-full w-full object-cover" />
             </div>
           </div>
-          <div class="sm:col-span-5 sm:pl-6">
-            <p class="eyebrow">05 — Print &amp; Merch</p>
-            <h3 class="mt-4 font-display text-3xl font-light leading-tight sm:text-4xl">Ironside</h3>
-            <p class="prose-body mt-4 max-w-sm text-stone">An apparel drop with a mark worth wearing — stripped-back, confident, and sold out before production.</p>
-            <span class="link mt-6 inline-block text-sm">Read case study →</span>
+          <div class="mt-6 flex items-end justify-between gap-6 border-t border-line pt-5">
+            <div>
+              <p class="eyebrow">05 — Sports Graphic</p>
+              <h3 class="mt-2 font-display text-2xl font-black uppercase leading-none tracking-tight sm:text-3xl">Cuber</h3>
+              <p class="prose-body mt-3 max-w-md text-sm text-stone">A bold, graphic treatment built to read instantly — even at thumbnail size.</p>
+            </div>
+            <span class="link mb-1 shrink-0 text-sm">Case study →</span>
           </div>
         </article>
 
-        <!-- 06 — image right -->
-        <article class="work-item reveal grid cursor-pointer gap-6 sm:grid-cols-12 sm:items-center" tabindex="0" role="button"
-          data-title="Coastal Run — Event Branding" data-cat="Event Branding" data-client="Coastal Half Marathon" data-year="2024"
-          data-goal="Give a charity half-marathon a cohesive look across bibs, banners, and the finish-line gantry."
-          data-approach="A route-line motif drawn from the actual course, paired with a confident sans and a calm, warm palette.">
-          <div class="order-2 sm:order-1 sm:col-span-5 sm:pr-6">
-            <p class="eyebrow">06 — Event Branding</p>
-            <h3 class="mt-4 font-display text-3xl font-light leading-tight sm:text-4xl"><span class="italic">Coastal</span> Run</h3>
-            <p class="prose-body mt-4 max-w-sm text-stone">One cohesive look for a charity half-marathon — drawn from the route itself, from bib to finish line.</p>
-            <span class="link mt-6 inline-block text-sm">Read case study →</span>
-          </div>
-          <div class="order-1 overflow-hidden sm:order-2 sm:col-span-7">
-            <div class="ph aspect-[16/12]" data-label="assets/work-6.jpg">
-              <img src="assets/work-6.jpg" alt="Coastal Half Marathon event branding" loading="lazy" class="work-img h-full w-full object-cover" />
+        <!-- 06 — Saka -->
+        <article class="work-item reveal cursor-pointer" tabindex="0" role="button"
+          data-title="Saka" data-cat="Player Graphic" data-client="Bukayo Saka" data-year="2026"
+          data-goal="An Arsenal player edit with a calm, premium finish — star power without the noise."
+          data-approach="Warm tones, a sharp cut-out, and generous negative space that lets the subject breathe.">
+          <div class="overflow-hidden">
+            <div class="ph aspect-[4/5]">
+              <img src="Slike/saka%20watermark.png" alt="Saka player graphic by madebyM" loading="lazy" class="work-img h-full w-full object-cover" />
             </div>
+          </div>
+          <div class="mt-6 flex items-end justify-between gap-6 border-t border-line pt-5">
+            <div>
+              <p class="eyebrow">06 — Player Graphic</p>
+              <h3 class="mt-2 font-display text-2xl font-black uppercase leading-none tracking-tight sm:text-3xl">Saka</h3>
+              <p class="prose-body mt-3 max-w-md text-sm text-stone">An Arsenal player edit with a calm, premium finish — star power without the noise.</p>
+            </div>
+            <span class="link mb-1 shrink-0 text-sm">Case study →</span>
           </div>
         </article>
 
@@ -335,41 +321,41 @@
 
   <!-- ================= SERVICES (split, heavy type contrast) ================= -->
   <section id="services" class="scroll-mt-24 border-t border-line py-20 sm:py-28">
-    <div class="mx-auto max-w-shell px-5 sm:px-8">
+    <div class="mx-auto max-w-shell px-6 md:px-12">
       <div class="grid gap-12 sm:grid-cols-12">
         <!-- sticky statement column -->
         <div class="sm:col-span-4">
           <div class="sm:sticky sm:top-28">
             <p class="reveal eyebrow">What I do</p>
-            <h2 class="reveal mt-5 font-display text-4xl font-light leading-[1.05] tracking-[-0.01em] sm:text-5xl">
-              Three ways to<br /><span class="italic">look the part.</span>
+            <h2 class="reveal mt-5 font-display text-3xl font-black uppercase leading-[1.02] tracking-tight sm:text-4xl lg:text-5xl">
+              Three ways to<br /><span class="italic text-clay">look the part.</span>
             </h2>
             <p class="reveal prose-body mt-6 max-w-xs text-stone">Each engagement is built to win attention, sponsors, and recognition for the people who wear the brand.</p>
           </div>
         </div>
 
-        <!-- enumerated service rows -->
+        <!-- enumerated service rows (no divider above the first row) -->
         <div class="sm:col-span-8">
-          <div class="reveal flex flex-col gap-px border-t border-line">
+          <div class="reveal flex flex-col">
             <div class="grid gap-4 py-9 sm:grid-cols-12 sm:items-baseline">
-              <span class="font-display text-2xl font-light text-clay sm:col-span-1">I</span>
+              <span class="font-display text-2xl font-black text-clay sm:col-span-1">I</span>
               <div class="sm:col-span-11">
-                <h3 class="font-display text-3xl font-light sm:text-4xl">Matchday Systems</h3>
-                <p class="prose-body mt-3 max-w-md text-stone">Social graphics for clubs — fixtures, scorelines, line-ups, and transfers. A consistent system that builds a recognisable identity, week after week.</p>
+                <h3 class="font-display text-2xl font-black uppercase leading-none tracking-tight sm:text-3xl lg:text-4xl">Matchday Systems</h3>
+                <p class="prose-body mt-4 max-w-md text-stone">Social graphics for clubs — fixtures, scorelines, line-ups, and transfers. A consistent system that builds a recognisable identity, week after week.</p>
               </div>
             </div>
             <div class="grid gap-4 border-t border-line py-9 sm:grid-cols-12 sm:items-baseline">
-              <span class="font-display text-2xl font-light text-clay sm:col-span-1">II</span>
+              <span class="font-display text-2xl font-black text-clay sm:col-span-1">II</span>
               <div class="sm:col-span-11">
-                <h3 class="font-display text-3xl font-light sm:text-4xl">Athlete Branding</h3>
-                <p class="prose-body mt-3 max-w-md text-stone">A personal visual identity for professional athletes — logomark, custom backgrounds, and thumbnails that turn a player into a brand.</p>
+                <h3 class="font-display text-2xl font-black uppercase leading-none tracking-tight sm:text-3xl lg:text-4xl">Athlete Branding</h3>
+                <p class="prose-body mt-4 max-w-md text-stone">A personal visual identity for professional athletes — logomark, custom backgrounds, and thumbnails that turn a player into a brand.</p>
               </div>
             </div>
             <div class="grid gap-4 border-t border-line py-9 sm:grid-cols-12 sm:items-baseline">
-              <span class="font-display text-2xl font-light text-clay sm:col-span-1">III</span>
+              <span class="font-display text-2xl font-black text-clay sm:col-span-1">III</span>
               <div class="sm:col-span-11">
-                <h3 class="font-display text-3xl font-light sm:text-4xl">Commercial &amp; Print</h3>
-                <p class="prose-body mt-3 max-w-md text-stone">Posters, calendars, event branding, and merch. High-resolution, print-ready work that carries the same energy off-screen as on.</p>
+                <h3 class="font-display text-2xl font-black uppercase leading-none tracking-tight sm:text-3xl lg:text-4xl">Social Media Management</h3>
+                <p class="prose-body mt-4 max-w-md text-stone">End-to-end social support — a steady flow of matchday posts, stories, and reels, planned on a content calendar and delivered ready to publish, so your channels never go quiet.</p>
               </div>
             </div>
           </div>
@@ -378,45 +364,100 @@
     </div>
   </section>
 
-  <!-- ================= ABOUT + PROCESS (split, pull-quote) ================= -->
-  <!-- EDIT: profile.jpg, real name, story -->
-  <section id="about" class="scroll-mt-24 border-t border-line py-20 sm:py-28">
-    <div class="mx-auto max-w-shell px-5 sm:px-8">
-      <div class="grid gap-14 sm:grid-cols-12 sm:gap-12">
-        <!-- pull quote statement -->
-        <div class="sm:col-span-7">
-          <p class="reveal eyebrow">The studio</p>
-          <blockquote class="reveal mt-6 font-display font-light leading-[1.08] tracking-[-0.01em] text-bone" style="font-size:clamp(1.9rem,4.4vw,3.5rem)">
-            I make the brand look like it has <span class="italic">already arrived</span> — long before the budget says it should.
-          </blockquote>
-          <p class="reveal prose-body mt-8 max-w-md text-stone">
-            <!-- EDIT: swap in your real name/initial and story -->
-            made.bymp is a one-person sports design studio led by <span class="text-bone">M. P.</span>, working with clubs, athletes, and sports brands to turn raw ambition into a visual identity that earns sponsors and recognition.
-          </p>
+  <!-- ================= PACKAGES / TIERS (monthly plans) ================= -->
+  <!-- EDIT: tune prices + features to your real packages -->
+  <section id="pricing" class="scroll-mt-24 border-t border-line py-20 sm:py-28">
+    <div class="mx-auto max-w-shell px-6 md:px-12">
+      <div class="reveal flex items-end justify-between">
+        <div>
+          <p class="eyebrow">Plans &amp; pricing</p>
+          <h2 class="mt-3 font-display text-4xl font-black uppercase leading-none tracking-tight sm:text-6xl">Packages</h2>
+        </div>
+        <p class="eyebrow hidden sm:block">Monthly plans</p>
+      </div>
 
-          <!-- Process: a genuine sequence -->
-          <ol class="reveal mt-12 max-w-md divide-y divide-line border-t border-line">
-            <li class="flex gap-5 py-5">
-              <span class="font-display text-lg font-light text-clay">01</span>
-              <div><h3 class="font-display text-xl font-light">Briefing &amp; idea</h3><p class="prose-body mt-1 text-sm text-stone">We define the goal, the audience, and the look.</p></div>
-            </li>
-            <li class="flex gap-5 py-5">
-              <span class="font-display text-lg font-light text-clay">02</span>
-              <div><h3 class="font-display text-xl font-light">Design &amp; feedback</h3><p class="prose-body mt-1 text-sm text-stone">Concepts and refinement until every detail earns its place.</p></div>
-            </li>
-            <li class="flex gap-5 py-5">
-              <span class="font-display text-lg font-light text-clay">03</span>
-              <div><h3 class="font-display text-xl font-light">Delivery</h3><p class="prose-body mt-1 text-sm text-stone">Final assets, ready for print, social, and broadcast.</p></div>
-            </li>
-          </ol>
+      <div class="mt-14 grid gap-12 md:grid-cols-3 md:gap-8 lg:gap-12">
+        <!-- STARTER -->
+        <div class="reveal border-t border-line pt-8">
+          <h3 class="font-display text-2xl font-black uppercase tracking-tight sm:text-3xl">Starter</h3>
+          <p class="mt-6 font-display text-4xl font-black tracking-tight sm:text-5xl">€90–110</p>
+          <p class="eyebrow mt-2">per month</p>
+          <p class="prose-body mt-5 text-sm text-stone">Up to 4 high-end graphics per month — the essentials, covered every week.</p>
+          <ul class="mt-7 space-y-2.5 text-sm text-stone">
+            <li class="flex gap-3"><span class="text-clay">—</span><span>Matchday + Full-time graphics</span></li>
+            <li class="flex gap-3"><span class="text-clay">—</span><span>1 fan wallpaper</span></li>
+          </ul>
+          <a href="#contact" class="link mt-9 inline-block text-sm">Start a project →</a>
         </div>
 
-        <!-- portrait -->
-        <div class="reveal sm:col-span-5">
-          <div class="ph aspect-[4/5]" data-label="assets/profile.jpg">
-            <img src="assets/profile.jpg" alt="Portrait of M. P., founder of made.bymp" loading="lazy" class="h-full w-full object-cover" />
+        <!-- GAMEDAY (best value) -->
+        <div class="reveal border-t-2 border-clay/60 pt-8">
+          <div class="flex items-center justify-between gap-4">
+            <h3 class="font-display text-2xl font-black uppercase tracking-tight sm:text-3xl">Gameday</h3>
+            <span class="shrink-0 text-[11px] uppercase tracking-[0.18em] text-clay">Best value</span>
           </div>
-          <p class="mt-4 eyebrow">M. P. — Founder &amp; Designer</p>
+          <p class="mt-6 font-display text-4xl font-black tracking-tight sm:text-5xl">€180–220</p>
+          <p class="eyebrow mt-2">per month</p>
+          <p class="prose-body mt-5 text-sm text-stone">Up to 8 graphics per month — a full matchday presence, start to finish.</p>
+          <ul class="mt-7 space-y-2.5 text-sm text-stone">
+            <li class="flex gap-3"><span class="text-clay">—</span><span>Matchday graphics</span></li>
+            <li class="flex gap-3"><span class="text-clay">—</span><span>Line-up graphics</span></li>
+            <li class="flex gap-3"><span class="text-clay">—</span><span>Full-time graphics</span></li>
+            <li class="flex gap-3"><span class="text-clay">—</span><span>Custom brand template</span></li>
+          </ul>
+          <a href="#contact" class="link mt-9 inline-block text-sm">Start a project →</a>
+        </div>
+
+        <!-- CLUB MANAGEMENT -->
+        <div class="reveal border-t border-line pt-8">
+          <h3 class="font-display text-2xl font-black uppercase tracking-tight sm:text-3xl">Club Management</h3>
+          <p class="mt-6 font-display text-4xl font-black tracking-tight sm:text-5xl">€350–400</p>
+          <p class="eyebrow mt-2">per month</p>
+          <p class="prose-body mt-5 text-sm text-stone">Up to 15 graphics per month — your club's entire visual output, handled.</p>
+          <ul class="mt-7 space-y-2.5 text-sm text-stone">
+            <li class="flex gap-3"><span class="text-clay">—</span><span>Full club matchday support</span></li>
+            <li class="flex gap-3"><span class="text-clay">—</span><span>Transfer reveals</span></li>
+            <li class="flex gap-3"><span class="text-clay">—</span><span>Sponsor posts</span></li>
+            <li class="flex gap-3"><span class="text-clay">—</span><span>Priority support</span></li>
+          </ul>
+          <a href="#contact" class="link mt-9 inline-block text-sm">Start a project →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ABOUT + PROCESS (split, pull-quote) ================= -->
+  <section id="about" class="scroll-mt-24 border-t border-line py-20 sm:py-28">
+    <div class="mx-auto max-w-shell px-6 md:px-12">
+      <div class="grid gap-14 sm:grid-cols-12 sm:gap-12">
+        <!-- statement + bio -->
+        <div class="sm:col-span-7">
+          <p class="reveal eyebrow">The studio</p>
+          <blockquote class="reveal mt-6 font-display font-black leading-[1.06] tracking-tight text-bone" style="font-size:clamp(1.7rem,3.6vw,2.9rem)">
+            I make the brand look like it has <span class="italic text-clay">already arrived</span> — long before the budget says it should.
+          </blockquote>
+          <p class="reveal prose-body mt-8 max-w-md text-stone">
+            madebyM is a one-person sports design studio led by <span class="text-bone">Miha Pavlic</span>, working with clubs, athletes, and sports brands to turn raw ambition into a visual identity that earns sponsors and recognition.
+          </p>
+        </div>
+
+        <!-- process: a genuine sequence -->
+        <div class="reveal sm:col-span-5">
+          <p class="eyebrow">Process</p>
+          <ol class="mt-6 divide-y divide-line border-t border-line">
+            <li class="flex gap-5 py-5">
+              <span class="font-display text-lg font-black text-clay">01</span>
+              <div><h3 class="font-display text-lg font-black uppercase tracking-tight">Briefing &amp; idea</h3><p class="prose-body mt-1 text-sm text-stone">We define the goal, the audience, and the look.</p></div>
+            </li>
+            <li class="flex gap-5 py-5">
+              <span class="font-display text-lg font-black text-clay">02</span>
+              <div><h3 class="font-display text-lg font-black uppercase tracking-tight">Design &amp; feedback</h3><p class="prose-body mt-1 text-sm text-stone">Concepts and refinement until every detail earns its place.</p></div>
+            </li>
+            <li class="flex gap-5 py-5">
+              <span class="font-display text-lg font-black text-clay">03</span>
+              <div><h3 class="font-display text-lg font-black uppercase tracking-tight">Delivery</h3><p class="prose-body mt-1 text-sm text-stone">Final assets, ready for print, social, and broadcast.</p></div>
+            </li>
+          </ol>
         </div>
       </div>
     </div>
@@ -425,23 +466,24 @@
   <!-- ================= CONTACT (statement + underline form) ================= -->
   <!-- EDIT: data-email + socials -->
   <section id="contact" class="scroll-mt-24 border-t border-line py-20 sm:py-28">
-    <div class="mx-auto max-w-shell px-5 sm:px-8">
+    <div class="mx-auto max-w-shell px-6 md:px-12">
       <div class="grid gap-14 sm:grid-cols-12 sm:gap-12">
         <div class="sm:col-span-5">
           <p class="reveal eyebrow">Start a project</p>
-          <h2 class="reveal mt-6 font-display font-light leading-[1.04] tracking-[-0.01em]" style="font-size:clamp(2.4rem,5.2vw,4.5rem)">
-            Let's build<br /><span class="italic">your edge.</span>
+          <h2 class="reveal mt-6 font-display font-black uppercase leading-[0.96] tracking-tight" style="font-size:clamp(2.2rem,4.4vw,4rem)">
+            Let's build<br /><span class="italic text-clay">your edge.</span>
           </h2>
-          <p class="reveal prose-body mt-6 max-w-xs text-stone">Tell me about the club, the athlete, or the brand. Every serious brief gets a reply within 24 hours.</p>
+          <p class="reveal prose-body mt-6 max-w-xs text-stone">Tell me about the club, the athlete, or the brand. Every brief gets a reply within 24 hours.</p>
           <div class="reveal mt-9 flex flex-wrap gap-7 text-sm">
-            <a href="#" class="link">Instagram</a>
-            <a href="#" class="link">TikTok</a>
-            <a href="#" class="link">Behance</a>
+            <a href="https://www.instagram.com/made.bymp/" target="_blank" rel="noopener noreferrer" class="link">Instagram</a>
+            <a href="https://www.tiktok.com/@madebym70" target="_blank" rel="noopener noreferrer" class="link">TikTok</a>
           </div>
         </div>
 
         <div class="reveal sm:col-span-7">
-          <form id="briefForm" data-email="hello@madebymp.com" novalidate class="grid gap-8">
+          <form id="briefForm" action="https://formspree.io/f/xpqgnljz" method="POST" data-email="madebymp.studio@gmail.com" novalidate class="grid gap-8">
+            <!-- Honeypot: invisible spam trap, ignored by real visitors -->
+            <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true" />
             <div class="grid gap-8 sm:grid-cols-2">
               <div>
                 <label for="name" class="eyebrow mb-2 block">Your name</label>
@@ -461,9 +503,9 @@
             <fieldset>
               <legend class="eyebrow mb-3">Budget range</legend>
               <div class="flex flex-wrap gap-3">
-                <label class="budget cursor-pointer"><input type="radio" name="budget" value="€200–€500" class="sr-only" /><span class="block border border-line px-4 py-2 text-sm text-stone">€200–500</span></label>
-                <label class="budget cursor-pointer"><input type="radio" name="budget" value="€500–€1000" class="sr-only" /><span class="block border border-line px-4 py-2 text-sm text-stone">€500–1000</span></label>
-                <label class="budget cursor-pointer"><input type="radio" name="budget" value="€1000+" class="sr-only" /><span class="block border border-line px-4 py-2 text-sm text-stone">€1000+</span></label>
+                <label class="budget cursor-pointer"><input type="radio" name="budget" value="Starter (€90–€110 / month)" class="sr-only" /><span class="block border border-line px-4 py-2 text-sm text-stone">Starter · €90–110/mo</span></label>
+                <label class="budget cursor-pointer"><input type="radio" name="budget" value="Gameday (€180–€220 / month)" class="sr-only" /><span class="block border border-line px-4 py-2 text-sm text-stone">Gameday · €180–220/mo</span></label>
+                <label class="budget cursor-pointer"><input type="radio" name="budget" value="Club Management (€350–€400 / month)" class="sr-only" /><span class="block border border-line px-4 py-2 text-sm text-stone">Club Management · €350–400/mo</span></label>
               </div>
             </fieldset>
 
@@ -472,11 +514,18 @@
               <textarea id="brief" name="brief" rows="3" required class="field" placeholder="What do you need, and when?"></textarea>
             </div>
 
-            <div class="flex items-center gap-6">
-              <button type="submit" class="link text-base cursor-pointer">Send the brief →</button>
-              <p id="formMsg" role="status" aria-live="polite" class="text-sm text-stone"></p>
+            <div>
+              <button id="briefSubmit" type="submit" class="link text-base cursor-pointer">Send the brief →</button>
+              <p id="formMsg" role="alert" aria-live="polite" class="mt-4 hidden text-sm text-clay"></p>
             </div>
           </form>
+
+          <!-- Inline success state (shown after a successful submission) -->
+          <div id="formSuccess" class="hidden" role="status">
+            <p class="eyebrow text-clay">Brief received</p>
+            <h3 class="mt-5 font-display text-2xl font-black uppercase tracking-tight sm:text-3xl">Thank you.</h3>
+            <p class="prose-body mt-4 max-w-md text-stone">Your brief has been securely delivered. Expect a response within 24 hours.</p>
+          </div>
         </div>
       </div>
     </div>
@@ -485,9 +534,9 @@
 
   <!-- ================= FOOTER ================= -->
   <footer class="border-t border-line py-10">
-    <div class="mx-auto flex max-w-shell flex-col items-center justify-between gap-4 px-5 sm:flex-row sm:px-8">
-      <a href="#top" class="inline-flex items-baseline gap-1 font-display text-lg">made<span class="mb-1 inline-block h-1 w-1 rounded-full bg-clay"></span><span class="italic text-stone">bymp</span></a>
-      <p class="eyebrow text-stone/70">Sports Design Studio — © <span id="year">2024</span></p>
+    <div class="flex flex-col items-center justify-between gap-4 px-6 sm:flex-row md:px-12">
+      <a href="#top" class="group font-display text-lg font-black"><span class="text-bone">made</span><span class="text-stone">by</span><span class="italic text-clay">M</span></a>
+      <p class="eyebrow text-stone/70">Sports Design Studio — © 2026</p>
       <p class="eyebrow text-stone/70">Built to look the part</p>
     </div>
   </footer>
@@ -495,18 +544,18 @@
   <!-- ================= CASE-STUDY LIGHTBOX ================= -->
   <div id="lightbox" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
     <div data-close class="absolute inset-0 bg-bg/90"></div>
-    <div role="dialog" aria-modal="true" aria-labelledby="lbTitle" class="relative z-10 max-h-[88vh] w-full max-w-3xl overflow-y-auto bg-surface">
+    <div role="dialog" aria-modal="true" aria-labelledby="lbTitle" class="relative z-10 max-h-[88vh] w-full max-w-4xl overflow-y-auto bg-surface">
       <button data-close aria-label="Close" class="absolute right-4 top-4 z-10 inline-flex h-10 w-10 items-center justify-center text-bone cursor-pointer hover:text-clay">
         <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
       </button>
-      <div class="ph aspect-[16/10] w-full" id="lbImageWrap" data-label="project image">
-        <img id="lbImage" src="" alt="" class="h-full w-full object-cover" />
+      <div class="ph aspect-[16/10] w-full" id="lbImageWrap">
+        <img id="lbImage" src="" alt="" class="h-full w-full object-contain" />
       </div>
       <div class="p-7 sm:p-10">
         <p id="lbCat" class="eyebrow text-clay">Category</p>
-        <h3 id="lbTitle" class="mt-3 font-display text-3xl font-light sm:text-4xl">Project</h3>
-        <dl class="mt-8 grid gap-7 sm:grid-cols-2">
-          <div><dt class="eyebrow text-stone/70">Client</dt><dd id="lbClient" class="prose-body mt-2 text-bone"></dd></div>
+        <h3 id="lbTitle" class="mt-3 font-display text-3xl font-black uppercase tracking-tight sm:text-4xl">Project</h3>
+         <dl class="mt-8 grid gap-7 sm:grid-cols-2">
+          <div><dt class="eyebrow text-stone/70">Subject</dt><dd id="lbClient" class="prose-body mt-2 text-bone"></dd></div>
           <div><dt class="eyebrow text-stone/70">Year</dt><dd id="lbYear" class="prose-body mt-2 text-bone"></dd></div>
           <div class="sm:col-span-2"><dt class="eyebrow text-stone/70">The goal</dt><dd id="lbGoal" class="prose-body mt-2 text-stone"></dd></div>
           <div class="sm:col-span-2"><dt class="eyebrow text-stone/70">The approach</dt><dd id="lbApproach" class="prose-body mt-2 text-stone"></dd></div>
@@ -517,9 +566,7 @@
   </div>
 
   <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
-
-    // Broken image -> warm placeholder (clean preview before real assets exist)
+    // Broken image -> hide so the warm frame shows (clean fallback)
     document.querySelectorAll('img').forEach(function (img) {
       img.addEventListener('error', function () { img.classList.add('is-broken'); });
       if (img.complete && img.naturalWidth === 0) img.classList.add('is-broken');
@@ -560,7 +607,6 @@
       document.getElementById('lbGoal').textContent = item.dataset.goal;
       document.getElementById('lbApproach').textContent = item.dataset.approach;
       var img = item.querySelector('img'), lbImg = document.getElementById('lbImage');
-      document.getElementById('lbImageWrap').setAttribute('data-label', item.dataset.title);
       lbImg.classList.remove('is-broken');
       lbImg.src = img.getAttribute('src'); lbImg.alt = img.getAttribute('alt');
       if (img.classList.contains('is-broken')) lbImg.classList.add('is-broken');
@@ -584,20 +630,53 @@
       if (e.key === 'Escape' && !lightbox.classList.contains('hidden')) closeLightbox();
     });
 
-    // Contact form -> pre-filled email (no backend). Swap to Formspree/Getform for inbox delivery.
+    // Contact form -> async Formspree submission (fetch, no page reload).
+    // Setup: create a form at formspree.io and put its ID in the action URL above.
     var form = document.getElementById('briefForm');
+    var submitBtn = document.getElementById('briefSubmit');
+    var formMsg = document.getElementById('formMsg');
+    var formSuccess = document.getElementById('formSuccess');
+    var submitLabel = submitBtn.textContent;
+
+    function showSuccess() {
+      form.classList.add('is-leaving');
+      window.setTimeout(function () {
+        form.classList.add('hidden');
+        formSuccess.classList.remove('hidden');
+        void formSuccess.offsetHeight; // force reflow so the fade-in transition plays
+        formSuccess.classList.add('show');
+      }, 350);
+    }
+
+    function showError() {
+      form.classList.remove('is-sending');
+      submitBtn.textContent = submitLabel;
+      formMsg.textContent = 'Something went wrong — please try again, or email ' + form.getAttribute('data-email') + ' directly.';
+      formMsg.classList.remove('hidden');
+    }
+
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       if (!form.checkValidity()) { form.reportValidity(); return; }
-      var to = form.getAttribute('data-email');
-      var name = form.name.value, org = form.org.value || '—', email = form.email.value;
-      var budget = (form.querySelector('input[name="budget"]:checked') || {}).value || 'Not set';
-      var brief = form.brief.value;
-      var subject = 'New project brief — ' + name;
-      var body = 'Name: ' + name + '\r\nClub/Company: ' + org + '\r\nEmail: ' + email +
-                 '\r\nBudget: ' + budget + '\r\n\r\nProject:\r\n' + brief;
-      document.getElementById('formMsg').textContent = 'Opening your email app…';
-      window.location.href = 'mailto:' + to + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+
+      // Loading state
+      formMsg.classList.add('hidden');
+      form.classList.add('is-sending');
+      submitBtn.textContent = 'Sending brief…';
+
+      var data = new FormData(form);
+      data.append('_subject', 'New project brief — ' + (data.get('name') || 'madebyM website'));
+
+      fetch(form.action, {
+        method: 'POST',
+        body: data,
+        headers: { 'Accept': 'application/json' }
+      }).then(function (res) {
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        showSuccess();
+      }).catch(function () {
+        showError();
+      });
     });
   </script>
 </body>

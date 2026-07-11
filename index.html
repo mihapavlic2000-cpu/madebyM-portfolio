@@ -523,6 +523,12 @@
               <textarea id="brief" name="brief" rows="3" required class="field" placeholder="What do you need, and when?"></textarea>
             </div>
 
+            <!-- GDPR consent -->
+            <label class="flex cursor-pointer items-start gap-3">
+              <input type="checkbox" name="gdpr" value="da" required class="mt-0.5 h-4 w-4 shrink-0 cursor-pointer accent-clay" />
+              <span class="prose-body text-sm text-stone">Strinjam se, da madebymstudio.com uporabi moje osebne podatke za namen odgovora na to povpraševanje.</span>
+            </label>
+
             <div>
               <button id="briefSubmit" type="submit" class="link text-base cursor-pointer">Send the brief →</button>
               <p id="formMsg" role="alert" aria-live="polite" class="mt-4 hidden text-sm text-clay"></p>
@@ -546,6 +552,7 @@
     <div class="flex flex-col items-center justify-between gap-4 px-6 sm:flex-row md:px-12">
       <a href="#top" class="group font-display text-lg font-black"><span class="text-bone">madeby</span><span class="italic text-clay-light">M</span></a>
       <p class="eyebrow text-stone/70">Sports Design Studio — © 2026</p>
+      <button id="privacyOpen" type="button" class="eyebrow cursor-pointer text-stone/70 transition-colors hover:text-clay">Politika zasebnosti</button>
       <p class="eyebrow text-stone/70">Built to look the part</p>
     </div>
   </footer>
@@ -570,6 +577,43 @@
           <div class="sm:col-span-2"><dt class="eyebrow text-stone/70">The approach</dt><dd id="lbApproach" class="prose-body mt-2 text-stone"></dd></div>
         </dl>
         <a href="#contact" data-close class="link mt-9 inline-block text-sm">Start a project like this →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= PRIVACY POLICY MODAL ================= -->
+  <div id="privacyModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
+    <div data-privacy-close class="absolute inset-0 bg-bg/90"></div>
+    <div role="dialog" aria-modal="true" aria-labelledby="privacyTitle" class="relative z-10 max-h-[88vh] w-full max-w-2xl overflow-y-auto bg-surface p-7 sm:p-10">
+      <button data-privacy-close aria-label="Zapri" class="absolute right-4 top-4 inline-flex h-10 w-10 items-center justify-center text-bone cursor-pointer hover:text-clay">
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+
+      <p class="eyebrow text-clay">madebyM — Sports Design Studio</p>
+      <h3 id="privacyTitle" class="mt-3 font-display text-2xl font-black uppercase tracking-tight sm:text-3xl">Politika zasebnosti</h3>
+
+      <div class="prose-body mt-8 space-y-6 text-sm text-stone">
+        <div>
+          <p class="eyebrow mb-2 text-stone/70">1 — Katere podatke zbiramo</p>
+          <p>Ob oddaji povpraševanja prek kontaktnega obrazca zbiramo ime, e-poštni naslov, ime kluba ali podjetja (če ga navedete) in vsebino sporočila. Drugih osebnih podatkov ne zbiramo in ne uporabljamo piškotkov za sledenje.</p>
+        </div>
+        <div>
+          <p class="eyebrow mb-2 text-stone/70">2 — Namen obdelave</p>
+          <p>Vaše podatke uporabimo izključno za odgovor na povpraševanje in morebitno pripravo ponudbe. Ne pošiljamo neželene pošte in podatkov ne uporabljamo za oglaševanje.</p>
+        </div>
+        <div>
+          <p class="eyebrow mb-2 text-stone/70">3 — Obdelava prek storitve Formspree</p>
+          <p>Obrazec tehnično obdeluje storitev Formspree, Inc., ki sporočilo prek šifrirane povezave (HTTPS/TLS) varno posreduje na naš e-poštni naslov.</p>
+        </div>
+        <div>
+          <p class="eyebrow mb-2 text-stone/70">4 — Deljenje podatkov</p>
+          <p>Vaših podatkov ne prodajamo, ne oddajamo v najem in jih ne delimo s tretjimi osebami.</p>
+        </div>
+        <div>
+          <p class="eyebrow mb-2 text-stone/70">5 — Hramba in vaše pravice</p>
+          <p>Podatke hranimo le toliko časa, kolikor je potrebno za obravnavo povpraševanja oziroma sodelovanja. Kadar koli lahko zahtevate vpogled, popravek ali izbris svojih podatkov — pišite nam na <a href="mailto:madebymp.studio@gmail.com" class="link">madebymp.studio@gmail.com</a>.</p>
+        </div>
+        <p class="eyebrow pt-1 text-stone/50">Zadnja posodobitev — julij 2026</p>
       </div>
     </div>
   </div>
@@ -643,6 +687,26 @@
     lightbox.querySelectorAll('[data-close]').forEach(function (el) { el.addEventListener('click', closeLightbox); });
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' && !lightbox.classList.contains('hidden')) closeLightbox();
+    });
+
+    // Privacy policy modal
+    var privacyModal = document.getElementById('privacyModal');
+    var privacyLastFocus = null;
+    function openPrivacy() {
+      privacyLastFocus = document.activeElement;
+      privacyModal.classList.remove('hidden'); privacyModal.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+      privacyModal.querySelector('button[data-privacy-close]').focus();
+    }
+    function closePrivacy() {
+      privacyModal.classList.add('hidden'); privacyModal.classList.remove('flex');
+      document.body.style.overflow = '';
+      if (privacyLastFocus) privacyLastFocus.focus();
+    }
+    document.getElementById('privacyOpen').addEventListener('click', openPrivacy);
+    privacyModal.querySelectorAll('[data-privacy-close]').forEach(function (el) { el.addEventListener('click', closePrivacy); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !privacyModal.classList.contains('hidden')) closePrivacy();
     });
 
     // Contact form -> async Formspree submission (fetch, no page reload).

@@ -42,13 +42,21 @@
             sans:    ['Inter', 'system-ui', 'sans-serif'],
           },
           maxWidth: { shell: '1600px', prose: '68ch' },
-          // Radius scale. Sharp editorial hairlines stay for dividers; panels and
-          // controls now sit on a rounded scale so cards read as objects.
-          borderRadius: { pill: '999px', card: '24px', panel: '32px' },
+          // No radius scale, deliberately. Miha's own matchday graphics are
+          // hard-edged poster work; rounded frames read as generic web UI
+          // against them. Every surface on this site is a right angle —
+          // images, panels, controls, tags. Do not reintroduce a radius token.
           // Type scale — headings step by >=1.25, body by the tighter ratio the
           // 16/14/12 range allows (documented in CLAUDE.md as expected, not a fault).
           fontSize: {
-            'd1': ['clamp(2.75rem,7vw,6.5rem)', { lineHeight: '0.92', letterSpacing: '-0.02em' }],
+            // The 2.5rem floor is a measurement, not taste. Archivo at 125%
+            // stretch renders the hero's longest word, "impossible", at 7.98px
+            // per 1px of font-size. A 375px phone leaves 327px between the
+            // px-6 gutters, so anything above ~41px puts that word on the
+            // screen edge — at the previous 2.75rem it measured 351px and ran
+            // 0.2px past it. 2.5rem = 40px -> 319px, and 40/32 keeps the >=1.25
+            // step to d2 intact. Do not raise this without re-measuring at 375px.
+            'd1': ['clamp(2.5rem,7vw,6.5rem)', { lineHeight: '0.92', letterSpacing: '-0.02em' }],
             'd2': ['clamp(2rem,4.4vw,3.75rem)', { lineHeight: '0.96', letterSpacing: '-0.015em' }],
             'd3': ['clamp(1.5rem,2.6vw,2.25rem)', { lineHeight: '1.05', letterSpacing: '-0.01em' }],
             'd4': ['1.375rem', { lineHeight: '1.2' }],
@@ -74,7 +82,7 @@
     /* ---------- Controls ---------- */
     .btn {
       display:inline-flex; align-items:center; justify-content:center; gap:.55rem;
-      border-radius:999px; padding:.95rem 1.85rem;
+      border-radius:0; padding:.95rem 1.85rem;
       font-family:Inter, sans-serif; font-size:15px; font-weight:500; line-height:1;
       white-space:nowrap; cursor:pointer; border:1px solid transparent;
       transition: transform var(--dur) var(--ease-spring),
@@ -182,8 +190,33 @@
     html.js .reveal { opacity:0; transform: translateY(20px); transition: opacity .8s cubic-bezier(.16,1,.3,1), transform .8s cubic-bezier(.16,1,.3,1); }
     html.js .reveal.in { opacity:1; transform:none; }
 
-    .work-img { transition: transform .7s cubic-bezier(.16,1,.3,1); }
+    /* ---------- Work card ---------- */
+    /* Provenance marks. PRODUCT.md records which pieces were commissioned and
+       which are personal work; `Concept` says so on the card itself, so no
+       reader takes a subject's name for a client who hired the studio.
+       Measured on #16130F: #D68A5C over the 8% wash (#251D15) = 6.05:1,
+       #A99E8C = 7.02:1. Both clear 4.5:1 at this 11px size. */
+    .tag {
+      display:inline-flex; align-items:center; border-radius:0;
+      border:1px solid; padding:.32rem .62rem;
+      font-family:Inter, sans-serif; font-size:11px; font-weight:500; line-height:1;
+      letter-spacing:.14em; text-transform:uppercase; white-space:nowrap;
+    }
+    .tag-concept { color:#D68A5C; border-color:rgba(214,138,92,.38); background:rgba(214,138,92,.08); }
+    .tag-client  { color:#A99E8C; border-color:rgba(237,229,214,.18); background:transparent; }
+
+    /* Frame lifts, image pushes in — two speeds so the card reads as an object
+       on the page rather than a flat crop. Both on the Phase 1 motion tokens. */
+    .work-frame { transition: transform var(--dur) var(--ease-out); }
+    .work-item:hover .work-frame { transform: translateY(-6px); }
+    .work-img { transition: transform var(--dur-slow) var(--ease-out); }
     .work-item:hover .work-img { transform: scale(1.035); }
+
+    /* The card carries role="button", so it is a control. Without this rule a
+       keyboard visitor gets no visible focus anywhere in the grid. */
+    .work-item:focus-visible { outline:2px solid #D68A5C; outline-offset:8px; border-radius:0; }
+    .work-item:focus-visible .work-cta { color:#C26B3F; }
+    .work-item:focus-visible .work-cta::after { opacity:1; background:#C26B3F; }
 
     /* Contact form submission states */
     #briefForm { transition: opacity .35s ease; }
@@ -196,7 +229,10 @@
       /* Must match html.js specificity (0,2,0) or the reveal rule above wins
          and reduced-motion visitors get a permanently invisible page. */
       html.js .reveal, .reveal { opacity:1; transform:none; transition:none; }
-      .work-img { transition:none; }
+      /* Must match the .work-item:hover selectors' specificity (0,3,0) — a
+         weaker rule here would lose and the lift would still snap into place. */
+      .work-img, .work-frame { transition:none; }
+      .work-item:hover .work-frame, .work-item:hover .work-img { transform:none; }
       #briefForm, #formSuccess { transition:none; }
       #brandLogo { transition:none; }
       /* Colour still changes so hover/press stay legible; only travel is removed. */
@@ -212,7 +248,7 @@
 <body class="bg-bg font-sans text-bone antialiased selection:bg-clay selection:text-bone">
   <div class="grain" aria-hidden="true"></div>
 
-  <a href="#work" class="sr-only focus:not-sr-only focus:fixed focus:z-50 focus:top-3 focus:left-3 focus:bg-bone focus:text-bg focus:px-4 focus:py-2 focus:rounded-sm focus:text-sm">Skip to work</a>
+  <a href="#work" class="sr-only focus:not-sr-only focus:fixed focus:z-50 focus:top-3 focus:left-3 focus:bg-bone focus:text-bg focus:px-4 focus:py-2 focus:text-sm">Skip to work</a>
 
   <!-- ================= NAV (logo hard left · links hard right, full-bleed) ================= -->
   <header class="fixed top-0 left-0 w-full z-50">
@@ -278,128 +314,159 @@
   <section id="work" class="scroll-mt-24 border-t border-line py-20 sm:py-28">
     <div class="mx-auto max-w-shell px-6 md:px-12">
       <div class="reveal">
-        <h2 class="font-display text-4xl font-black uppercase leading-none tracking-tight sm:text-6xl">Selected work</h2>
+        <h2 class="font-display text-d2 font-black uppercase leading-none tracking-tight">Selected work</h2>
+        <p class="prose-body mt-6 max-w-2xl text-base text-stone" style="text-wrap:pretty">
+          Matchday systems, player edits, and club graphics. Pieces marked <span class="text-clay-light">Concept</span> are personal work &mdash; made to push the craft, not commissioned.
+        </p>
       </div>
 
       <div class="mt-14 grid grid-cols-1 gap-x-8 gap-y-16 md:grid-cols-2 lg:gap-x-10">
 
-        <!-- 01 — Ekitike -->
+        <!-- 01 — Ekitike · personal work, not a commission (PRODUCT.md) -->
         <article class="work-item reveal cursor-pointer" tabindex="0" role="button"
+          data-kind="concept"
           data-title="Ekitike" data-cat="Player Graphic" data-client="Hugo Ekitike" data-year="2026"
           data-goal="A scroll-stopping player edit that captures Ekitike's energy in a single frame."
           data-approach="A clean cut-out subject, dramatic lighting, and a restrained warm palette — composed for instant recognition on a busy feed.">
-          <div class="overflow-hidden">
+          <div class="work-frame">
             <div class="ph aspect-[4/5]">
-              <img src="Slike/ekitikike%20pt22.jpg" alt="Ekitike player graphic by madebyM" loading="lazy" class="work-img h-full w-full object-cover" />
+              <img src="Slike/ekitikike%20pt22.jpg" alt="Ekitike player graphic by madebyM" loading="lazy" decoding="async" width="1080" height="1350" class="work-img h-full w-full object-cover" />
             </div>
           </div>
-          <div class="mt-6 flex items-end justify-between gap-6 border-t border-line pt-5">
-            <div>
-              <p class="eyebrow">01 — Player Graphic</p>
-              <h3 class="mt-2 font-display text-2xl font-black uppercase leading-none tracking-tight sm:text-3xl">Ekitike</h3>
+          <div class="mt-6 flex items-start justify-between gap-5">
+            <div class="min-w-0">
+              <div class="flex flex-wrap items-center gap-x-3 gap-y-2">
+                <p class="eyebrow">01 — Player Graphic</p>
+                <span class="tag tag-concept">Concept</span>
+              </div>
+              <h3 class="mt-3 font-display text-d3 font-black uppercase leading-none tracking-tight">Ekitike</h3>
               <p class="prose-body mt-3 max-w-md text-sm text-stone">A high-impact player edit — bold composition, dramatic light, and a clean type lockup tuned for the feed.</p>
             </div>
-            <span class="link mb-1 shrink-0 text-sm">Case study →</span>
+            <span class="work-cta link mt-1 shrink-0 text-sm">Case study →</span>
           </div>
         </article>
 
-        <!-- 02 — Endrick -->
+        <!-- 02 — Endrick · personal work, not a commission (PRODUCT.md) -->
         <article class="work-item reveal cursor-pointer" tabindex="0" role="button"
+          data-kind="concept"
           data-title="Endrick" data-cat="Player Graphic" data-client="Endrick" data-year="2026"
           data-goal="A striker rendered as a brand — capturing the swagger of one of the game's brightest talents."
           data-approach="A sharp cut-out, atmospheric light, and a confident lockup that holds up from thumbnail to full screen.">
-          <div class="overflow-hidden">
+          <div class="work-frame">
             <div class="ph aspect-[4/5]">
-              <img src="Slike/endrick.png" alt="Endrick player graphic by madebyM" loading="lazy" class="work-img h-full w-full object-cover" />
+              <img src="Slike/endrick.png" alt="Endrick player graphic by madebyM" loading="lazy" decoding="async" width="1080" height="1350" class="work-img h-full w-full object-cover" />
             </div>
           </div>
-          <div class="mt-6 flex items-end justify-between gap-6 border-t border-line pt-5">
-            <div>
-              <p class="eyebrow">02 — Player Graphic</p>
-              <h3 class="mt-2 font-display text-2xl font-black uppercase leading-none tracking-tight sm:text-3xl">Endrick</h3>
+          <div class="mt-6 flex items-start justify-between gap-5">
+            <div class="min-w-0">
+              <div class="flex flex-wrap items-center gap-x-3 gap-y-2">
+                <p class="eyebrow">02 — Player Graphic</p>
+                <span class="tag tag-concept">Concept</span>
+              </div>
+              <h3 class="mt-3 font-display text-d3 font-black uppercase leading-none tracking-tight">Endrick</h3>
               <p class="prose-body mt-3 max-w-md text-sm text-stone">A forward rendered as a brand — sharp cut-out, atmospheric light, and a confident lockup.</p>
             </div>
-            <span class="link mb-1 shrink-0 text-sm">Case study →</span>
+            <span class="work-cta link mt-1 shrink-0 text-sm">Case study →</span>
           </div>
         </article>
 
-        <!-- 03 — Kosi -->
+        <!-- 03 — Kosi · commissioned, real client (PRODUCT.md) -->
         <article class="work-item reveal cursor-pointer" tabindex="0" role="button"
+          data-kind="client"
           data-title="Kosi" data-cat="Sports Graphic" data-client="Kosi" data-year="2025"
           data-goal="Create a gritty, high-impact matchday poster that highlights the player's presence on the pitch using bold typography."
           data-approach="Blended dynamic match action shots with aggressive, textured masking and a raw color scheme that matches the club's energy.">
-          <div class="overflow-hidden">
+          <div class="work-frame">
             <div class="ph aspect-[4/5]">
-              <img src="Slike/kosi.png" alt="Kosi sports graphic by madebyM" loading="lazy" class="work-img h-full w-full object-cover" />
+              <img src="Slike/kosi.png" alt="Kosi sports graphic by madebyM" loading="lazy" decoding="async" width="1080" height="1350" class="work-img h-full w-full object-cover" />
             </div>
           </div>
-          <div class="mt-6 flex items-end justify-between gap-6 border-t border-line pt-5">
-            <div>
-              <p class="eyebrow">03 — Sports Graphic</p>
-              <h3 class="mt-2 font-display text-2xl font-black uppercase leading-none tracking-tight sm:text-3xl">Kosi</h3>
+          <div class="mt-6 flex items-start justify-between gap-5">
+            <div class="min-w-0">
+              <div class="flex flex-wrap items-center gap-x-3 gap-y-2">
+                <p class="eyebrow">03 — Sports Graphic</p>
+                <span class="tag tag-client">Client work</span>
+              </div>
+              <h3 class="mt-3 font-display text-d3 font-black uppercase leading-none tracking-tight">Kosi</h3>
               <p class="prose-body mt-3 max-w-md text-sm text-stone">A gritty matchday poster — dynamic action shots, textured masking, and bold type with raw club energy.</p>
             </div>
-            <span class="link mb-1 shrink-0 text-sm">Case study →</span>
+            <span class="work-cta link mt-1 shrink-0 text-sm">Case study →</span>
           </div>
         </article>
 
-        <!-- 04 — PSG -->
+        <!-- 04 — PSG · personal work, not a commission (PRODUCT.md) -->
         <article class="work-item reveal cursor-pointer" tabindex="0" role="button"
+          data-kind="concept"
           data-title="PSG" data-cat="Club Graphic" data-client="Paris Saint-Germain" data-year="2025"
           data-goal="Design a cinematic, atmospheric wallpaper piece celebrating the club's heritage over the iconic Paris skyline."
           data-approach="Utilized deep cosmic blue tones, high-contrast city lighting effects, and clean, modern player placement to give it an epic, emotional feel.">
-          <div class="overflow-hidden">
+          <div class="work-frame">
             <div class="ph aspect-[4/5]">
-              <img src="Slike/psg.png" alt="PSG club graphic by madebyM" loading="lazy" class="work-img h-full w-full object-cover" />
+              <img src="Slike/psg.png" alt="PSG club graphic by madebyM" loading="lazy" decoding="async" width="1080" height="1350" class="work-img h-full w-full object-cover" />
             </div>
           </div>
-          <div class="mt-6 flex items-end justify-between gap-6 border-t border-line pt-5">
-            <div>
-              <p class="eyebrow">04 — Club Graphic</p>
-              <h3 class="mt-2 font-display text-2xl font-black uppercase leading-none tracking-tight sm:text-3xl">PSG</h3>
+          <div class="mt-6 flex items-start justify-between gap-5">
+            <div class="min-w-0">
+              <div class="flex flex-wrap items-center gap-x-3 gap-y-2">
+                <p class="eyebrow">04 — Club Graphic</p>
+                <span class="tag tag-concept">Concept</span>
+              </div>
+              <h3 class="mt-3 font-display text-d3 font-black uppercase leading-none tracking-tight">PSG</h3>
               <p class="prose-body mt-3 max-w-md text-sm text-stone">A cinematic wallpaper piece — the club's heritage set over the Paris skyline in deep, atmospheric blue.</p>
             </div>
-            <span class="link mb-1 shrink-0 text-sm">Case study →</span>
+            <span class="work-cta link mt-1 shrink-0 text-sm">Case study →</span>
           </div>
         </article>
 
-        <!-- 05 — Cuber -->
+        <!-- 05 — Cuber · commissioned, real client (PRODUCT.md) -->
         <article class="work-item reveal cursor-pointer" tabindex="0" role="button"
+          data-kind="client"
           data-title="Cuber" data-cat="Sports Graphic" data-client="Cuber" data-year="2026"
           data-goal="A bold, graphic treatment built to read instantly — even at thumbnail size."
           data-approach="High-contrast composition and confident cropping, finished with a warm, premium tone.">
-          <div class="overflow-hidden">
+          <div class="work-frame">
             <div class="ph aspect-[4/5]">
-              <img src="Slike/cuber%20glavna.png" alt="Cuber sports graphic by madebyM" loading="lazy" class="work-img h-full w-full object-cover" />
+              <img src="Slike/cuber%20glavna.png" alt="Cuber sports graphic by madebyM" loading="lazy" decoding="async" width="1080" height="1350" class="work-img h-full w-full object-cover" />
             </div>
           </div>
-          <div class="mt-6 flex items-end justify-between gap-6 border-t border-line pt-5">
-            <div>
-              <p class="eyebrow">05 — Sports Graphic</p>
-              <h3 class="mt-2 font-display text-2xl font-black uppercase leading-none tracking-tight sm:text-3xl">Cuber</h3>
+          <div class="mt-6 flex items-start justify-between gap-5">
+            <div class="min-w-0">
+              <div class="flex flex-wrap items-center gap-x-3 gap-y-2">
+                <p class="eyebrow">05 — Sports Graphic</p>
+                <span class="tag tag-client">Client work</span>
+              </div>
+              <h3 class="mt-3 font-display text-d3 font-black uppercase leading-none tracking-tight">Cuber</h3>
               <p class="prose-body mt-3 max-w-md text-sm text-stone">A bold, graphic treatment built to read instantly — even at thumbnail size.</p>
             </div>
-            <span class="link mb-1 shrink-0 text-sm">Case study →</span>
+            <span class="work-cta link mt-1 shrink-0 text-sm">Case study →</span>
           </div>
         </article>
 
-        <!-- 06 — Saka -->
+        <!-- 06 — Saka · commissioned, real client (PRODUCT.md).
+             NOTE for Miha: the subject reads "Bukayo Saka". If the commission
+             came from someone other than the player, change data-client to the
+             party who actually hired the studio — the lightbox prints this
+             under the label "Client" for every data-kind="client" piece. -->
         <article class="work-item reveal cursor-pointer" tabindex="0" role="button"
+          data-kind="client"
           data-title="Saka" data-cat="Player Graphic" data-client="Bukayo Saka" data-year="2026"
           data-goal="An Arsenal player edit with a calm, premium finish — star power without the noise."
           data-approach="Warm tones, a sharp cut-out, and generous negative space that lets the subject breathe.">
-          <div class="overflow-hidden">
+          <div class="work-frame">
             <div class="ph aspect-[4/5]">
-              <img src="Slike/saka%20watermark.png" alt="Saka player graphic by madebyM" loading="lazy" class="work-img h-full w-full object-cover" />
+              <img src="Slike/saka%20watermark.png" alt="Saka player graphic by madebyM" loading="lazy" decoding="async" width="1080" height="1350" class="work-img h-full w-full object-cover" />
             </div>
           </div>
-          <div class="mt-6 flex items-end justify-between gap-6 border-t border-line pt-5">
-            <div>
-              <p class="eyebrow">06 — Player Graphic</p>
-              <h3 class="mt-2 font-display text-2xl font-black uppercase leading-none tracking-tight sm:text-3xl">Saka</h3>
+          <div class="mt-6 flex items-start justify-between gap-5">
+            <div class="min-w-0">
+              <div class="flex flex-wrap items-center gap-x-3 gap-y-2">
+                <p class="eyebrow">06 — Player Graphic</p>
+                <span class="tag tag-client">Client work</span>
+              </div>
+              <h3 class="mt-3 font-display text-d3 font-black uppercase leading-none tracking-tight">Saka</h3>
               <p class="prose-body mt-3 max-w-md text-sm text-stone">An Arsenal player edit with a calm, premium finish — star power without the noise.</p>
             </div>
-            <span class="link mb-1 shrink-0 text-sm">Case study →</span>
+            <span class="work-cta link mt-1 shrink-0 text-sm">Case study →</span>
           </div>
         </article>
 
@@ -573,22 +640,31 @@
 
         <div class="reveal sm:col-span-7">
           <form id="briefForm" action="https://formspree.io/f/xpqgnljz" method="POST" data-email="madebymp.studio@gmail.com" novalidate class="grid gap-8">
-            <!-- Honeypot: invisible spam trap, ignored by real visitors -->
-            <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true" />
+            <!-- Honeypot. The offset is an INLINE style on purpose: the old
+                 `class="hidden"` was a Tailwind class, so if the CDN is blocked
+                 or fails the trap would render visible, a real visitor would
+                 fill it in, and their brief would be silently binned as spam.
+                 Off-screen rather than display:none — some bots skip fields
+                 they can see are hidden. tabindex=-1 + aria-hidden keeps it out
+                 of the keyboard order and away from screen readers. -->
+            <div style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden" aria-hidden="true">
+              <label for="_gotcha">Leave this field empty</label>
+              <input id="_gotcha" type="text" name="_gotcha" tabindex="-1" autocomplete="off" />
+            </div>
             <div class="grid gap-8 sm:grid-cols-2">
               <div>
                 <label for="name" class="eyebrow mb-2 block">Your name</label>
-                <input id="name" name="name" type="text" autocomplete="name" required class="field" placeholder="Jordan Romero" />
+                <input id="name" name="name" type="text" autocomplete="name" required maxlength="80" class="field" placeholder="Jordan Romero" />
               </div>
               <div>
                 <label for="org" class="eyebrow mb-2 block">Club / company</label>
-                <input id="org" name="org" type="text" autocomplete="organization" class="field" placeholder="Velocity FC" />
+                <input id="org" name="org" type="text" autocomplete="organization" maxlength="100" class="field" placeholder="Velocity FC" />
               </div>
             </div>
 
             <div>
               <label for="email" class="eyebrow mb-2 block">Email</label>
-              <input id="email" name="email" type="email" autocomplete="email" required class="field" placeholder="you@email.com" />
+              <input id="email" name="email" type="email" autocomplete="email" required maxlength="120" class="field" placeholder="you@email.com" />
             </div>
 
             <fieldset>
@@ -602,14 +678,21 @@
 
             <div>
               <label for="brief" class="eyebrow mb-2 block">Project details</label>
-              <textarea id="brief" name="brief" rows="3" required class="field" placeholder="What do you need, and when?"></textarea>
+              <textarea id="brief" name="brief" rows="3" required maxlength="2000" class="field" placeholder="What do you need, and when?"></textarea>
             </div>
 
-            <!-- GDPR consent -->
-            <label class="flex cursor-pointer items-start gap-3">
-              <input type="checkbox" name="gdpr" value="da" required class="mt-0.5 h-4 w-4 shrink-0 cursor-pointer accent-clay" />
-              <span class="prose-body text-sm text-stone">I agree that madebymstudio.com may use my personal data for the purpose of responding to this inquiry.</span>
-            </label>
+            <!-- GDPR consent. Unticked by default and required — consent must be
+                 an active choice. The policy trigger sits OUTSIDE the label: a
+                 button nested inside it would also toggle the checkbox. -->
+            <div>
+              <label class="flex cursor-pointer items-start gap-3">
+                <input type="checkbox" name="gdpr" value="yes" required class="mt-0.5 h-4 w-4 shrink-0 cursor-pointer accent-clay" />
+                <span class="prose-body text-sm text-stone">I agree that madebyM (Miha Pavlic) may process my personal data in order to respond to this inquiry. Consent can be withdrawn at any time.</span>
+              </label>
+              <p class="mt-3 pl-7">
+                <button type="button" id="privacyOpenForm" class="link cursor-pointer text-sm">Read the Privacy Policy</button>
+              </p>
+            </div>
 
             <div>
               <button id="briefSubmit" type="submit" class="link text-base cursor-pointer">Send the brief →</button>
@@ -633,9 +716,9 @@
   <footer class="border-t border-line py-10">
     <div class="flex flex-col items-center justify-between gap-4 px-6 sm:flex-row md:px-12">
       <a href="#top" class="group font-display text-lg font-black"><span class="text-bone">madeby</span><span class="italic text-clay-light">M</span></a>
-      <p class="eyebrow text-stone/70">Sports Design Studio — © 2026</p>
-      <button id="privacyOpen" type="button" class="eyebrow cursor-pointer text-stone/70 transition-colors hover:text-clay">Privacy Policy</button>
-      <p class="eyebrow text-stone/70">Built to look the part</p>
+      <p class="eyebrow">Sports Design Studio — © 2026</p>
+      <button id="privacyOpen" type="button" class="eyebrow cursor-pointer transition-colors hover:text-clay-light">Privacy Policy</button>
+      <p class="eyebrow">Built to look the part</p>
     </div>
   </footer>
 
@@ -650,13 +733,20 @@
         <img id="lbImage" src="" alt="" class="h-full w-full object-contain" />
       </div>
       <div class="p-7 sm:p-10">
-        <p id="lbCat" class="eyebrow text-clay">Category</p>
-        <h3 id="lbTitle" class="mt-3 font-display text-3xl font-black uppercase tracking-tight sm:text-4xl">Project</h3>
+        <!-- clay #C26B3F measured only 4.51:1 on the #1E1A15 surface — no
+             headroom at 11px. clay-light #D68A5C gives 6.30:1. The dt labels
+             below dropped /70 for the same reason: stone/70 was 3.87:1, a
+             straight AA failure; plain stone is 6.56:1. -->
+        <div class="flex flex-wrap items-center gap-3">
+          <p id="lbCat" class="eyebrow text-clay-light">Category</p>
+          <span id="lbTag" class="tag tag-concept">Concept</span>
+        </div>
+        <h3 id="lbTitle" class="mt-4 font-display text-3xl font-black uppercase tracking-tight sm:text-4xl">Project</h3>
          <dl class="mt-8 grid gap-7 sm:grid-cols-2">
-          <div><dt class="eyebrow text-stone/70">Subject</dt><dd id="lbClient" class="prose-body mt-2 text-bone"></dd></div>
-          <div><dt class="eyebrow text-stone/70">Year</dt><dd id="lbYear" class="prose-body mt-2 text-bone"></dd></div>
-          <div class="sm:col-span-2"><dt class="eyebrow text-stone/70">The goal</dt><dd id="lbGoal" class="prose-body mt-2 text-stone"></dd></div>
-          <div class="sm:col-span-2"><dt class="eyebrow text-stone/70">The approach</dt><dd id="lbApproach" class="prose-body mt-2 text-stone"></dd></div>
+          <div><dt id="lbClientLabel" class="eyebrow">Subject</dt><dd id="lbClient" class="prose-body mt-2 text-bone"></dd></div>
+          <div><dt class="eyebrow">Year</dt><dd id="lbYear" class="prose-body mt-2 text-bone"></dd></div>
+          <div class="sm:col-span-2"><dt class="eyebrow">The goal</dt><dd id="lbGoal" class="prose-body mt-2 text-stone"></dd></div>
+          <div class="sm:col-span-2"><dt class="eyebrow">The approach</dt><dd id="lbApproach" class="prose-body mt-2 text-stone"></dd></div>
         </dl>
         <a href="#contact" data-close class="link mt-9 inline-block text-sm">Start a project like this →</a>
       </div>
@@ -674,28 +764,49 @@
       <p class="eyebrow text-clay">madebyM — Sports Design Studio</p>
       <h3 id="privacyTitle" class="mt-3 font-display text-2xl font-black uppercase tracking-tight sm:text-3xl">Privacy Policy</h3>
 
+      <!-- GDPR Art. 13 checklist this covers: controller identity (1), purposes
+           and legal bases (3), recipients and third-country transfers (4),
+           storage period (5), data-subject rights incl. withdrawal (6), right
+           to lodge a complaint with the supervisory authority (7).
+           STILL MISSING AND ONLY MIHA CAN SUPPLY IT: the registered business
+           address. It is required for the ZEPT imprint in the footer, and
+           should be repeated here as the controller's postal contact. -->
       <div class="prose-body mt-8 space-y-6 text-sm text-stone">
         <div>
-          <p class="eyebrow mb-2 text-stone/70">1 — What data we collect</p>
-          <p>When you submit an inquiry through the contact form, we collect your name, email address, club or company name (if provided), and the content of your message. We collect no other personal data and use no tracking cookies.</p>
+          <p class="eyebrow mb-2">1 — Who is responsible</p>
+          <p>The controller of your personal data is <span class="text-bone">madebyM — Miha Pavlic</span>, Slovenia. For any question about this policy or your data, write to <a href="mailto:madebymp.studio@gmail.com" class="link">madebymp.studio@gmail.com</a>.</p>
         </div>
         <div>
-          <p class="eyebrow mb-2 text-stone/70">2 — Why we process it</p>
-          <p>Your data is used solely to respond to your inquiry and, where relevant, prepare a quote. We do not send unsolicited mail and we do not use your data for advertising.</p>
+          <p class="eyebrow mb-2">2 — What data we collect</p>
+          <p>When you submit an inquiry through the contact form, we collect your name, email address, club or company name (if provided), the budget range you select, and the content of your message. Nothing else. This site sets <span class="text-bone">no cookies</span>, stores nothing on your device, and runs no analytics or tracking of any kind.</p>
         </div>
         <div>
-          <p class="eyebrow mb-2 text-stone/70">3 — Processing via Formspree</p>
-          <p>The form is technically processed by Formspree, Inc., which securely forwards your message to our email address over an encrypted connection (HTTPS/TLS).</p>
+          <p class="eyebrow mb-2">3 — Why we process it, and on what basis</p>
+          <p>Your data is used solely to answer your inquiry and, where relevant, prepare a quote. The legal bases are your <span class="text-bone">consent</span> (Art. 6(1)(a) GDPR), given via the checkbox on the form, and <span class="text-bone">steps taken at your request before entering into a contract</span> (Art. 6(1)(b) GDPR). We send no unsolicited mail and use your data for no advertising.</p>
         </div>
         <div>
-          <p class="eyebrow mb-2 text-stone/70">4 — Data sharing</p>
-          <p>We do not sell, rent, or share your data with third parties.</p>
+          <p class="eyebrow mb-2">4 — Who else processes it</p>
+          <p>We do not sell, rent, or trade your data. Three service providers necessarily handle it on our behalf:</p>
+          <ul class="mt-3 space-y-2 pl-5" style="list-style:disc">
+            <li><span class="text-bone">Formspree, Inc.</span> (United States) — receives the form submission and forwards it to our mailbox over an encrypted connection.</li>
+            <li><span class="text-bone">Vercel Inc.</span> (United States) — hosts this website and processes the connection data (including your IP address) needed to deliver the page.</li>
+            <li><span class="text-bone">Google Ireland Ltd. / Google LLC</span> — the typeface used on this site is loaded from Google's servers, which receives your IP address when the page loads.</li>
+          </ul>
+          <p class="mt-3">This means your data is transferred to the <span class="text-bone">United States</span>. You may ask us at any time which safeguards apply to those transfers.</p>
         </div>
         <div>
-          <p class="eyebrow mb-2 text-stone/70">5 — Retention and your rights</p>
-          <p>We keep your data only as long as needed to handle your inquiry or collaboration. You may request access to, correction of, or deletion of your data at any time — write to us at <a href="mailto:madebymp.studio@gmail.com" class="link">madebymp.studio@gmail.com</a>.</p>
+          <p class="eyebrow mb-2">5 — How long we keep it</p>
+          <p>We keep inquiry data for as long as needed to answer it. If a collaboration follows, we keep it for the duration of that work and for any period Slovenian law requires us to retain business records. Otherwise it is deleted once the inquiry is closed.</p>
         </div>
-        <p class="eyebrow pt-1 text-stone/50">Last updated — July 2026</p>
+        <div>
+          <p class="eyebrow mb-2">6 — Your rights</p>
+          <p>You have the right to access your data, to have it corrected or erased, to restrict or object to its processing, and to receive it in a portable form. You may <span class="text-bone">withdraw your consent at any time</span> — this does not affect the lawfulness of processing carried out before the withdrawal. To exercise any of these, write to <a href="mailto:madebymp.studio@gmail.com" class="link">madebymp.studio@gmail.com</a>.</p>
+        </div>
+        <div>
+          <p class="eyebrow mb-2">7 — Right to complain</p>
+          <p>If you believe your data has been handled unlawfully, you may lodge a complaint with the Slovenian supervisory authority, the <a href="https://www.ip-rs.si/" target="_blank" rel="noopener noreferrer" class="link">Information Commissioner of the Republic of Slovenia</a>.</p>
+        </div>
+        <p class="eyebrow pt-1">Last updated — August 2026</p>
       </div>
     </div>
   </div>
@@ -745,6 +856,16 @@
       document.getElementById('lbCat').textContent = item.dataset.cat;
       document.getElementById('lbClient').textContent = item.dataset.client;
       document.getElementById('lbYear').textContent = item.dataset.year;
+
+      // Provenance. Anything not explicitly marked as a commission is treated
+      // as concept work, so a missing or mistyped data-kind can never upgrade a
+      // personal piece into a claimed client. The field label moves with it:
+      // only a real commission is ever printed under "Client".
+      var kind = item.dataset.kind === 'client' ? 'client' : 'concept';
+      var tagEl = document.getElementById('lbTag');
+      tagEl.textContent = kind === 'client' ? 'Client work' : 'Concept';
+      tagEl.className = 'tag tag-' + kind;
+      document.getElementById('lbClientLabel').textContent = kind === 'client' ? 'Client' : 'Subject';
       document.getElementById('lbGoal').textContent = item.dataset.goal;
       document.getElementById('lbApproach').textContent = item.dataset.approach;
       var img = item.querySelector('img'), lbImg = document.getElementById('lbImage');
@@ -752,8 +873,11 @@
       lbImg.src = img.getAttribute('src'); lbImg.alt = img.getAttribute('alt');
       if (img.classList.contains('is-broken')) lbImg.classList.add('is-broken');
       lightbox.classList.remove('hidden'); lightbox.classList.add('flex');
-      document.body.style.overflow = 'hidden';
-      lightbox.querySelector('[data-close]').focus();
+      document.body.style.overflow = 'hidden'; 
+      // Must be the close BUTTON: the first [data-close] is the backdrop div,
+      // which cannot take focus, so focus stayed on the card behind the open
+      // dialog. The privacy modal below already qualifies its selector this way.
+      lightbox.querySelector('button[data-close]').focus();
     }
     function closeLightbox() {
       lightbox.classList.add('hidden'); lightbox.classList.remove('flex');
@@ -785,7 +909,11 @@
       document.body.style.overflow = '';
       if (privacyLastFocus) privacyLastFocus.focus();
     }
-    document.getElementById('privacyOpen').addEventListener('click', openPrivacy);
+    // Two triggers: the footer link and the one beside the consent checkbox.
+    // Consent is only informed if the policy is reachable at the point of giving it.
+    document.querySelectorAll('#privacyOpen, #privacyOpenForm').forEach(function (b) {
+      b.addEventListener('click', openPrivacy);
+    });
     privacyModal.querySelectorAll('[data-privacy-close]').forEach(function (el) { el.addEventListener('click', closePrivacy); });
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' && !privacyModal.classList.contains('hidden')) closePrivacy();
@@ -809,24 +937,74 @@
       }, 350);
     }
 
-    function showError() {
+    function showError(msg) {
       form.classList.remove('is-sending');
+      sending = false;
       submitBtn.textContent = submitLabel;
-      formMsg.textContent = 'Something went wrong — please try again, or email ' + form.getAttribute('data-email') + ' directly.';
+      formMsg.textContent = msg || ('Something went wrong — please try again, or email ' + form.getAttribute('data-email') + ' directly.');
       formMsg.classList.remove('hidden');
     }
 
+    /* ---------- Anti-spam: defence in depth, not a gate ---------------------
+       Every check below runs in the visitor's browser, and the Formspree
+       endpoint is written in this page's markup — so a determined bot can POST
+       to it directly and skip all of this. These checks stop the ordinary
+       form-filling crawlers only. THE REAL GATE MUST BE TURNED ON IN THE
+       FORMSPREE DASHBOARD (spam filter + CAPTCHA); see README.txt.
+       Deliberately kept in memory: no cookie and no storage is written, which
+       is why this site still needs no ZEKom-2 consent banner.              */
+    var formLoadedAt = Date.now();
+    var MIN_FILL_MS = 2500;      // nobody reads and completes this form faster
+    var MAX_PER_VISIT = 3;       // stops a stuck finger flooding the 50/month quota
+    var sending = false;
+    var sentCount = 0;
+    var LIMITS = { name: 80, org: 100, email: 120, brief: 2000 };
+
     form.addEventListener('submit', function (e) {
       e.preventDefault();
+
+      // Re-entry guard. `is-sending` sets pointer-events:none, which blocks the
+      // mouse but NOT a second Enter keypress inside a field.
+      if (sending) return;
+
       if (!form.checkValidity()) { form.reportValidity(); return; }
 
-      // Loading state
+      // Honeypot. A real visitor never sees this field. Report success rather
+      // than an error so a bot learns nothing, but send nothing.
+      var trap = form.querySelector('[name="_gotcha"]');
+      if (trap && trap.value !== '') { showSuccess(); return; }
+
+      // Timing trap. A human who is genuinely this fast simply sends again —
+      // the clock resets here, so nobody is ever locked out.
+      if (Date.now() - formLoadedAt < MIN_FILL_MS) {
+        formLoadedAt = Date.now();
+        showError('Almost — please check your details and press send once more.');
+        return;
+      }
+
+      if (sentCount >= MAX_PER_VISIT) {
+        showError('You have already sent several briefs. Please email ' + form.getAttribute('data-email') + ' instead.');
+        return;
+      }
+
+      // Length clamp. maxlength on the inputs covers typing and pasting; this
+      // catches anything that got past it (autofill, extensions, devtools).
+      var tooLong = Object.keys(LIMITS).filter(function (k) {
+        var f = form.elements[k];
+        return f && typeof f.value === 'string' && f.value.length > LIMITS[k];
+      });
+      if (tooLong.length) { showError('That message is too long — please shorten it and send again.'); return; }
+
+      sending = true;
       formMsg.classList.add('hidden');
       form.classList.add('is-sending');
       submitBtn.textContent = 'Sending brief…';
 
       var data = new FormData(form);
-      data.append('_subject', 'New project brief — ' + (data.get('name') || 'madebyM website'));
+      // Strip CR/LF before this reaches an email header. Formspree sanitises
+      // server-side too, but a subject line is the classic injection point.
+      var safeName = String(data.get('name') || '').replace(/[\r\n\t]+/g, ' ').trim().slice(0, 80);
+      data.append('_subject', 'New project brief — ' + (safeName || 'madebyM website'));
 
       fetch(form.action, {
         method: 'POST',
@@ -834,6 +1012,8 @@
         headers: { 'Accept': 'application/json' }
       }).then(function (res) {
         if (!res.ok) throw new Error('HTTP ' + res.status);
+        sentCount++;
+        sending = false;
         showSuccess();
       }).catch(function () {
         showError();

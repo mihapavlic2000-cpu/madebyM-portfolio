@@ -20,7 +20,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <!-- Archivo: heavy expanded grotesque (athletic display). Inter: clean body. -->
-  <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=Great+Vibes&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -191,46 +191,6 @@
     .field:focus { outline:none; border-color:#84FF00; }
     textarea.field { resize:vertical; }
 
-    /* Decorative wordmark behind the work grid, outline only, no fill.
-       Drawn as SVG text rather than -webkit-text-stroke: the CSS property is
-       prefixed-only, and its fallback is color:transparent, so on a browser
-       that lacks it the mark does not degrade to a hairline - it vanishes.
-       SVG fill="none" + stroke needs no prefix and no fallback.
-
-       THE OPACITY IS A CEILING, NOT A TASTE CHOICE. Text sits on top of this,
-       and the smallest of it is 14px #A3A3A3. Measured against white-on-black
-       at various alphas: 0.12 leaves 6.56:1, 0.20 leaves 5.01:1, and 0.25
-       drops to 4.13:1 and FAILS. Do not raise this past 0.22 without
-       re-measuring every text colour that crosses it.
-
-       vector-effect keeps the stroke a true hairline at any rendered size, so
-       the line weight does not change when the viewport does.
-
-       overflow:hidden lives on this layer, not on the section: scoping it here
-       means the mark can be wider than the screen without the page scrolling
-       sideways, and nothing else in the section gets clipped. */
-    .mark-layer {
-      position:absolute; left:0; right:0; top:0;
-      height:clamp(240px, 42vw, 560px);
-      overflow:hidden; display:grid; place-items:center;
-      pointer-events:none; z-index:0;
-    }
-    /* Fits INSIDE the layer, it does not bleed past it. At min(112vw,1500px)
-       the mark measured 1317px inside a 1250px layer and overflow:hidden cut
-       it - and not evenly: 65px went on the left, 132px on the right, because
-       Great Vibes carries a long flourish off the final M. A wordmark clipped
-       symmetrically can look deliberate; one clipped lopsidedly just looks
-       broken, and the M is the whole point of the name. */
-    .mark-layer svg { width:min(94%, 1400px); height:auto; display:block; }
-    .mark-layer text {
-      font-family:'Great Vibes', cursive;
-      font-size:300px;
-      fill:none;
-      stroke:rgba(255,255,255,0.12);
-      stroke-width:1.5;
-      vector-effect:non-scaling-stroke;
-    }
-
     /* Image frame — neutral dark fallback if a file is missing (no text overlay) */
     .ph { position:relative; overflow:hidden; background:linear-gradient(150deg,#141414 0%,#0A0A0A 100%); }
     img.is-broken { display:none; }
@@ -385,7 +345,18 @@
     /* Dots rather than a flat film, so the photography reads as printed matter. */
     .halftone {
       position:absolute; inset:0; z-index:0; pointer-events:none;
-      background-image: radial-gradient(circle at center, rgba(0,0,0,.55) 1.1px, transparent 1.5px);
+      /* Softened from .55 to .30 on 2026-09-20: on a phone the dot grid read
+         as texture over the work rather than under it. The dots are a fixed
+         5px CSS grid while the artwork shrinks, so the pattern gets coarser
+         relative to the image the smaller the screen gets.
+
+         Safe, and measured rather than assumed. An older comment claimed the
+         halftone carried about 8% of the hero's scrim; recomputed over all 15
+         tiles in the band where the copy actually sits (21%-73%), compositing
+         in sRGB as CSS does, white measures 5.90:1 at .55, 5.38:1 at .30, and
+         4.82:1 with no halftone at all. Even removing it entirely clears
+         4.5:1, so this is a look decision, not a contrast one. */
+      background-image: radial-gradient(circle at center, rgba(0,0,0,.30) 1.1px, transparent 1.5px);
       background-size: 5px 5px;
     }
 
@@ -561,16 +532,8 @@
 
        Source files live in Slike/covers/<folder>/ and the served WebP in
        Slike/covers-web/<folder>/. Rebuild both with scratchpad/covers.py. -->
-  <section id="work" class="relative scroll-mt-24 border-t border-line py-20 sm:py-28">
-    <!-- Purely decorative, hidden from assistive tech and unclickable. The
-         heading and lead sit on top of it, which is why the stroke opacity is
-         capped - see .mark-layer in the style block. -->
-    <div class="mark-layer" aria-hidden="true">
-      <svg viewBox="0 0 1200 480" preserveAspectRatio="xMidYMid meet" focusable="false" role="presentation">
-        <text x="600" y="340" text-anchor="middle">madebyM</text>
-      </svg>
-    </div>
-    <div class="relative z-10 mx-auto max-w-shell px-6 md:px-12">
+  <section id="work" class="scroll-mt-24 border-t border-line py-20 sm:py-28">
+    <div class="mx-auto max-w-shell px-6 md:px-12">
       <div class="reveal">
         <h2 class="font-display text-d2 font-black uppercase leading-none tracking-tight">Work</h2>
         <p class="prose-body mt-6 max-w-[46ch] text-base text-ash" style="text-wrap:pretty">
@@ -793,7 +756,17 @@
 
             <div>
               <label for="brief" class="eyebrow mb-2 block">Project details</label>
-              <textarea id="brief" name="brief" rows="3" required maxlength="2000" class="field" placeholder="What do you need, and when?"></textarea>
+              <textarea id="brief" name="brief" rows="3" required maxlength="2000" aria-describedby="briefRate" class="field" placeholder="What do you need, and when?"></textarea>
+              <!-- Miha's figure, given 2026-09-20. It is a price on a public
+                   business page, so it is his to state and must not be rounded,
+                   restyled or "tidied" here. Note it is BELOW the per-graphic
+                   rate of the monthly plans recorded in PRODUCT.md (those work
+                   out at EUR 22.50-27.50 each); the plans are not shown on the
+                   site any more, so nothing on the page contradicts it, but
+                   PRODUCT.md and this line disagree and one of them has to move.
+                   aria-describedby ties it to the field so a screen reader
+                   reads the rate with the question, not adrift after it. -->
+              <p id="briefRate" class="prose-body mt-3 text-sm text-ash">The quote follows the number of graphics you need — <span class="text-paper">&euro;20 per graphic</span>.</p>
             </div>
 
             <!-- GDPR consent. Unticked by default and required — consent must be

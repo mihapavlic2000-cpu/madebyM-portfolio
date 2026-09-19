@@ -1,0 +1,44 @@
+# ---------------------------------------------------------------------------
+# What Vercel must NOT upload. Same rule as vercel.json: Root Directory is set
+# to portfolio_madebym, so this file belongs HERE, not at the repository root.
+# At the repository root Vercel never reads it and the exclusions silently
+# vanish — no error anywhere.
+#
+# Defence in depth, not the main gate. The main gate is .gitignore at the
+# workspace root: Vercel deploys from Git, so a source file that is not in the
+# repository can never reach this stage. This file catches the case where one
+# gets committed by accident.
+#
+# Measured, not assumed — the three pages reference exactly 82 files, all of
+# them under a *-web/ folder:
+#     Slike/album-web/client-work      9
+#     Slike/album-web/demo-projects   40
+#     Slike/covers-web/client-work     9
+#     Slike/covers-web/demo-projects   9
+#     Slike/hero-web                  15
+# Re-run this before editing the list below:
+#     grep -ohE '(src|href)="Slike/[^"]*"' *.html | sort -u
+# ---------------------------------------------------------------------------
+
+# Poster sources — 231 MB against the 5 MB the site actually serves.
+Slike/album/
+Slike/covers/
+Slike/hero/
+
+# The six pre-redesign images, still tracked in Git but referenced by no page
+# since "Selected work" was split into client-work.html and demo-projects.html.
+# 15 MB of dead weight on every deploy. Excluding them is safe precisely
+# because nothing links to them; deleting them is a separate decision.
+Slike/*.png
+Slike/*.jpg
+
+# Hero mark derivatives, replaced by the live-text wordmark.
+Slike/logo/logo-mark.png
+Slike/logo/logo-mark.webp
+
+# Internal documentation. Measured 2026-09-18: README.txt answered 200 at
+# https://www.madebymstudio.com/README.txt — it is a public page today. It
+# names the Formspree form ID, states that every anti-spam check runs in the
+# browser and can be skipped, and flags that the real gate still has to be
+# switched on in the dashboard. None of that belongs on a public URL.
+README.txt

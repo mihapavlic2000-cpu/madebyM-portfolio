@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Demo projects — madebyM</title>
+
+  <!-- Runs before first paint: marks the document as script-capable so the
+       scroll-reveal rules may hide content. If this never runs, nothing hides. -->
+  <script>document.documentElement.classList.add('js');</script>
+  <meta name="description" content="Personal sports design work by madebyM — concept pieces made to push the craft, not commissioned by a client." />
+
+  <!-- ============================================================= -->
+  <!--  madebyM · Sports Design Studio — Wide Athletic Editorial      -->
+  <!--  Stack: HTML + Tailwind (Play CDN) + Google Fonts (Archivo/Inter) -->
+  <!--  Display face: Archivo variable, expanded width (125%) + Black -->
+  <!--  Selected-work images live in /Slike · Email: <form data-email="…"> -->
+  <!-- ============================================================= -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <!-- Archivo: heavy expanded grotesque (athletic display). Inter: clean body. -->
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          // Palette sampled from Slike/logo/logo.png, not chosen by eye: the mark
+          // is 89.3% #84FF00, 8.3% #FFFFFF, 2.2% #000000. The measured contrast
+          // between those three decides the whole site:
+          //     black on #84FF00 = 16.29:1      #84FF00 on black = 16.29:1
+          //     white on #84FF00 =  1.29:1      #84FF00 on white =  1.29:1
+          // So green can never carry white text and can never BE text on a light
+          // surface. Every green surface takes BLACK text, and the page stays
+          // dark throughout — a light section would leave the accent with nowhere
+          // legible to go. This is the same trap CLAUDE.md records for amber,
+          // only far wider. Do not add a light section without re-measuring.
+          colors: {
+            ink:     '#000000', // canvas — the logo's own black
+            carbon:  '#101010', // raised surface — white on it is 19.03:1
+            paper:   '#FFFFFF', // primary text — 21:1 on ink
+            ash:     '#A3A3A3', // muted text — 8.33:1 on ink (floor: #757575 at 4.56:1)
+            volt:    '#84FF00', // brand green. Accent only, never body text.
+            line:    'rgba(255,255,255,0.14)',
+          },
+          fontFamily: {
+            display: ['Archivo', '"Archivo Black"', 'system-ui', 'sans-serif'],
+            sans:    ['Inter', 'system-ui', 'sans-serif'],
+          },
+          maxWidth: { shell: '1600px', prose: '68ch' },
+          // No radius scale, deliberately. Miha's own matchday graphics are
+          // hard-edged poster work; rounded frames read as generic web UI
+          // against them. Every surface on this site is a right angle —
+          // images, panels, controls, tags. Do not reintroduce a radius token.
+          // Type scale — headings step by >=1.25, body by the tighter ratio the
+          // 16/14/12 range allows (documented in CLAUDE.md as expected, not a fault).
+          fontSize: {
+            // The 2.5rem floor is a measurement, not taste. Archivo at 125%
+            // stretch renders the hero's longest word, "impossible", at 7.98px
+            // per 1px of font-size. A 375px phone leaves 327px between the
+            // px-6 gutters, so anything above ~41px puts that word on the
+            // screen edge — at the previous 2.75rem it measured 351px and ran
+            // 0.2px past it. 2.5rem = 40px -> 319px, and 40/32 keeps the >=1.25
+            // step to d2 intact. Do not raise this without re-measuring at 375px.
+            'd1': ['clamp(2.5rem,7vw,6.5rem)', { lineHeight: '0.92', letterSpacing: '-0.02em' }],
+            'd2': ['clamp(2rem,4.4vw,3.75rem)', { lineHeight: '0.96', letterSpacing: '-0.015em' }],
+            'd3': ['clamp(1.5rem,2.6vw,2.25rem)', { lineHeight: '1.05', letterSpacing: '-0.01em' }],
+            'd4': ['1.375rem', { lineHeight: '1.2' }],
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    :root {
+      color-scheme: dark;
+      /* Motion tokens. One easing for entrances (decelerating, no overshoot),
+         one for controls (slight overshoot so presses feel physical). */
+      --ease-out: cubic-bezier(.16,1,.3,1);
+      --ease-spring: cubic-bezier(.34,1.4,.64,1);
+      --dur-fast: .18s;
+      --dur: .32s;
+      --dur-slow: .7s;
+    }
+    html, body { background:#000000; }
+
+    /* ---------- Controls ---------- */
+    .btn {
+      display:inline-flex; align-items:center; justify-content:center; gap:.55rem;
+      border-radius:0; padding:.95rem 1.85rem;
+      font-family:Inter, sans-serif; font-size:15px; font-weight:500; line-height:1;
+      white-space:nowrap; cursor:pointer; border:1px solid transparent;
+      transition: transform var(--dur) var(--ease-spring),
+                  background-color var(--dur) var(--ease-out),
+                  border-color var(--dur) var(--ease-out),
+                  color var(--dur) var(--ease-out);
+    }
+    /* 44px minimum touch target — the padding above clears it, this guarantees it */
+    .btn { min-height:44px; }
+    .btn:focus-visible { outline:2px solid #84FF00; outline-offset:3px; }
+
+    /* The primary control is the brand green with BLACK text — 16.29:1.
+       White on this green is 1.29:1, so a white label here is never an option,
+       at any weight or size. Hover lifts to #9BFF33 (black on it: 16.75:1);
+       the old rule faded #EDE5D6 to #fff, which after the palette swap would
+       have been a hover from white to white — a control that looks dead. */
+    .btn-primary { background:#84FF00; color:#000000; }
+    .btn-primary:hover { background:#9BFF33; transform: translateY(-2px); }
+    .btn-primary:active { transform: translateY(0) scale(.98); }
+    /* The shared .btn focus ring is volt, which would vanish against a volt
+       button even at 3px offset. White reads against both the button and the
+       canvas behind it. */
+    .btn-primary:focus-visible { outline-color:#FFFFFF; }
+
+    /* UNUSED SINCE 2026-09-19 — kept on purpose, do not infer a button from it.
+       Its only instance was the hero's "Who am I?", which went with the About
+       section. This is the secondary tier of the button system and a peer of
+       .btn-primary; the hover and active values below are measured, so keeping
+       three lines costs less than deriving them again. Delete it only if the
+       decision is that the site has no secondary button at all. */
+    .btn-ghost { background:#101010; color:#FFFFFF; border-color:rgba(255,255,255,0.18); }
+    .btn-ghost:hover { border-color:rgba(255,255,255,0.38); background:#1A1A1A; transform: translateY(-2px); }
+    .btn-ghost:active { transform: translateY(0) scale(.98); }
+
+    /* Compact variant for the header. Keeps the 44px min-height from .btn. */
+    .btn-sm { padding:.7rem 1.35rem; font-size:14px; }
+
+    /* Scroll hint — a slow, small bob. Travel stays under 6px so it reads as a
+       nudge rather than motion competing with the headline. */
+    @keyframes cue-bob { 0%,100% { transform: translate(-50%, 0); } 50% { transform: translate(-50%, 5px); } }
+    .scroll-cue { animation: cue-bob 2.6s var(--ease-out) infinite; }
+
+    /* ---------- Header ---------- */
+    /* Bare over the hero, then a blurred bar once the page moves. Hooked onto the
+       .is-scrolled class the existing script already sets — no new JS. */
+    header { transition: background-color var(--dur) var(--ease-out), border-color var(--dur) var(--ease-out); border-bottom:1px solid transparent; }
+    header.is-scrolled {
+      background:rgba(0,0,0,0.78);
+      backdrop-filter:saturate(140%) blur(14px);
+      -webkit-backdrop-filter:saturate(140%) blur(14px);
+      border-bottom-color:rgba(255,255,255,0.12);
+    }
+
+    /* Display face: Archivo pushed to its expanded cut — wide, heavy, athletic */
+    .font-display { font-stretch: 125%; }
+    .prose-body { line-height: 1.65; }
+
+    /* Eyebrow / catalogue label */
+    .eyebrow {
+      font-family: Inter, sans-serif; font-size: 11px; font-weight: 500;
+      letter-spacing: 0.24em; text-transform: uppercase; color:#A3A3A3;
+    }
+
+    /* Quiet typographic link; the underline takes the accent on hover */
+    .link {
+      position: relative; color:#FFFFFF; transition: color .25s ease;
+      padding-bottom: 2px;
+    }
+    .link::after {
+      content:''; position:absolute; left:0; bottom:0; height:1px; width:100%;
+      background:currentColor; opacity:.25; transform: scaleX(1); transform-origin:left;
+      transition: opacity .3s ease, background-color .3s ease;
+    }
+    .link:hover, .link:focus-visible { color:#84FF00; }
+    .link:hover::after, .link:focus-visible::after { opacity:1; background:#84FF00; }
+
+    /* Brand logo fades out on scroll — phones only (below md breakpoint) */
+    #brandLogo { transition: opacity .3s ease, visibility .3s ease; }
+    @media (max-width: 767px) {
+      header.is-scrolled #brandLogo { opacity: 0; visibility: hidden; }
+    }
+
+    /* Nav link: underline draws in from left */
+    .nav-link { position:relative; color:#A3A3A3; transition: color .25s ease; }
+    .nav-link::after {
+      content:''; position:absolute; left:0; bottom:-4px; height:1px; width:0; background:#84FF00; transition: width .28s cubic-bezier(.16,1,.3,1);
+    }
+    .nav-link:hover, .nav-link:focus-visible { color:#FFFFFF; }
+    .nav-link:hover::after, .nav-link:focus-visible::after { width:100%; }
+
+    /* Underline-style form fields (no boxes) */
+    .field {
+      width:100%; background:transparent; border:0; border-bottom:1px solid rgba(255,255,255,0.26);
+      padding:10px 0; color:#FFFFFF; font-family:Inter, sans-serif; font-size:16px;
+      transition: border-color .25s ease;
+    }
+    .field::placeholder { color:#757575; }
+    .field:focus { outline:none; border-color:#84FF00; }
+    textarea.field { resize:vertical; }
+
+    /* Image frame — neutral dark fallback if a file is missing (no text overlay) */
+    .ph { position:relative; overflow:hidden; background:linear-gradient(150deg,#141414 0%,#0A0A0A 100%); }
+    img.is-broken { display:none; }
+
+    /* Film grain. On the old warm canvas this used mix-blend-mode:overlay, which
+       is a no-op over #000000 — overlay against a black base returns black, so the
+       grain would have vanished silently the moment the canvas went black.
+       screen lightens instead, so it survives. Keep the opacity low: this sits
+       over the hero photography too. */
+    .grain {
+      position:fixed; inset:0; z-index:1; pointer-events:none; opacity:.06; mix-blend-mode:screen;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* Progressive enhancement. Content is visible by default and is only hidden
+       once JS has proven itself by setting html.js (see the head script).
+       Hiding first would strand 28 elements at opacity:0 whenever the script is
+       blocked, fails, or is switched off — measured, not assumed. */
+    .reveal { opacity:1; transform:none; }
+    html.js .reveal { opacity:0; transform: translateY(20px); transition: opacity .8s cubic-bezier(.16,1,.3,1), transform .8s cubic-bezier(.16,1,.3,1); }
+    html.js .reveal.in { opacity:1; transform:none; }
+
+    /* ---------- Work card ---------- */
+    /* Provenance marks. PRODUCT.md records which pieces were commissioned and
+       which are personal work; `Concept` says so on the card itself, so no
+       reader takes a subject's name for a client who hired the studio.
+       Measured on #000000: #84FF00 over its own 10% wash = 14.09:1, #A3A3A3 =
+       8.33:1. Both clear 4.5:1 at this 11px size with room to spare. */
+    /* Album tile. The gradient shows through while the file is still in
+       flight and stays if it never arrives, so a gap never reads as a hole. */
+    .album-img { display:block; width:100%; height:auto; background:linear-gradient(150deg,#141414 0%,#0A0A0A 100%); }
+
+    /* The cover frame lifts on hover. The paired .work-img zoom went with the
+       case-study cards — a cover holds a moving strip, not a single image. */
+    .work-frame { transition: transform var(--dur) var(--ease-out); }
+    .work-item:hover .work-frame { transform: translateY(-6px); }
+
+    /* The card carries role="button", so it is a control. Without this rule a
+       keyboard visitor gets no visible focus anywhere in the grid. */
+    .work-item:focus-visible { outline:2px solid #84FF00; outline-offset:8px; border-radius:0; }
+    .work-item:focus-visible .work-cta { color:#84FF00; }
+    .work-item:focus-visible .work-cta::after { opacity:1; background:#84FF00; }
+
+    /* Contact form submission states */
+    #briefForm { transition: opacity .35s ease; }
+    #briefForm.is-sending { opacity:.6; pointer-events:none; }
+    #briefForm.is-leaving { opacity:0; }
+    #formSuccess { opacity:0; transform: translateY(12px); transition: opacity .5s ease, transform .5s ease; }
+    #formSuccess.show { opacity:1; transform:none; }
+
+    /* ---------- Hero strip ----------
+       A marquee of the work moving left to right behind the headline. Pure CSS,
+       so it still runs when the script is blocked or switched off.
+
+       The scrim over it is measured, not judged by eye. Every one of the 15
+       tiles passes behind the copy, so it has to survive the brightest band of
+       the brightest tile rather than an average. Untouched, that worst case was
+       P99 = 1.0000 (the white block in the Bruno poster) and white text would
+       have needed a 0.55 black veil — which buries the work the hero exists to
+       show. So the highlights are compressed in the tiles themselves at build
+       time instead (y = x(1 - 0.45x²), saturation 0.88), which drops it to
+       0.2874, and 0.25 of scrim then gives white 5.17:1. The halftone adds
+       roughly another 8% on top of that.
+
+       The band matters as much as the number. The first pass measured 28%-72%
+       of the tile and was wrong: measured in the browser, the copy runs from
+       18.3% (top of the headline) to 86.1% (bottom of the buttons), so the
+       figures above are for 16%-80%. Move the copy, or regenerate the tiles,
+       and this measurement is void — redo it rather than trusting this comment.
+
+       Tiles are 720px wide because that is what they actually render at: the
+       track is height:100% of the hero, so a 900px-tall hero draws each 4:5 tile
+       at 720x900. One width, no srcset, deliberately — CLAUDE.md records that a
+       scrim proven at one width silently stops holding at another, and a single
+       file removes that whole family of bugs. 15 tiles, 795 KB total, down from
+       38.9 MB of source PNGs. */
+    .hero-strip { position:absolute; inset:0; z-index:0; overflow:hidden; }
+    .hero-track { display:flex; width:max-content; height:100%; animation: hero-slide 96s linear infinite; }
+    .hero-track img { display:block; flex:0 0 auto; height:100%; width:auto; }
+    /* A full-height 4:5 tile is 0.8 x the hero height, which on a portrait phone
+       is wider than the screen: at 375x812 one tile came out 650px and 0.58 of a
+       single poster was visible — a fragment, not a showcase. A breakpoint was
+       the wrong tool here; at 640x900 the tile was still 720px and 0.89 visible,
+       just above the cutoff. max-width is width-independent and holds at every
+       size: roughly 1.8 posters at 375px, 640px and 1265px, and on wide screens
+       the natural size wins and more fit anyway.
+       Cropping does not invalidate the scrim measurement — a centre crop is a
+       subset of the full-width band that was measured, so its P99 can only be
+       lower than the figure the scrim was set from. */
+    .hero-track img { max-width:56vw; object-fit:cover; object-position:center; }
+    /* The track holds the 15 tiles twice, so -50% is exactly one full set and
+       the loop has no seam. Running from -50% to 0 carries the work rightwards. */
+    @keyframes hero-slide { from { transform: translate3d(-50%,0,0); } to { transform: translate3d(0,0,0); } }
+
+    /* Top and bottom go much darker than the middle. The header sits over this
+       section with no background of its own until the page scrolls, and its
+       11px nav links have nothing else to stand on. */
+    .hero-scrim {
+      position:absolute; inset:0; z-index:0; pointer-events:none;
+      background: linear-gradient(to bottom,
+        rgba(0,0,0,.92) 0, rgba(0,0,0,.25) 18%, rgba(0,0,0,.25) 78%, rgba(0,0,0,.90) 100%);
+    }
+    /* Dots rather than a flat film, so the photography reads as printed matter. */
+    .hero-halftone {
+      position:absolute; inset:0; z-index:0; pointer-events:none;
+      background-image: radial-gradient(circle at center, rgba(0,0,0,.55) 1.1px, transparent 1.5px);
+      background-size: 5px 5px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      /* Must match html.js specificity (0,2,0) or the reveal rule above wins
+         and reduced-motion visitors get a permanently invisible page. */
+      html.js .reveal, .reveal { opacity:1; transform:none; transition:none; }
+      /* Must match the .work-item:hover selectors' specificity (0,3,0) — a
+         weaker rule here would lose and the lift would still snap into place. */
+      .work-frame { transition:none; }
+      .work-item:hover .work-frame { transform:none; }
+      #briefForm, #formSuccess { transition:none; }
+      #brandLogo { transition:none; }
+      /* Colour still changes so hover/press stay legible; only travel is removed. */
+      .btn { transition: background-color var(--dur-fast) linear, border-color var(--dur-fast) linear, color var(--dur-fast) linear; }
+      .btn:hover, .btn:active { transform:none; }
+      .scroll-cue { animation:none; }
+      .hero-track { animation:none; }
+      header { transition:none; }
+      html { scroll-behavior:auto; }
+    }
+  </style>
+</head>
+
+<body class="bg-ink font-sans text-paper antialiased selection:bg-volt selection:text-ink">
+  <div class="grain" aria-hidden="true"></div>
+
+  <a href="#grid" class="sr-only focus:not-sr-only focus:fixed focus:z-50 focus:top-3 focus:left-3 focus:bg-paper focus:text-ink focus:px-4 focus:py-2 focus:text-sm">Skip to the work</a>
+
+  <!-- ================= NAV (logo hard left · links hard right, full-bleed) ================= -->
+  <header class="fixed top-0 left-0 w-full z-50">
+    <div class="px-6 md:px-12">
+      <nav class="relative flex items-center justify-between gap-6 py-4">
+        <a href="index.html" id="brandLogo" class="group shrink-0 font-display text-xl font-black tracking-tight">
+          <span class="text-paper">madeby</span><span class="italic text-paper">M</span>
+        </a>
+
+        <!-- Centred link cluster. Absolutely placed so the logo and the CTA can
+             change width without dragging the links off centre. -->
+        <div class="pointer-events-none absolute inset-x-0 hidden justify-center md:flex">
+          <div class="pointer-events-auto flex items-center gap-9 text-sm">
+            <a href="index.html#work" class="nav-link inline-flex min-h-[24px] items-center">Work</a>
+          </div>
+        </div>
+
+        <a href="index.html#contact" class="btn btn-primary btn-sm hidden shrink-0 md:inline-flex">Start a project</a>
+
+        <button id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu" class="md:hidden inline-flex h-11 w-11 items-center justify-center text-paper cursor-pointer">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3 7h18M3 17h18"/></svg>
+        </button>
+      </nav>
+
+      <!-- The panel is the brand green, so every link on it must be BLACK.
+           Straight after the palette swap these read hover:text-volt and the
+           CTA read text-volt — green on green, 1:1: the hover was invisible and
+           "Start a project" could not be seen at all. Nothing in the console
+           said so. Hover is carried by an underline instead of a colour,
+           because there is no second colour this panel can legibly hold. -->
+      <div id="mobileMenu" class="md:hidden hidden bg-volt px-5 pb-4 pt-2">
+        <a href="index.html#work" class="block py-3 text-ink hover:underline">Work</a>
+        <a href="index.html#contact" class="block py-3 font-semibold text-ink underline">Start a project →</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+  <!-- ================= PAGE HEAD ================= -->
+  <!-- The visible title block came off on 2026-09-19 at Miha's request: the
+       album is the page. The h1 itself STAYS, visually hidden.
+
+       Two reasons it must not simply be deleted. First, a page with no h1 has
+       no document outline: a screen-reader user landing here gets a grid of
+       images and nothing naming what they are looking at, and a crawler gets
+       the same. Second, and this is the one that matters legally, the
+       per-item "Client work / Concept" tags were removed on 2026-09-17, which
+       left the PAGE TITLE as the only provenance statement anywhere on this
+       page. Everything here is personal work, NOT commissioned; presenting it
+       as a commission is a misleading commercial practice under ZVPot, so
+       that statement has to survive somewhere even when it is not drawn.
+
+       BE AWARE OF WHAT THIS COSTS: a sighted visitor now sees no heading at
+       all, so for them this page and client-work.html are visually identical.
+       The only things telling them apart are the link they arrived through
+       and the browser tab title. If that is not enough, the answer is to put
+       a visible heading back, not to delete this one. -->
+  <h1 class="sr-only">Demo projects</h1>
+
+  <!-- Back to the homepage. Kept at Miha's request on 2026-09-19 when the rest
+       of the title block came off. The header logo also returns to index.html,
+       but a visitor who arrived straight into the album needs a way out that
+       is not the browser's back button, and the logo does not read as one.
+
+       The padding is a measurement, not decoration. The header is
+       position:fixed and measures 77px tall; with the title block gone the
+       grid started at 81px, i.e. 4px under the bar with no breathing room at
+       all. pt-24 (96px) clears it by 19px.
+
+       pb-2, not the pb-14 the old block carried: that bottom padding was
+       sized for an h1 and a lead paragraph sitting above the grid. With only
+       a link left it measured 160px of empty black between the link and the
+       first poster - a third of the opening screen. Re-measure if the header
+       height ever changes. -->
+  <div class="px-6 pb-2 pt-24 md:px-12">
+    <div class="mx-auto max-w-shell">
+      <a href="index.html#work" class="link inline-flex min-h-[24px] items-center text-sm">&larr; madebyM</a>
+    </div>
+  </div>
+
+  <!-- ================= ALBUM ================= -->
+  <!-- Three across, no captions, by Miha's instruction. The page
+       heading is now the only provenance statement on it: everything
+       here is presented as personal work. Two columns below 768px -
+       three would put each poster at about 100px on a phone.
+       Source files in Slike/album/demo-projects/, served WebP in
+       Slike/album-web/demo-projects/. Rebuild with scratchpad/album.py.
+
+       ORDER IS DELIBERATE — do not re-sort. Miha chose grouping by COLOUR
+       PALETTE on 2026-09-19. This replaced the grouping by subject of
+       2026-09-18, which in turn replaced filename alphabetical order.
+
+       Six families, laid out around the colour wheel so the grid reads as a
+       run rather than a shuffle:
+
+            1-12  red          12
+           13-16  orange        4
+           17-23  sepia/cream   7   the desaturated ones, i.e. muted orange
+           24-26  green/teal    3
+           27-35  blue          9
+           36-40  pink/violet   5
+
+       WITHIN a family, ONE rule: sort by measured relative luminance,
+       brightest first. Luminance is 0.2126R + 0.7152G + 0.0722B after sRGB
+       linearisation — the same formula this file uses for text contrast, not
+       HSV "value", which calls a blue and a yellow of equal V equally bright
+       when they are nowhere near it.
+
+       A first attempt sorted some families by hue instead, on the theory that
+       hue is what defines a family. That was wrong and the strip of dominant
+       colours showed it: inside sepia the run went #322E22 -> #F2E0B8 ->
+       #1B1916, dark-light-dark. At 20 degrees of hue difference the eye sees
+       nothing; at that much lightness difference it sees everything. Hue
+       picks the block, luminance orders it.
+
+       HOW THE FAMILIES WERE DECIDED — three passes, each catching what the
+       one before it could not:
+
+         1. saturation-and-value-weighted CIRCULAR mean hue. Circular because
+            hue is an angle: the plain mean of red and green is grey, which is
+            neither. Weighted so the black background (S=0) gets no vote.
+         2. 12-colour median-cut quantisation, reporting the three real
+            surfaces and their share, dropping pixels under S=0.18 or V=0.10.
+            A mean invents a third colour on a two-colour poster; quantisation
+            shows a two-colour poster as two colours.
+         3. A CONTACT SHEET, looked at. This is not optional and it changed
+            four placements that both measurements agreed on, because area is
+            not salience — a saturated, bright field pulls the eye far harder
+            than a larger dark one:
+
+              arsenal-new-kit  navy is the bigger area; the gold-on-red
+                               banner is what you actually see -> orange
+              belingham        cream+tan measured 40% vs blue 18%; the blue
+                               stand still dominates -> blue
+              haaland-fisherman measured as muted warm; the water and trees
+                               read green -> green/teal
+              raphinha         the one genuinely POLYCHROME poster, yellow
+                               and red and blue and teal at once. It stuck
+                               out of the muted block like a flare -> pink,
+                               next to pogba, on its magenta kit.
+
+       raphinha remains a judgement call, not a measurement. Move it if it
+       looks wrong on screen.
+
+       The first three carry loading="eager" because they are the first grid
+       row; moving an image into the top three means moving the attribute
+       with it, or the row pops in late. Currently 3 eager / 37 lazy. -->
+  <!-- Spacing above the grid is the back-link block's job, NOT this section's.
+       Both were given top padding on 2026-09-19 and it stacked: the first
+       poster ended up at y=242 on a 375px phone, leaving 120px of empty black
+       under the link and pushing the work to 30% down the opening screen.
+       This section is back to its original py-16/sm:py-20; if the grid ever
+       needs to move, change the pt on the block above, not here. -->
+  <section id="grid" class="scroll-mt-24 border-t border-line py-16 sm:py-20">
+    <div class="mx-auto max-w-shell px-6 md:px-12">
+      <div class="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6">
+        <img src="Slike/album-web/demo-projects/ekitikike-pt22.webp" alt="Champions League quarter-final poster set at Parc des Princes"
+             width="520" height="650" loading="eager" decoding="async" class="album-img" />
+        <img src="Slike/album-web/demo-projects/bruno.webp" alt="Bruno Fernandes poster in Manchester United red"
+             width="520" height="650" loading="eager" decoding="async" class="album-img" />
+        <img src="Slike/album-web/demo-projects/ngumoha2.webp" alt="Rio Ngumoha poster in Liverpool red"
+             width="520" height="650" loading="eager" decoding="async" class="album-img" />
+        <img src="Slike/album-web/demo-projects/sobo.webp" alt="Dominik Szoboszlai poster in Liverpool red"
+             width="520" height="650" loading="lazy" decoding="async" class="album-img" />
+        <img src="Slike/album-web/demo-projects/gabriel-jesus.webp" alt="Gabriel Jesus poster in Arsenal red with lightning graphics"
+             width="520" height="650" loading="lazy" decoding="async" class="album-img" />
+        <img src="Slike/album-web/demo-projects/fre.webp" alt="Spain number 17 player poster with large Williams lettering"
+             width="520" height="650" loading="lazy" decoding="async" class="album-img" />
+        <img src="Slike/album-web/demo-projects/ron.webp" alt="Cristiano Ronaldo poster in the Portugal kit"
+             width="520" height="650" loading="lazy" decoding="async" class="album-img" />
+        <img src="Slike/album-web/demo-projects/leclerc.webp" alt="Charles Leclerc poster in a Ferrari helmet, close up"
+             width="520" height="650" loading="lazy" decoding="async" class="album-img" />
+        <img src="Slike/album-web/demo-projects/saliba.webp" alt="William Saliba poster styled as a trading card"
+             width="520" height="650" loading="lazy" decoding="async" class="album-img" />
+        <img src="Slike/album-web/demo-projects/chinese-grand-prix7.webp" alt="Chinese Grand Prix poster with Formula 1 drivers on a red star ground"
+             width="520" height="650" loading="lazy" decoding="async" class="album-img" />
+        <img src="Slike/album-web/demo-projects/van-dijk-matchday.webp" alt="Liverpool versus Atlético Madrid Champions League matchday poster"
+             width="520" height="650" loading="lazy" decoding="async" class="album-img" />
+        <img src="Slike/album-web/demo-projects/mbappe.webp" alt="Kylian Mbappé poster with Is on Fire lettering"
+             width="520" height="650" loading="lazy" decoding="async" class="album-img" />
+        <img src="Slike/album-web/demo-projects/raphinha-balon.webp" alt="Surreal desert poster of a player hauling a giant golden ball"
+             width="520" height="650" loading="lazy" decoding="async" class="album-img" />
+        <img src="Slike/album-web/demo-projects/frenkie.webp" alt="Barcelona player poster styled as a polaroid lying on a desk"
+             width="520" height="650" loading="lazy" decoding="async" class="album-img" />
+        <img src="Slike/album-web/demo-projects/norris.webp" alt="McLaren Formula 1 driver poster with a patterned helmet"
+             width="520" height="650" loading="lazy" decoding="async" class="album-img" />
+        <img src="Slike/album-web/demo-projects/arsenal-new-kit.webp" alt="Arsenal away kit reveal poster"
+             width="520" height="650" loading="lazy" decoding="async" class="album-img" />
+        <img src="Slike/album-web/demo-projects/yildiz.webp" alt="Kenan Yıldız poster in the Juventus kit"
+             width="520" height="650" loading="lazy" decoding="async" class="album-img" />
+        <img src="Slike/album-web/demo-projects/man-utd.webp" alt="Manchester United third kit reveal poster with three players"
+             width="520" height="650" loading="lazy" decoding="async" class="album-img" />
+        <img src="Slike/album-web/demo-projects/belgium.webp" alt="Belgium versus Spain World Cup 2026 poster set at SoFi Stadium"
+             width="520" height="650" loading="lazy" decoding="async" class="album-img" />
+        <img src="Slike/album-web/demo-projects/teacher.webp" alt="Classroom scene poster about becoming a Real Madrid legend"
+             width="520" height="650" loading="lazy" decoding="async" class="album-img" />
+        <img src="Slike/album-web/demo-projects/france.webp" alt="France versus Spain poster with three players in cream tones"
+             width="520" height="650" loading="lazy" decoding="async" class="album-img" />
+        <img src="Slike/album-web/demo-projects/england.webp" alt="England versus France poster for the third-place match"
+             width="520" height="650" loading="lazy" decoding="async" class="album-img" />
+        <img src="Slike/album-web/demo-projects/lamie-lewa.webp" alt="Black and white cinematic poster of figures in suits"
+             width="520" height="650" loading="lazy" decoding="async" class="album-img" />
+        <img src="Slike/album-web/demo-projects/endrick.webp" alt="Lyon versus Auxerre matchday poster"
+             width="520" height="650" loading="lazy" decoding="async" class="album-img" />
+        <img src="Slike/album-web/demo-projects/rio.webp" alt="Palmeiras poster with two players celebrating in green, club crests blurred behind"
+             width="520" height="650" loading="lazy" decoding="async" class="album-img" />
+        <img src="Slike/album-web/demo-projects/haaland-fisherman.webp" alt="Surreal poster of a fisherman in a boat using a football as bait"
+             width="520" height="650" loading="lazy" decoding="async" class="album-img" />
+        <img src="Slike/album-web/demo-projects/garmacho.webp" alt="Player poster laid out as a music player interface"
+             width="520" height="650" loading="lazy" decoding="async" class="album-img" />
+        <img src="Slike/album-web/demo-projects/belingham.webp" alt="Jude Bellingham poster titled The Prince of Madrid"
+             width="520" height="650" loading="lazy" decoding="async" class="album-img" />
+        <img src="Slike/album-web/demo-projects/doku.webp" alt="Jérémy Doku poster in Manchester City blue, rain-streaked"
+             width="520" height="650" loading="lazy" decoding="async" class="album-img" />
+        <img src="Slike/album-web/demo-projects/psg-vs-slovan-3.webp" alt="PSG versus Slovan Champions League matchday poster"
+             width="520" height="650" loading="lazy" decoding="async" class="album-img" />
+        <img src="Slike/album-web/demo-projects/enzo.webp" alt="Enzo Fernández poster in Chelsea blue"
+             width="520" height="650" loading="lazy" decoding="async" class="album-img" />
+        <img src="Slike/album-web/demo-projects/madueke.webp" alt="Noni Madueke poster in Chelsea blue"
+             width="520" height="650" loading="lazy" decoding="async" class="album-img" />
+        <img src="Slike/album-web/demo-projects/lakine-hunter.webp" alt="Surreal poster of a player leaping through a snowy mountain landscape"
+             width="520" height="650" loading="lazy" decoding="async" class="album-img" />
+        <img src="Slike/album-web/demo-projects/psg.webp" alt="Night poster of figures looking out over Paris and the Eiffel Tower"
+             width="520" height="650" loading="lazy" decoding="async" class="album-img" />
+        <img src="Slike/album-web/demo-projects/estevao.webp" alt="Estêvão poster in the Chelsea number 41 shirt"
+             width="520" height="650" loading="lazy" decoding="async" class="album-img" />
+        <img src="Slike/album-web/demo-projects/pogba.webp" alt="Paul Pogba poster in pink and white with a mirrored portrait"
+             width="520" height="650" loading="lazy" decoding="async" class="album-img" />
+        <img src="Slike/album-web/demo-projects/raphinha.webp" alt="Raphinha poster in Barcelona colours holding a trophy"
+             width="520" height="650" loading="lazy" decoding="async" class="album-img" />
+        <img src="Slike/album-web/demo-projects/japan.webp" alt="Surreal poster of a robed figure before Mount Fuji and cherry blossom"
+             width="520" height="650" loading="lazy" decoding="async" class="album-img" />
+        <img src="Slike/album-web/demo-projects/messi.webp" alt="Lionel Messi poster in the Inter Miami pink kit"
+             width="520" height="650" loading="lazy" decoding="async" class="album-img" />
+        <img src="Slike/album-web/demo-projects/1leclerc2.webp" alt="Formula 1 poster of a driver celebrating above the clouds, car below"
+             width="520" height="650" loading="lazy" decoding="async" class="album-img" />
+      </div>
+    </div>
+  </section>
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <!-- ⚠ STILL OUTSTANDING — THE ONE KNOWN LEGAL GAP ON THE LIVE SITE.
+       If madebyM is a registered business, ZEPT Art. 6 requires the legal
+       name, registered address, registration number and tax number to appear
+       here. They are missing. They are NOT invented or guessed: a wrong tax
+       number is a ZGD-1 breach in its own right. Miha has to supply them, and
+       the tax number and IBAN must be run through their check-digit
+       calculations before they go in — see CLAUDE.md.
+
+       2026-09-18 — a VISIBLE placeholder was added here, reading "Business
+       details pending". 2026-09-19 — Miha had it removed again, along with
+       the .blank rule that styled it.
+
+       READ THIS BEFORE ASSUMING THE FOOTER IS FINISHED. Removing the line did
+       not close the gap, it only made it invisible again. ZEPT Art. 6 is
+       still unmet and this is still the one known legal exposure on the live
+       site. The next person to look at this footer will see nothing missing,
+       which is exactly why it is written down here instead.
+
+       Layout: the row had no max-width while every section above is capped at
+       max-w-shell, so past 1600px the footer kept spreading while the page
+       stopped. The privacy button was an 11px eyebrow standing on its own,
+       about 13px tall, under the 24x24px WCAG 2.2 minimum. -->
+  <footer class="border-t border-line py-10">
+    <div class="mx-auto flex max-w-shell flex-col items-center justify-between gap-4 px-6 sm:flex-row md:px-12">
+      <a href="index.html" class="group font-display text-lg font-black"><span class="text-paper">madeby</span><span class="italic text-paper">M</span></a>
+      <p class="eyebrow">Sports Design Studio — © 2026</p>
+      <button id="privacyOpen" type="button" class="eyebrow inline-flex min-h-[24px] cursor-pointer items-center transition-colors hover:text-volt">Privacy Policy</button>
+      <p class="eyebrow">Built to look the part</p>
+    </div>
+  </footer>
+
+  <!-- ================= PRIVACY POLICY MODAL ================= -->
+  <div id="privacyModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
+    <div data-privacy-close class="absolute inset-0 bg-ink/90"></div>
+    <div role="dialog" aria-modal="true" aria-labelledby="privacyTitle" class="relative z-10 max-h-[88vh] w-full max-w-2xl overflow-y-auto bg-carbon p-7 sm:p-10">
+      <button data-privacy-close aria-label="Close" class="absolute right-4 top-4 inline-flex h-10 w-10 items-center justify-center text-paper cursor-pointer hover:text-volt">
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+
+      <p class="eyebrow text-volt">madebyM — Sports Design Studio</p>
+      <h3 id="privacyTitle" class="mt-3 font-display text-2xl font-black uppercase tracking-tight sm:text-3xl">Privacy Policy</h3>
+
+      <!-- GDPR Art. 13 checklist this covers: controller identity (1), purposes
+           and legal bases (3), recipients and third-country transfers (4),
+           storage period (5), data-subject rights incl. withdrawal (6), right
+           to lodge a complaint with the supervisory authority (7).
+           STILL MISSING AND ONLY MIHA CAN SUPPLY IT: the registered business
+           address. It is required for the ZEPT imprint in the footer, and
+           should be repeated here as the controller's postal contact. -->
+      <div class="prose-body mt-8 space-y-6 text-sm text-ash">
+        <div>
+          <p class="eyebrow mb-2">1 — Who is responsible</p>
+          <p>The controller of your personal data is <span class="text-paper">madebyM — Miha Pavlic</span>, Slovenia. For any question about this policy or your data, write to <a href="mailto:madebymp.studio@gmail.com" class="link">madebymp.studio@gmail.com</a>.</p>
+        </div>
+        <div>
+          <p class="eyebrow mb-2">2 — What data we collect</p>
+          <p>When you submit an inquiry through the contact form, we collect your name, email address, club or company name (if provided), and the content of your message. Nothing else. This site sets <span class="text-paper">no cookies</span>, stores nothing on your device, and runs no analytics or tracking of any kind.</p>
+        </div>
+        <div>
+          <p class="eyebrow mb-2">3 — Why we process it, and on what basis</p>
+          <p>Your data is used solely to answer your inquiry and, where relevant, prepare a quote. The legal bases are your <span class="text-paper">consent</span> (Art. 6(1)(a) GDPR), given via the checkbox on the form, and <span class="text-paper">steps taken at your request before entering into a contract</span> (Art. 6(1)(b) GDPR). We send no unsolicited mail and use your data for no advertising.</p>
+        </div>
+        <div>
+          <p class="eyebrow mb-2">4 — Who else processes it</p>
+          <p>We do not sell, rent, or trade your data. Three service providers necessarily handle it on our behalf:</p>
+          <ul class="mt-3 space-y-2 pl-5" style="list-style:disc">
+            <li><span class="text-paper">Formspree, Inc.</span> (United States) — receives the form submission and forwards it to our mailbox over an encrypted connection.</li>
+            <li><span class="text-paper">Vercel Inc.</span> (United States) — hosts this website and processes the connection data (including your IP address) needed to deliver the page.</li>
+            <li><span class="text-paper">Google Ireland Ltd. / Google LLC</span> — the typeface used on this site is loaded from Google's servers, which receives your IP address when the page loads.</li>
+          </ul>
+          <p class="mt-3">This means your data is transferred to the <span class="text-paper">United States</span>. You may ask us at any time which safeguards apply to those transfers.</p>
+        </div>
+        <div>
+          <p class="eyebrow mb-2">5 — How long we keep it</p>
+          <p>We keep inquiry data for as long as needed to answer it. If a collaboration follows, we keep it for the duration of that work and for any period Slovenian law requires us to retain business records. Otherwise it is deleted once the inquiry is closed.</p>
+        </div>
+        <div>
+          <p class="eyebrow mb-2">6 — Your rights</p>
+          <p>You have the right to access your data, to have it corrected or erased, to restrict or object to its processing, and to receive it in a portable form. You may <span class="text-paper">withdraw your consent at any time</span> — this does not affect the lawfulness of processing carried out before the withdrawal. To exercise any of these, write to <a href="mailto:madebymp.studio@gmail.com" class="link">madebymp.studio@gmail.com</a>.</p>
+        </div>
+        <div>
+          <p class="eyebrow mb-2">7 — Right to complain</p>
+          <p>If you believe your data has been handled unlawfully, you may lodge a complaint with the Slovenian supervisory authority, the <a href="https://www.ip-rs.si/" target="_blank" rel="noopener noreferrer" class="link">Information Commissioner of the Republic of Slovenia</a>.</p>
+        </div>
+        <p class="eyebrow pt-1">Last updated — August 2026</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Broken image -> hide it so the dark .ph frame shows through instead
+    document.querySelectorAll('img').forEach(function (img) {
+      img.addEventListener('error', function () { img.classList.add('is-broken'); });
+      if (img.complete && img.naturalWidth === 0) img.classList.add('is-broken');
+    });
+
+    // Hide the brand logo while scrolled (CSS applies this on phones only)
+    var headerEl = document.querySelector('header');
+    function onScroll() { headerEl.classList.toggle('is-scrolled', window.scrollY > 40); }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    // Mobile nav
+    var navToggle = document.getElementById('navToggle');
+    var mobileMenu = document.getElementById('mobileMenu');
+    navToggle.addEventListener('click', function () {
+      var open = mobileMenu.classList.toggle('hidden') === false;
+      navToggle.setAttribute('aria-expanded', String(open));
+    });
+    mobileMenu.querySelectorAll('a').forEach(function (a) {
+      a.addEventListener('click', function () { mobileMenu.classList.add('hidden'); navToggle.setAttribute('aria-expanded', 'false'); });
+    });
+
+    // Scroll reveal
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var reveals = document.querySelectorAll('.reveal');
+    if (reduce || !('IntersectionObserver' in window)) {
+      reveals.forEach(function (el) { el.classList.add('in'); });
+    } else {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+      }, { threshold: 0.12 });
+      reveals.forEach(function (el) { io.observe(el); });
+    }
+
+    // Privacy policy modal
+    var privacyModal = document.getElementById('privacyModal');
+    var privacyLastFocus = null;
+    function openPrivacy() {
+      privacyLastFocus = document.activeElement;
+      privacyModal.classList.remove('hidden'); privacyModal.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+      privacyModal.querySelector('button[data-privacy-close]').focus();
+    }
+    function closePrivacy() {
+      privacyModal.classList.add('hidden'); privacyModal.classList.remove('flex');
+      document.body.style.overflow = '';
+      if (privacyLastFocus) privacyLastFocus.focus();
+    }
+    // Two triggers: the footer link and the one beside the consent checkbox.
+    // Consent is only informed if the policy is reachable at the point of giving it.
+    document.querySelectorAll('#privacyOpen, #privacyOpenForm').forEach(function (b) {
+      b.addEventListener('click', openPrivacy);
+    });
+    privacyModal.querySelectorAll('[data-privacy-close]').forEach(function (el) { el.addEventListener('click', closePrivacy); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !privacyModal.classList.contains('hidden')) closePrivacy();
+    });
+
+  </script>
+</body>
+</html>

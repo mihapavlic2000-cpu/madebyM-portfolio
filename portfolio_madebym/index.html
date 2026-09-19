@@ -20,22 +20,30 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <!-- Archivo: heavy expanded grotesque (athletic display). Inter: clean body. -->
-  <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=Great+Vibes&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       theme: {
         extend: {
+          // Palette sampled from Slike/logo/logo.png, not chosen by eye: the mark
+          // is 89.3% #84FF00, 8.3% #FFFFFF, 2.2% #000000. The measured contrast
+          // between those three decides the whole site:
+          //     black on #84FF00 = 16.29:1      #84FF00 on black = 16.29:1
+          //     white on #84FF00 =  1.29:1      #84FF00 on white =  1.29:1
+          // So green can never carry white text and can never BE text on a light
+          // surface. Every green surface takes BLACK text, and the page stays
+          // dark throughout — a light section would leave the accent with nowhere
+          // legible to go. This is the same trap CLAUDE.md records for amber,
+          // only far wider. Do not add a light section without re-measuring.
           colors: {
-            bg:      '#16130F', // warm brown-black canvas
-            surface: '#1E1A15', // raised surface (used sparingly)
-            bone:    '#EDE5D6', // primary warm text
-            stone:   '#A99E8C', // muted warm text
-            clay:         '#C26B3F', // accent — tiny marks + hovers only
-            'clay-light': '#D68A5C', // brighter shade — logo M, highlight tags
-            'clay-deep':  '#9A5431', // deeper shade — numerals, dark-on-light accents
-            line:    'rgba(237,229,214,0.12)',
+            ink:     '#000000', // canvas — the logo's own black
+            carbon:  '#101010', // raised surface — white on it is 19.03:1
+            paper:   '#FFFFFF', // primary text — 21:1 on ink
+            ash:     '#A3A3A3', // muted text — 8.33:1 on ink (floor: #757575 at 4.56:1)
+            volt:    '#84FF00', // brand green. Accent only, never body text.
+            line:    'rgba(255,255,255,0.14)',
           },
           fontFamily: {
             display: ['Archivo', '"Archivo Black"', 'system-ui', 'sans-serif'],
@@ -77,7 +85,7 @@
       --dur: .32s;
       --dur-slow: .7s;
     }
-    html, body { background:#16130F; }
+    html, body { background:#000000; }
 
     /* ---------- Controls ---------- */
     .btn {
@@ -92,14 +100,29 @@
     }
     /* 44px minimum touch target — the padding above clears it, this guarantees it */
     .btn { min-height:44px; }
-    .btn:focus-visible { outline:2px solid #D68A5C; outline-offset:3px; }
+    .btn:focus-visible { outline:2px solid #84FF00; outline-offset:3px; }
 
-    .btn-primary { background:#EDE5D6; color:#16130F; }
-    .btn-primary:hover { background:#fff; transform: translateY(-2px); }
+    /* The primary control is the brand green with BLACK text — 16.29:1.
+       White on this green is 1.29:1, so a white label here is never an option,
+       at any weight or size. Hover lifts to #9BFF33 (black on it: 16.75:1);
+       the old rule faded #EDE5D6 to #fff, which after the palette swap would
+       have been a hover from white to white — a control that looks dead. */
+    .btn-primary { background:#84FF00; color:#000000; }
+    .btn-primary:hover { background:#9BFF33; transform: translateY(-2px); }
     .btn-primary:active { transform: translateY(0) scale(.98); }
+    /* The shared .btn focus ring is volt, which would vanish against a volt
+       button even at 3px offset. White reads against both the button and the
+       canvas behind it. */
+    .btn-primary:focus-visible { outline-color:#FFFFFF; }
 
-    .btn-ghost { background:#1E1A15; color:#EDE5D6; border-color:rgba(237,229,214,0.14); }
-    .btn-ghost:hover { border-color:rgba(237,229,214,0.35); background:#241f19; transform: translateY(-2px); }
+    /* UNUSED SINCE 2026-09-19 — kept on purpose, do not infer a button from it.
+       Its only instance was the hero's "Who am I?", which went with the About
+       section. This is the secondary tier of the button system and a peer of
+       .btn-primary; the hover and active values below are measured, so keeping
+       three lines costs less than deriving them again. Delete it only if the
+       decision is that the site has no secondary button at all. */
+    .btn-ghost { background:#101010; color:#FFFFFF; border-color:rgba(255,255,255,0.18); }
+    .btn-ghost:hover { border-color:rgba(255,255,255,0.38); background:#1A1A1A; transform: translateY(-2px); }
     .btn-ghost:active { transform: translateY(0) scale(.98); }
 
     /* Compact variant for the header. Keeps the 44px min-height from .btn. */
@@ -115,10 +138,10 @@
        .is-scrolled class the existing script already sets — no new JS. */
     header { transition: background-color var(--dur) var(--ease-out), border-color var(--dur) var(--ease-out); border-bottom:1px solid transparent; }
     header.is-scrolled {
-      background:rgba(22,19,15,0.72);
+      background:rgba(0,0,0,0.78);
       backdrop-filter:saturate(140%) blur(14px);
       -webkit-backdrop-filter:saturate(140%) blur(14px);
-      border-bottom-color:rgba(237,229,214,0.10);
+      border-bottom-color:rgba(255,255,255,0.12);
     }
 
     /* Display face: Archivo pushed to its expanded cut — wide, heavy, athletic */
@@ -128,12 +151,12 @@
     /* Eyebrow / catalogue label */
     .eyebrow {
       font-family: Inter, sans-serif; font-size: 11px; font-weight: 500;
-      letter-spacing: 0.24em; text-transform: uppercase; color:#A99E8C;
+      letter-spacing: 0.24em; text-transform: uppercase; color:#A3A3A3;
     }
 
-    /* Quiet typographic link with a clay underline that grows on hover */
+    /* Quiet typographic link; the underline takes the accent on hover */
     .link {
-      position: relative; color:#EDE5D6; transition: color .25s ease;
+      position: relative; color:#FFFFFF; transition: color .25s ease;
       padding-bottom: 2px;
     }
     .link::after {
@@ -141,8 +164,8 @@
       background:currentColor; opacity:.25; transform: scaleX(1); transform-origin:left;
       transition: opacity .3s ease, background-color .3s ease;
     }
-    .link:hover, .link:focus-visible { color:#C26B3F; }
-    .link:hover::after, .link:focus-visible::after { opacity:1; background:#C26B3F; }
+    .link:hover, .link:focus-visible { color:#84FF00; }
+    .link:hover::after, .link:focus-visible::after { opacity:1; background:#84FF00; }
 
     /* Brand logo fades out on scroll — phones only (below md breakpoint) */
     #brandLogo { transition: opacity .3s ease, visibility .3s ease; }
@@ -151,34 +174,74 @@
     }
 
     /* Nav link: underline draws in from left */
-    .nav-link { position:relative; color:#A99E8C; transition: color .25s ease; }
+    .nav-link { position:relative; color:#A3A3A3; transition: color .25s ease; }
     .nav-link::after {
-      content:''; position:absolute; left:0; bottom:-4px; height:1px; width:0; background:#C26B3F; transition: width .28s cubic-bezier(.16,1,.3,1);
+      content:''; position:absolute; left:0; bottom:-4px; height:1px; width:0; background:#84FF00; transition: width .28s cubic-bezier(.16,1,.3,1);
     }
-    .nav-link:hover, .nav-link:focus-visible { color:#EDE5D6; }
+    .nav-link:hover, .nav-link:focus-visible { color:#FFFFFF; }
     .nav-link:hover::after, .nav-link:focus-visible::after { width:100%; }
 
     /* Underline-style form fields (no boxes) */
     .field {
-      width:100%; background:transparent; border:0; border-bottom:1px solid rgba(237,229,214,0.22);
-      padding:10px 0; color:#EDE5D6; font-family:Inter, sans-serif; font-size:16px;
+      width:100%; background:transparent; border:0; border-bottom:1px solid rgba(255,255,255,0.26);
+      padding:10px 0; color:#FFFFFF; font-family:Inter, sans-serif; font-size:16px;
       transition: border-color .25s ease;
     }
-    .field::placeholder { color:#6f685c; }
-    .field:focus { outline:none; border-color:#C26B3F; }
+    .field::placeholder { color:#757575; }
+    .field:focus { outline:none; border-color:#84FF00; }
     textarea.field { resize:vertical; }
 
-    /* Budget chips as quiet text toggles */
-    .budget input:checked + span { color:#16130F; background:#EDE5D6; border-color:#EDE5D6; }
-    .budget span { transition: color .2s ease, background-color .2s ease, border-color .2s ease; }
+    /* Decorative wordmark behind the work grid, outline only, no fill.
+       Drawn as SVG text rather than -webkit-text-stroke: the CSS property is
+       prefixed-only, and its fallback is color:transparent, so on a browser
+       that lacks it the mark does not degrade to a hairline - it vanishes.
+       SVG fill="none" + stroke needs no prefix and no fallback.
 
-    /* Image frame — neutral warm fallback if a file is missing (no text overlay) */
-    .ph { position:relative; overflow:hidden; background:linear-gradient(150deg,#221d17 0%,#171410 100%); }
+       THE OPACITY IS A CEILING, NOT A TASTE CHOICE. Text sits on top of this,
+       and the smallest of it is 14px #A3A3A3. Measured against white-on-black
+       at various alphas: 0.12 leaves 6.56:1, 0.20 leaves 5.01:1, and 0.25
+       drops to 4.13:1 and FAILS. Do not raise this past 0.22 without
+       re-measuring every text colour that crosses it.
+
+       vector-effect keeps the stroke a true hairline at any rendered size, so
+       the line weight does not change when the viewport does.
+
+       overflow:hidden lives on this layer, not on the section: scoping it here
+       means the mark can be wider than the screen without the page scrolling
+       sideways, and nothing else in the section gets clipped. */
+    .mark-layer {
+      position:absolute; left:0; right:0; top:0;
+      height:clamp(240px, 42vw, 560px);
+      overflow:hidden; display:grid; place-items:center;
+      pointer-events:none; z-index:0;
+    }
+    /* Fits INSIDE the layer, it does not bleed past it. At min(112vw,1500px)
+       the mark measured 1317px inside a 1250px layer and overflow:hidden cut
+       it - and not evenly: 65px went on the left, 132px on the right, because
+       Great Vibes carries a long flourish off the final M. A wordmark clipped
+       symmetrically can look deliberate; one clipped lopsidedly just looks
+       broken, and the M is the whole point of the name. */
+    .mark-layer svg { width:min(94%, 1400px); height:auto; display:block; }
+    .mark-layer text {
+      font-family:'Great Vibes', cursive;
+      font-size:300px;
+      fill:none;
+      stroke:rgba(255,255,255,0.12);
+      stroke-width:1.5;
+      vector-effect:non-scaling-stroke;
+    }
+
+    /* Image frame — neutral dark fallback if a file is missing (no text overlay) */
+    .ph { position:relative; overflow:hidden; background:linear-gradient(150deg,#141414 0%,#0A0A0A 100%); }
     img.is-broken { display:none; }
 
-    /* Subtle film grain — warmth without glow. Static, very low opacity. */
+    /* Film grain. On the old warm canvas this used mix-blend-mode:overlay, which
+       is a no-op over #000000 — overlay against a black base returns black, so the
+       grain would have vanished silently the moment the canvas went black.
+       screen lightens instead, so it survives. Keep the opacity low: this sits
+       over the hero photography too. */
     .grain {
-      position:fixed; inset:0; z-index:1; pointer-events:none; opacity:.045; mix-blend-mode:overlay;
+      position:fixed; inset:0; z-index:1; pointer-events:none; opacity:.06; mix-blend-mode:screen;
       background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
     }
 
@@ -191,32 +254,16 @@
     html.js .reveal.in { opacity:1; transform:none; }
 
     /* ---------- Work card ---------- */
-    /* Provenance marks. PRODUCT.md records which pieces were commissioned and
-       which are personal work; `Concept` says so on the card itself, so no
-       reader takes a subject's name for a client who hired the studio.
-       Measured on #16130F: #D68A5C over the 8% wash (#251D15) = 6.05:1,
-       #A99E8C = 7.02:1. Both clear 4.5:1 at this 11px size. */
-    .tag {
-      display:inline-flex; align-items:center; border-radius:0;
-      border:1px solid; padding:.32rem .62rem;
-      font-family:Inter, sans-serif; font-size:11px; font-weight:500; line-height:1;
-      letter-spacing:.14em; text-transform:uppercase; white-space:nowrap;
-    }
-    .tag-concept { color:#D68A5C; border-color:rgba(214,138,92,.38); background:rgba(214,138,92,.08); }
-    .tag-client  { color:#A99E8C; border-color:rgba(237,229,214,.18); background:transparent; }
-
-    /* Frame lifts, image pushes in — two speeds so the card reads as an object
-       on the page rather than a flat crop. Both on the Phase 1 motion tokens. */
+    /* The cover frame lifts on hover. The paired .work-img zoom went with the
+       case-study cards — a cover holds a moving strip, not a single image. */
     .work-frame { transition: transform var(--dur) var(--ease-out); }
     .work-item:hover .work-frame { transform: translateY(-6px); }
-    .work-img { transition: transform var(--dur-slow) var(--ease-out); }
-    .work-item:hover .work-img { transform: scale(1.035); }
 
     /* The card carries role="button", so it is a control. Without this rule a
        keyboard visitor gets no visible focus anywhere in the grid. */
-    .work-item:focus-visible { outline:2px solid #D68A5C; outline-offset:8px; border-radius:0; }
-    .work-item:focus-visible .work-cta { color:#C26B3F; }
-    .work-item:focus-visible .work-cta::after { opacity:1; background:#C26B3F; }
+    .work-item:focus-visible { outline:2px solid #84FF00; outline-offset:8px; border-radius:0; }
+    .work-item:focus-visible .work-cta { color:#84FF00; }
+    .work-item:focus-visible .work-cta::after { opacity:1; background:#84FF00; }
 
     /* Contact form submission states */
     #briefForm { transition: opacity .35s ease; }
@@ -225,416 +272,493 @@
     #formSuccess { opacity:0; transform: translateY(12px); transition: opacity .5s ease, transform .5s ease; }
     #formSuccess.show { opacity:1; transform:none; }
 
+    /* ---------- Hero strip ----------
+       A marquee of the work moving left to right behind the headline. Pure CSS,
+       so it still runs when the script is blocked or switched off.
+
+       The scrim over it is measured, not judged by eye. Every one of the 15
+       tiles passes behind the copy, so it has to survive the brightest band of
+       the brightest tile rather than an average. Untouched, that worst case was
+       P99 = 1.0000 (the white block in the Bruno poster) and white text would
+       have needed a 0.55 black veil — which buries the work the hero exists to
+       show. So the highlights are compressed in the tiles themselves at build
+       time instead (y = x(1 - 0.45x²), saturation 0.88), which drops it to
+       0.2874, and 0.25 of scrim then gives white 5.17:1. The halftone adds
+       roughly another 8% on top of that.
+
+       The band matters as much as the number. The first pass measured 28%-72%
+       of the tile and was wrong; the figures above are for 16%-80%, which is
+       what the copy actually occupies. Re-measured after the headline became
+       the mark: at 1265x900 the mark sits at 21.3%-60.6% and the lead at
+       63.7%-73%, both inside it. The buttons reach 83.1%, past the band, but
+       they carry their own solid backgrounds and do not lean on the scrim.
+       Move the copy, or regenerate the tiles, and this measurement is void —
+       redo it rather than trusting this comment.
+
+       Tiles are 720px wide because that is what they actually render at: the
+       track is height:100% of the hero, so a 900px-tall hero draws each 4:5 tile
+       at 720x900. One width, no srcset, deliberately — CLAUDE.md records that a
+       scrim proven at one width silently stops holding at another, and a single
+       file removes that whole family of bugs. 15 tiles, 795 KB total, down from
+       38.9 MB of source PNGs. */
+    /* The hero wordmark.
+       Archivo is already loaded across its whole variable range (wdth 62..125,
+       wght 100..900), so a light, normal-width cut costs no extra request. This
+       is deliberately the opposite of .font-display, which pushes the same
+       family to 125% width at weight 900 for the athletic headings — and it is
+       why font-stretch is stated explicitly here. Inherit that 125% and the
+       wordmark stops being elegant and becomes another poster headline.
+
+       Weight 300, not 200: the strip of photography moves behind this. Hairline
+       strokes over moving pictures are hard to read even where the contrast
+       measures fine, and white over the scrim measures 5.17:1 at worst.
+
+       Sized in CSS rather than a Tailwind arbitrary value — clamp() with commas
+       is exactly the kind of class the CDN can fail to generate with nothing in
+       the console to say so, and this one decides whether the hero has a
+       centrepiece at all. */
+    .wordmark {
+      font-family: Archivo, system-ui, sans-serif;
+      font-stretch: 100%;
+      font-weight: 300;
+      /* Measured, not guessed. "madebyM" at weight 300 renders 4.45x its own
+         font-size wide, so at 375px the 327px between the gutters allows about
+         73px before it wraps; 3.5rem leaves 78px of clearance on one line. The
+         first pass used 2.75rem/9rem, which was needlessly timid at both ends -
+         196px on a phone and only 25% of the viewport at 2560px. Re-measure the
+         3.5rem floor at 375px if the weight or the width axis ever changes. */
+      font-size: clamp(3.5rem, 9vw, 11rem);
+      line-height: 1;
+      letter-spacing: 0.005em;
+    }
+    /* The M is the mark. Heavier and italic, the way it is set in the header. */
+    .wordmark-m { font-weight: 700; font-style: italic; }
+
+    .hero-strip { position:absolute; inset:0; z-index:0; overflow:hidden; }
+    .hero-track { display:flex; width:max-content; height:100%; animation: hero-slide 96s linear infinite; }
+    .hero-track img { display:block; flex:0 0 auto; height:100%; width:auto; }
+    /* A full-height 4:5 tile is 0.8 x the hero height, which on a portrait phone
+       is wider than the screen: at 375x812 one tile came out 650px and 0.58 of a
+       single poster was visible — a fragment, not a showcase. A breakpoint was
+       the wrong tool here; at 640x900 the tile was still 720px and 0.89 visible,
+       just above the cutoff. max-width is width-independent and holds at every
+       size: roughly 1.8 posters at 375px, 640px and 1265px, and on wide screens
+       the natural size wins and more fit anyway.
+       Cropping does not invalidate the scrim measurement — a centre crop is a
+       subset of the full-width band that was measured, so its P99 can only be
+       lower than the figure the scrim was set from. */
+    .hero-track img { max-width:56vw; object-fit:cover; object-position:center; }
+    /* The track holds the 15 tiles twice, so -50% is exactly one full set and
+       the loop has no seam. Running from -50% to 0 carries the work rightwards. */
+    @keyframes hero-slide { from { transform: translate3d(-50%,0,0); } to { transform: translate3d(0,0,0); } }
+
+    /* Top and bottom go much darker than the middle. The header sits over this
+       section with no background of its own until the page scrolls, and its
+       11px nav links have nothing else to stand on. */
+    /* ---------- Cover strips ----------
+       The two work covers run the same idea as the hero, turned 90 degrees.
+       Vertical is not decoration: the card is a 4:5 portrait, so a horizontal
+       strip of 4:5 posters would show about half of one tile - an offcut rather
+       than a piece of work. Running it vertically at the card's full width means
+       each tile is exactly the card, and a whole poster is on screen at a time.
+
+       No scrim here, unlike the hero. Nothing is written over these cards - the
+       title and the tag sit underneath the frame - so there is no contrast floor
+       to hold and the work can run at full strength. For the same reason the
+       cover tiles skip the highlight curve the hero tiles are built with.
+       If a label is ever put ON these cards, that changes: measure first. */
+    .cover-strip { position:absolute; inset:0; z-index:0; overflow:hidden; }
+    .cover-track { display:flex; flex-direction:column; width:100%; animation: cover-slide 54s linear infinite; }
+    .cover-track img { display:block; flex:0 0 auto; width:100%; height:auto; }
+    /* Each track holds its tiles twice, so -50% is exactly one full set and the
+       loop has no seam - the same arithmetic as the hero. */
+    @keyframes cover-slide { from { transform: translate3d(0,0,0); } to { transform: translate3d(0,-50%,0); } }
+    /* Both covers hold 9 tiles, so one duration gives them the same per-tile
+       pace. Add a per-cover animation-duration again if the counts ever diverge
+       — otherwise one card visibly crawls next to the other. */
+
+    .hero-scrim {
+      position:absolute; inset:0; z-index:0; pointer-events:none;
+      background: linear-gradient(to bottom,
+        rgba(0,0,0,.92) 0, rgba(0,0,0,.25) 18%, rgba(0,0,0,.25) 78%, rgba(0,0,0,.90) 100%);
+    }
+    /* Dots rather than a flat film, so the photography reads as printed matter. */
+    .halftone {
+      position:absolute; inset:0; z-index:0; pointer-events:none;
+      background-image: radial-gradient(circle at center, rgba(0,0,0,.55) 1.1px, transparent 1.5px);
+      background-size: 5px 5px;
+    }
+
     @media (prefers-reduced-motion: reduce) {
       /* Must match html.js specificity (0,2,0) or the reveal rule above wins
          and reduced-motion visitors get a permanently invisible page. */
       html.js .reveal, .reveal { opacity:1; transform:none; transition:none; }
       /* Must match the .work-item:hover selectors' specificity (0,3,0) — a
          weaker rule here would lose and the lift would still snap into place. */
-      .work-img, .work-frame { transition:none; }
-      .work-item:hover .work-frame, .work-item:hover .work-img { transform:none; }
+      .work-frame { transition:none; }
+      .work-item:hover .work-frame { transform:none; }
       #briefForm, #formSuccess { transition:none; }
       #brandLogo { transition:none; }
       /* Colour still changes so hover/press stay legible; only travel is removed. */
       .btn { transition: background-color var(--dur-fast) linear, border-color var(--dur-fast) linear, color var(--dur-fast) linear; }
       .btn:hover, .btn:active { transform:none; }
       .scroll-cue { animation:none; }
+      .hero-track, .cover-track { animation:none; }
       header { transition:none; }
       html { scroll-behavior:auto; }
     }
   </style>
 </head>
 
-<body class="bg-bg font-sans text-bone antialiased selection:bg-clay selection:text-bone">
+<body class="bg-ink font-sans text-paper antialiased selection:bg-volt selection:text-ink">
   <div class="grain" aria-hidden="true"></div>
 
-  <a href="#work" class="sr-only focus:not-sr-only focus:fixed focus:z-50 focus:top-3 focus:left-3 focus:bg-bone focus:text-bg focus:px-4 focus:py-2 focus:text-sm">Skip to work</a>
+  <a href="#work" class="sr-only focus:not-sr-only focus:fixed focus:z-50 focus:top-3 focus:left-3 focus:bg-paper focus:text-ink focus:px-4 focus:py-2 focus:text-sm">Skip to work</a>
 
   <!-- ================= NAV (logo hard left · links hard right, full-bleed) ================= -->
   <header class="fixed top-0 left-0 w-full z-50">
     <div class="px-6 md:px-12">
       <nav class="relative flex items-center justify-between gap-6 py-4">
         <a href="#top" id="brandLogo" class="group shrink-0 font-display text-xl font-black tracking-tight">
-          <span class="text-bone">madeby</span><span class="italic text-clay-light">M</span>
+          <span class="text-paper">madeby</span><span class="italic text-paper">M</span>
         </a>
 
         <!-- Centred link cluster. Absolutely placed so the logo and the CTA can
              change width without dragging the links off centre. -->
         <div class="pointer-events-none absolute inset-x-0 hidden justify-center md:flex">
           <div class="pointer-events-auto flex items-center gap-9 text-sm">
-            <a href="#work" class="nav-link">Work</a>
-            <a href="#services" class="nav-link">Services</a>
-            <a href="#pricing" class="nav-link">Pricing</a>
-            <a href="#about" class="nav-link">Studio</a>
+            <a href="#work" class="nav-link inline-flex min-h-[24px] items-center">Work</a>
           </div>
         </div>
 
         <a href="#contact" class="btn btn-primary btn-sm hidden shrink-0 md:inline-flex">Start a project</a>
 
-        <button id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu" class="md:hidden inline-flex h-11 w-11 items-center justify-center text-bone cursor-pointer">
+        <button id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu" class="md:hidden inline-flex h-11 w-11 items-center justify-center text-paper cursor-pointer">
           <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3 7h18M3 17h18"/></svg>
         </button>
       </nav>
 
-      <div id="mobileMenu" class="md:hidden hidden bg-[#F5F2EB] px-5 pb-4 pt-2">
-        <a href="#work" class="block py-3 text-bg hover:text-clay-deep">Work</a>
-        <a href="#services" class="block py-3 text-bg hover:text-clay-deep">Services</a>
-        <a href="#pricing" class="block py-3 text-bg hover:text-clay-deep">Pricing</a>
-        <a href="#about" class="block py-3 text-bg hover:text-clay-deep">Studio</a>
-        <a href="#contact" class="block py-3 font-medium text-clay-deep">Start a project →</a>
+      <!-- The panel is the brand green, so every link on it must be BLACK.
+           Straight after the palette swap these read hover:text-volt and the
+           CTA read text-volt — green on green, 1:1: the hover was invisible and
+           "Start a project" could not be seen at all. Nothing in the console
+           said so. Hover is carried by an underline instead of a colour,
+           because there is no second colour this panel can legibly hold. -->
+      <div id="mobileMenu" class="md:hidden hidden bg-volt px-5 pb-4 pt-2">
+        <a href="#work" class="block py-3 text-ink hover:underline">Work</a>
+        <a href="#contact" class="block py-3 font-semibold text-ink underline">Start a project →</a>
       </div>
     </div>
   </header>
 
   <main id="top">
   <!-- ================= HERO (wide poster block) ================= -->
-  <section class="relative flex min-h-[100svh] flex-col justify-center px-6 md:px-12">
-    <div class="mx-auto w-full max-w-shell text-center">
-      <h1 class="reveal mx-auto max-w-[18ch] font-display text-d1 font-black uppercase text-bone" style="text-wrap:balance">
-        Design that makes athletes, clubs &amp; brands <span class="italic text-clay-light">impossible to ignore.</span>
-      </h1>
+  <section class="relative flex min-h-[100svh] flex-col justify-center overflow-hidden px-6 md:px-12">
+    <!-- Decorative. These same pieces are presented properly below in
+         Selected work, with provenance and case-study text; captioning 30
+         marquee tiles here would read as noise to a screen reader. -->
+    <div class="hero-strip" aria-hidden="true">
+      <div class="hero-track">
+        <!-- set 1 of 2 -->
+          <img src="Slike/hero-web/england.webp" alt="" width="720" height="900" decoding="async" />
+          <img src="Slike/hero-web/estevao.webp" alt="" width="720" height="900" decoding="async" />
+          <img src="Slike/hero-web/chinesegrandprix.webp" alt="" width="720" height="900" decoding="async" />
+          <img src="Slike/hero-web/leclerc.webp" alt="" width="720" height="900" decoding="async" />
+          <img src="Slike/hero-web/brazil.webp" alt="" width="720" height="900" decoding="async" />
+          <img src="Slike/hero-web/man-utd.webp" alt="" width="720" height="900" decoding="async" />
+          <img src="Slike/hero-web/endrick.webp" alt="" width="720" height="900" decoding="async" />
+          <img src="Slike/hero-web/arsenal-watermark.webp" alt="" width="720" height="900" decoding="async" />
+          <img src="Slike/hero-web/ekitikikept22.webp" alt="" width="720" height="900" decoding="async" />
+          <img src="Slike/hero-web/japan.webp" alt="" width="720" height="900" decoding="async" />
+          <img src="Slike/hero-web/bruno.webp" alt="" width="720" height="900" decoding="async" />
+          <img src="Slike/hero-web/arsenalnewkit.webp" alt="" width="720" height="900" decoding="async" />
+          <img src="Slike/hero-web/haalandfisherman.webp" alt="" width="720" height="900" decoding="async" />
+          <img src="Slike/hero-web/france.webp" alt="" width="720" height="900" decoding="async" />
+          <img src="Slike/hero-web/fre.webp" alt="" width="720" height="900" decoding="async" />
+        <!-- set 2 of 2 — same files, so the browser serves them from cache -->
+          <img src="Slike/hero-web/england.webp" alt="" width="720" height="900" decoding="async" />
+          <img src="Slike/hero-web/estevao.webp" alt="" width="720" height="900" decoding="async" />
+          <img src="Slike/hero-web/chinesegrandprix.webp" alt="" width="720" height="900" decoding="async" />
+          <img src="Slike/hero-web/leclerc.webp" alt="" width="720" height="900" decoding="async" />
+          <img src="Slike/hero-web/brazil.webp" alt="" width="720" height="900" decoding="async" />
+          <img src="Slike/hero-web/man-utd.webp" alt="" width="720" height="900" decoding="async" />
+          <img src="Slike/hero-web/endrick.webp" alt="" width="720" height="900" decoding="async" />
+          <img src="Slike/hero-web/arsenal-watermark.webp" alt="" width="720" height="900" decoding="async" />
+          <img src="Slike/hero-web/ekitikikept22.webp" alt="" width="720" height="900" decoding="async" />
+          <img src="Slike/hero-web/japan.webp" alt="" width="720" height="900" decoding="async" />
+          <img src="Slike/hero-web/bruno.webp" alt="" width="720" height="900" decoding="async" />
+          <img src="Slike/hero-web/arsenalnewkit.webp" alt="" width="720" height="900" decoding="async" />
+          <img src="Slike/hero-web/haalandfisherman.webp" alt="" width="720" height="900" decoding="async" />
+          <img src="Slike/hero-web/france.webp" alt="" width="720" height="900" decoding="async" />
+          <img src="Slike/hero-web/fre.webp" alt="" width="720" height="900" decoding="async" />
+      </div>
+    </div>
+    <script>
+      /* Reshuffles the strip per visit. The order in the markup above is already
+         shuffled, so a visitor without JavaScript still gets a random-looking
+         run rather than the folder's alphabetical one - this only makes it
+         differ between visits.
+         Both halves are rebuilt from ONE shuffled list: the loop translates by
+         exactly -50%, so halves that differ would put a visible seam in it. */
+      /* Shared by the hero and by both covers. Defined here rather than in the
+         main script at the end of the body because the hero must be reordered
+         before it is painted; the covers call it again once they exist. */
+      window.__shuffleTrack = function (track) {
+        if (!track) return;
+        var tiles = Array.prototype.slice.call(track.children);
+        if (tiles.length < 4 || tiles.length % 2) return;
+        var set = tiles.slice(0, tiles.length / 2);
+        for (var i = set.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var t = set[i]; set[i] = set[j]; set[j] = t;
+        }
+        var frag = document.createDocumentFragment();
+        set.forEach(function (el) { frag.appendChild(el); });
+        set.forEach(function (el) { frag.appendChild(el.cloneNode(true)); });
+        track.textContent = '';
+        track.appendChild(frag);
+      };
+      window.__shuffleTrack(document.currentScript.previousElementSibling.firstElementChild);
+    </script>
+    <div class="hero-scrim" aria-hidden="true"></div>
+    <div class="halftone" aria-hidden="true"></div>
 
-      <p class="reveal prose-body mx-auto mt-7 max-w-2xl text-base text-stone sm:text-lg" style="text-wrap:pretty">
+    <div class="relative z-10 mx-auto w-full max-w-shell text-center">
+      <!-- The wordmark, set as live text rather than an image. That keeps the
+           studio name in the document as an h1 a search engine and a screen
+           reader can both read, and it cannot go soft or fail to load.
+           Slike/logo/logo-mark.webp is no longer referenced by any page. -->
+      <h1 class="reveal wordmark text-paper">madeby<span class="wordmark-m">M</span></h1>
+
+      <!-- White, not ash: ash clears AA on the black canvas but not over a
+           lit tile. Size and weight carry the hierarchy here instead. -->
+      <p class="reveal prose-body mx-auto mt-7 max-w-[46ch] text-base text-paper sm:text-lg" style="text-wrap:pretty">
         A sports design studio crafting matchday identities, athlete brands, and social content that looks the part — and earns the attention to prove it.
       </p>
 
       <div class="reveal mt-11 flex flex-wrap items-center justify-center gap-4">
         <a href="#work" class="btn btn-primary">View my work</a>
-        <a href="#about" class="btn btn-ghost">Who am I?</a>
       </div>
     </div>
 
-    <a href="#work" aria-label="Scroll to selected work" class="scroll-cue absolute bottom-8 left-1/2 -translate-x-1/2 text-stone/70 transition-colors hover:text-bone">
-      <span class="eyebrow text-[10px] text-current">Scroll</span>
+    <a href="#work" aria-label="Scroll to selected work" class="scroll-cue absolute bottom-8 left-1/2 z-10 -translate-x-1/2 text-paper transition-colors hover:text-volt">
+      <span class="eyebrow text-current">Scroll</span>
     </a>
   </section>
 
-  <!-- ================= SELECTED WORK (wide 2-column grid) ================= -->
-  <!-- Images come from /Slike. Case-study text lives on each .work-item (edit to taste). -->
-  <section id="work" class="scroll-mt-24 border-t border-line py-20 sm:py-28">
-    <div class="mx-auto max-w-shell px-6 md:px-12">
+  <!-- ================= WORK — two doors ================= -->
+  <!-- The six-piece grid that used to live here now lives on two pages of its
+       own. Commissioned work and personal work are kept apart deliberately:
+       PRODUCT.md records which is which, and a visitor should never have to
+       work out whether a piece was paid for. Each cover is a plain link, so it
+       opens as a full page in the same window with no JavaScript involved.
+
+       Each cover is a vertical strip of that page's own work. The tiles carry
+       alt="" and the strip is aria-hidden: they are decoration for a link whose
+       text already says where it goes, and captioning 40 marquee tiles would be
+       noise in a screen reader. The pieces themselves are described on the page
+       the cover opens.
+
+       Source files live in Slike/covers/<folder>/ and the served WebP in
+       Slike/covers-web/<folder>/. Rebuild both with scratchpad/covers.py. -->
+  <section id="work" class="relative scroll-mt-24 border-t border-line py-20 sm:py-28">
+    <!-- Purely decorative, hidden from assistive tech and unclickable. The
+         heading and lead sit on top of it, which is why the stroke opacity is
+         capped - see .mark-layer in the style block. -->
+    <div class="mark-layer" aria-hidden="true">
+      <svg viewBox="0 0 1200 480" preserveAspectRatio="xMidYMid meet" focusable="false" role="presentation">
+        <text x="600" y="340" text-anchor="middle">madebyM</text>
+      </svg>
+    </div>
+    <div class="relative z-10 mx-auto max-w-shell px-6 md:px-12">
       <div class="reveal">
-        <h2 class="font-display text-d2 font-black uppercase leading-none tracking-tight">Selected work</h2>
-        <p class="prose-body mt-6 max-w-2xl text-base text-stone" style="text-wrap:pretty">
-          Matchday systems, player edits, and club graphics. Pieces marked <span class="text-clay-light">Concept</span> are personal work &mdash; made to push the craft, not commissioned.
+        <h2 class="font-display text-d2 font-black uppercase leading-none tracking-tight">Work</h2>
+        <p class="prose-body mt-6 max-w-[46ch] text-base text-ash" style="text-wrap:pretty">
+          Commissioned work and personal work, kept apart on purpose — so it is always clear which is which.
         </p>
       </div>
 
-      <div class="mt-14 grid grid-cols-1 gap-x-8 gap-y-16 md:grid-cols-2 lg:gap-x-10">
-
-        <!-- 01 — Ekitike · personal work, not a commission (PRODUCT.md) -->
-        <article class="work-item reveal cursor-pointer" tabindex="0" role="button"
-          data-kind="concept"
-          data-title="Ekitike" data-cat="Player Graphic" data-client="Hugo Ekitike" data-year="2026"
-          data-goal="A scroll-stopping player edit that captures Ekitike's energy in a single frame."
-          data-approach="A clean cut-out subject, dramatic lighting, and a restrained warm palette — composed for instant recognition on a busy feed.">
+      <div class="mt-14 grid grid-cols-1 gap-8 md:grid-cols-2 lg:gap-10">
+        <a href="client-work.html" class="work-item reveal block">
           <div class="work-frame">
-            <div class="ph aspect-[4/5]">
-              <img src="Slike/ekitikike%20pt22.jpg" alt="Ekitike player graphic by madebyM" loading="lazy" decoding="async" width="1080" height="1350" class="work-img h-full w-full object-cover" />
+            <div class="ph aspect-[4/5]" id="cover-client">
+              <div class="cover-strip" aria-hidden="true">
+                <div class="cover-track js-shuffle">
+                  <!-- set 1 of 2 -->
+                  <img src="Slike/covers-web/client-work/saka-watermark.webp" alt="" width="480" height="600" decoding="async" />
+                  <img src="Slike/covers-web/client-work/kozelj-matchday.webp" alt="" width="480" height="600" decoding="async" />
+                  <img src="Slike/covers-web/client-work/cuber-glavna.webp" alt="" width="480" height="600" decoding="async" />
+                  <img src="Slike/covers-web/client-work/kosi.webp" alt="" width="480" height="600" decoding="async" />
+                  <img src="Slike/covers-web/client-work/kozel.webp" alt="" width="480" height="600" decoding="async" />
+                  <img src="Slike/covers-web/client-work/arsenal-watermark.webp" alt="" width="480" height="600" decoding="async" />
+                  <img src="Slike/covers-web/client-work/cuber.webp" alt="" width="480" height="600" decoding="async" />
+                  <img src="Slike/covers-web/client-work/kozelj-olimpija-2.webp" alt="" width="480" height="600" decoding="async" />
+                  <img src="Slike/covers-web/client-work/derbi-bright.webp" alt="" width="480" height="600" decoding="async" />
+                  <!-- set 2 of 2 — same files, served from cache -->
+                  <img src="Slike/covers-web/client-work/saka-watermark.webp" alt="" width="480" height="600" decoding="async" />
+                  <img src="Slike/covers-web/client-work/kozelj-matchday.webp" alt="" width="480" height="600" decoding="async" />
+                  <img src="Slike/covers-web/client-work/cuber-glavna.webp" alt="" width="480" height="600" decoding="async" />
+                  <img src="Slike/covers-web/client-work/kosi.webp" alt="" width="480" height="600" decoding="async" />
+                  <img src="Slike/covers-web/client-work/kozel.webp" alt="" width="480" height="600" decoding="async" />
+                  <img src="Slike/covers-web/client-work/arsenal-watermark.webp" alt="" width="480" height="600" decoding="async" />
+                  <img src="Slike/covers-web/client-work/cuber.webp" alt="" width="480" height="600" decoding="async" />
+                  <img src="Slike/covers-web/client-work/kozelj-olimpija-2.webp" alt="" width="480" height="600" decoding="async" />
+                  <img src="Slike/covers-web/client-work/derbi-bright.webp" alt="" width="480" height="600" decoding="async" />
+                </div>
+              </div>
+              <div class="halftone" aria-hidden="true"></div>
             </div>
           </div>
           <div class="mt-6 flex items-start justify-between gap-5">
             <div class="min-w-0">
-              <div class="flex flex-wrap items-center gap-x-3 gap-y-2">
-                <p class="eyebrow">01 — Player Graphic</p>
-                <span class="tag tag-concept">Concept</span>
-              </div>
-              <h3 class="mt-3 font-display text-d3 font-black uppercase leading-none tracking-tight">Ekitike</h3>
-              <p class="prose-body mt-3 max-w-md text-sm text-stone">A high-impact player edit — bold composition, dramatic light, and a clean type lockup tuned for the feed.</p>
+              <h3 class="font-display text-d3 font-black uppercase leading-none tracking-tight">Client work</h3>
+              <p class="prose-body mt-3 max-w-md text-sm text-ash">Work made for the clubs, athletes and brands who hired the studio.</p>
             </div>
-            <span class="work-cta link mt-1 shrink-0 text-sm">Case study →</span>
+            <span class="work-cta link mt-1 shrink-0 text-sm">Open &rarr;</span>
           </div>
-        </article>
+        </a>
 
-        <!-- 02 — Endrick · personal work, not a commission (PRODUCT.md) -->
-        <article class="work-item reveal cursor-pointer" tabindex="0" role="button"
-          data-kind="concept"
-          data-title="Endrick" data-cat="Player Graphic" data-client="Endrick" data-year="2026"
-          data-goal="A striker rendered as a brand — capturing the swagger of one of the game's brightest talents."
-          data-approach="A sharp cut-out, atmospheric light, and a confident lockup that holds up from thumbnail to full screen.">
+        <a href="demo-projects.html" class="work-item reveal block">
           <div class="work-frame">
-            <div class="ph aspect-[4/5]">
-              <img src="Slike/endrick.png" alt="Endrick player graphic by madebyM" loading="lazy" decoding="async" width="1080" height="1350" class="work-img h-full w-full object-cover" />
+            <div class="ph aspect-[4/5]" id="cover-demo">
+              <div class="cover-strip" aria-hidden="true">
+                <div class="cover-track js-shuffle">
+                  <!-- set 1 of 2 -->
+                  <img src="Slike/covers-web/demo-projects/belgium.webp" alt="" width="480" height="600" decoding="async" />
+                  <img src="Slike/covers-web/demo-projects/psg-vs-slovan-3.webp" alt="" width="480" height="600" decoding="async" />
+                  <img src="Slike/covers-web/demo-projects/1leclerc2.webp" alt="" width="480" height="600" decoding="async" />
+                  <img src="Slike/covers-web/demo-projects/raphinha.webp" alt="" width="480" height="600" decoding="async" />
+                  <img src="Slike/covers-web/demo-projects/arsenal-new-kit.webp" alt="" width="480" height="600" decoding="async" />
+                  <img src="Slike/covers-web/demo-projects/bruno.webp" alt="" width="480" height="600" decoding="async" />
+                  <img src="Slike/covers-web/demo-projects/lamie-lewa.webp" alt="" width="480" height="600" decoding="async" />
+                  <img src="Slike/covers-web/demo-projects/doku.webp" alt="" width="480" height="600" decoding="async" />
+                  <img src="Slike/covers-web/demo-projects/madueke.webp" alt="" width="480" height="600" decoding="async" />
+                  <!-- set 2 of 2 — same files, served from cache -->
+                  <img src="Slike/covers-web/demo-projects/belgium.webp" alt="" width="480" height="600" decoding="async" />
+                  <img src="Slike/covers-web/demo-projects/psg-vs-slovan-3.webp" alt="" width="480" height="600" decoding="async" />
+                  <img src="Slike/covers-web/demo-projects/1leclerc2.webp" alt="" width="480" height="600" decoding="async" />
+                  <img src="Slike/covers-web/demo-projects/raphinha.webp" alt="" width="480" height="600" decoding="async" />
+                  <img src="Slike/covers-web/demo-projects/arsenal-new-kit.webp" alt="" width="480" height="600" decoding="async" />
+                  <img src="Slike/covers-web/demo-projects/bruno.webp" alt="" width="480" height="600" decoding="async" />
+                  <img src="Slike/covers-web/demo-projects/lamie-lewa.webp" alt="" width="480" height="600" decoding="async" />
+                  <img src="Slike/covers-web/demo-projects/doku.webp" alt="" width="480" height="600" decoding="async" />
+                  <img src="Slike/covers-web/demo-projects/madueke.webp" alt="" width="480" height="600" decoding="async" />
+                </div>
+              </div>
+              <div class="halftone" aria-hidden="true"></div>
             </div>
           </div>
           <div class="mt-6 flex items-start justify-between gap-5">
             <div class="min-w-0">
-              <div class="flex flex-wrap items-center gap-x-3 gap-y-2">
-                <p class="eyebrow">02 — Player Graphic</p>
-                <span class="tag tag-concept">Concept</span>
-              </div>
-              <h3 class="mt-3 font-display text-d3 font-black uppercase leading-none tracking-tight">Endrick</h3>
-              <p class="prose-body mt-3 max-w-md text-sm text-stone">A forward rendered as a brand — sharp cut-out, atmospheric light, and a confident lockup.</p>
+              <h3 class="font-display text-d3 font-black uppercase leading-none tracking-tight">Demo projects</h3>
+              <p class="prose-body mt-3 max-w-md text-sm text-ash">Concept pieces, made to push the craft rather than to a brief.</p>
             </div>
-            <span class="work-cta link mt-1 shrink-0 text-sm">Case study →</span>
+            <span class="work-cta link mt-1 shrink-0 text-sm">Open &rarr;</span>
           </div>
-        </article>
-
-        <!-- 03 — Kosi · commissioned, real client (PRODUCT.md) -->
-        <article class="work-item reveal cursor-pointer" tabindex="0" role="button"
-          data-kind="client"
-          data-title="Kosi" data-cat="Sports Graphic" data-client="Kosi" data-year="2025"
-          data-goal="Create a gritty, high-impact matchday poster that highlights the player's presence on the pitch using bold typography."
-          data-approach="Blended dynamic match action shots with aggressive, textured masking and a raw color scheme that matches the club's energy.">
-          <div class="work-frame">
-            <div class="ph aspect-[4/5]">
-              <img src="Slike/kosi.png" alt="Kosi sports graphic by madebyM" loading="lazy" decoding="async" width="1080" height="1350" class="work-img h-full w-full object-cover" />
-            </div>
-          </div>
-          <div class="mt-6 flex items-start justify-between gap-5">
-            <div class="min-w-0">
-              <div class="flex flex-wrap items-center gap-x-3 gap-y-2">
-                <p class="eyebrow">03 — Sports Graphic</p>
-                <span class="tag tag-client">Client work</span>
-              </div>
-              <h3 class="mt-3 font-display text-d3 font-black uppercase leading-none tracking-tight">Kosi</h3>
-              <p class="prose-body mt-3 max-w-md text-sm text-stone">A gritty matchday poster — dynamic action shots, textured masking, and bold type with raw club energy.</p>
-            </div>
-            <span class="work-cta link mt-1 shrink-0 text-sm">Case study →</span>
-          </div>
-        </article>
-
-        <!-- 04 — PSG · personal work, not a commission (PRODUCT.md) -->
-        <article class="work-item reveal cursor-pointer" tabindex="0" role="button"
-          data-kind="concept"
-          data-title="PSG" data-cat="Club Graphic" data-client="Paris Saint-Germain" data-year="2025"
-          data-goal="Design a cinematic, atmospheric wallpaper piece celebrating the club's heritage over the iconic Paris skyline."
-          data-approach="Utilized deep cosmic blue tones, high-contrast city lighting effects, and clean, modern player placement to give it an epic, emotional feel.">
-          <div class="work-frame">
-            <div class="ph aspect-[4/5]">
-              <img src="Slike/psg.png" alt="PSG club graphic by madebyM" loading="lazy" decoding="async" width="1080" height="1350" class="work-img h-full w-full object-cover" />
-            </div>
-          </div>
-          <div class="mt-6 flex items-start justify-between gap-5">
-            <div class="min-w-0">
-              <div class="flex flex-wrap items-center gap-x-3 gap-y-2">
-                <p class="eyebrow">04 — Club Graphic</p>
-                <span class="tag tag-concept">Concept</span>
-              </div>
-              <h3 class="mt-3 font-display text-d3 font-black uppercase leading-none tracking-tight">PSG</h3>
-              <p class="prose-body mt-3 max-w-md text-sm text-stone">A cinematic wallpaper piece — the club's heritage set over the Paris skyline in deep, atmospheric blue.</p>
-            </div>
-            <span class="work-cta link mt-1 shrink-0 text-sm">Case study →</span>
-          </div>
-        </article>
-
-        <!-- 05 — Cuber · commissioned, real client (PRODUCT.md) -->
-        <article class="work-item reveal cursor-pointer" tabindex="0" role="button"
-          data-kind="client"
-          data-title="Cuber" data-cat="Sports Graphic" data-client="Cuber" data-year="2026"
-          data-goal="A bold, graphic treatment built to read instantly — even at thumbnail size."
-          data-approach="High-contrast composition and confident cropping, finished with a warm, premium tone.">
-          <div class="work-frame">
-            <div class="ph aspect-[4/5]">
-              <img src="Slike/cuber%20glavna.png" alt="Cuber sports graphic by madebyM" loading="lazy" decoding="async" width="1080" height="1350" class="work-img h-full w-full object-cover" />
-            </div>
-          </div>
-          <div class="mt-6 flex items-start justify-between gap-5">
-            <div class="min-w-0">
-              <div class="flex flex-wrap items-center gap-x-3 gap-y-2">
-                <p class="eyebrow">05 — Sports Graphic</p>
-                <span class="tag tag-client">Client work</span>
-              </div>
-              <h3 class="mt-3 font-display text-d3 font-black uppercase leading-none tracking-tight">Cuber</h3>
-              <p class="prose-body mt-3 max-w-md text-sm text-stone">A bold, graphic treatment built to read instantly — even at thumbnail size.</p>
-            </div>
-            <span class="work-cta link mt-1 shrink-0 text-sm">Case study →</span>
-          </div>
-        </article>
-
-        <!-- 06 — Saka · commissioned, real client (PRODUCT.md).
-             NOTE for Miha: the subject reads "Bukayo Saka". If the commission
-             came from someone other than the player, change data-client to the
-             party who actually hired the studio — the lightbox prints this
-             under the label "Client" for every data-kind="client" piece. -->
-        <article class="work-item reveal cursor-pointer" tabindex="0" role="button"
-          data-kind="client"
-          data-title="Saka" data-cat="Player Graphic" data-client="Bukayo Saka" data-year="2026"
-          data-goal="An Arsenal player edit with a calm, premium finish — star power without the noise."
-          data-approach="Warm tones, a sharp cut-out, and generous negative space that lets the subject breathe.">
-          <div class="work-frame">
-            <div class="ph aspect-[4/5]">
-              <img src="Slike/saka%20watermark.png" alt="Saka player graphic by madebyM" loading="lazy" decoding="async" width="1080" height="1350" class="work-img h-full w-full object-cover" />
-            </div>
-          </div>
-          <div class="mt-6 flex items-start justify-between gap-5">
-            <div class="min-w-0">
-              <div class="flex flex-wrap items-center gap-x-3 gap-y-2">
-                <p class="eyebrow">06 — Player Graphic</p>
-                <span class="tag tag-client">Client work</span>
-              </div>
-              <h3 class="mt-3 font-display text-d3 font-black uppercase leading-none tracking-tight">Saka</h3>
-              <p class="prose-body mt-3 max-w-md text-sm text-stone">An Arsenal player edit with a calm, premium finish — star power without the noise.</p>
-            </div>
-            <span class="work-cta link mt-1 shrink-0 text-sm">Case study →</span>
-          </div>
-        </article>
-
+        </a>
       </div>
     </div>
+    <script>
+      /* Same per-visit reshuffle as the hero. The order in the markup is already
+         shuffled at build time, so a visitor without JavaScript still gets a
+         random-looking run rather than the folder listing. */
+      document.querySelectorAll('.cover-track.js-shuffle').forEach(function (t) {
+        if (window.__shuffleTrack) window.__shuffleTrack(t);
+      });
+    </script>
   </section>
 
-  <!-- ================= SERVICES (split, heavy type contrast) ================= -->
+  <!-- ============ SERVICES — ODSTRANJENO S STRANI 19. 9. 2026 ============ -->
+  <!-- Miha je ta odsek umaknil s strani, a ga je treba ohraniti za primer
+       vrnitve. Parkiran je v <template>, NE v komentarju: odsek ima dva
+       lastna komentarja in prvi notranji zakljucek komentarja bi zunanjega
+       zaprl predcasno, preostanek pa bi se izrisal kot ziva koda.
+       Vsebina <template> se ne izrise, ne nalozi in ni v drevesu
+       dostopnosti, notranji komentarji pa ostanejo nedotaknjeni.
+
+       ZA VRNITEV: odstrani vrstici <template> in </template> spodaj IN vrni
+       povezavo v OBA menija, v glavo in v mobilnega:
+           glava:   <a href="#services" class="nav-link inline-flex min-h-[24px] items-center">Services</a>
+           mobilni: <a href="#services" class="block py-3 text-ink hover:underline">Services</a>
+       Povezava, ki prezivi svoj odsek, je mrtva povezava. CLAUDE.md ima
+       zapisan primer, ko je taka kazala na izbrisan odsek tri seje. -->
+  <template id="parkirano-services">
+  <!-- ================= SERVICES (sticky statement · enumerated rows) ================= -->
+  <!-- Phase 4 of 7 - services, packages and about together.
+       Type moved onto the phase 1 scale: the heading was a
+       text-3xl/sm:4xl/lg:5xl chain and the row titles another, which between
+       them added four sizes the d2/d3/d4 steps already cover.
+       The numerals were on the old palette's deepest accent, which measured
+       3.25:1 — it cleared the 3:1 large-text threshold at 24px bold and nothing
+       below it, and the same token sat on 18px numerals in About where it
+       failed outright. They are volt now: 16.29:1 on the black canvas, safe at
+       any size. -->
   <section id="services" class="scroll-mt-24 border-t border-line py-20 sm:py-28">
     <div class="mx-auto max-w-shell px-6 md:px-12">
-      <div class="grid gap-12 sm:grid-cols-12">
-        <!-- sticky statement column -->
+      <div class="grid gap-12 sm:grid-cols-12 sm:gap-10">
+        <!-- Statement column — sticks alongside the rows from the sm breakpoint up -->
         <div class="sm:col-span-4">
           <div class="sm:sticky sm:top-28">
-            <p class="reveal eyebrow">What I do</p>
-            <h2 class="reveal mt-5 font-display text-3xl font-black uppercase leading-[1.02] tracking-tight sm:text-4xl lg:text-5xl">
-              Three ways to<br /><span class="italic text-clay-light">look the part.</span>
+            <h2 class="reveal font-display text-d2 font-black uppercase text-paper" style="text-wrap:balance">
+              Three ways to <span class="italic text-volt">look the part.</span>
             </h2>
-            <p class="reveal prose-body mt-6 max-w-xs text-stone">Each engagement is built to win attention, sponsors, and recognition for the people who wear the brand.</p>
+            <p class="reveal prose-body mt-6 max-w-xs text-base text-ash" style="text-wrap:pretty">Each engagement is built to win attention, sponsors, and recognition for the people who wear the brand.</p>
           </div>
         </div>
 
-        <!-- enumerated service rows (no divider above the first row) -->
+        <!-- Enumerated rows. No divider above the first — the section border serves. -->
         <div class="sm:col-span-8">
           <div class="reveal flex flex-col">
-            <div class="grid gap-4 py-9 sm:grid-cols-12 sm:items-baseline">
-              <span class="font-display text-2xl font-black text-clay-deep sm:col-span-1">I</span>
+            <article class="grid gap-4 py-9 sm:grid-cols-12 sm:items-baseline">
+              <span aria-hidden="true" class="font-display text-d4 font-black text-volt sm:col-span-1">I</span>
               <div class="sm:col-span-11">
-                <h3 class="font-display text-2xl font-black uppercase leading-none tracking-tight sm:text-3xl lg:text-4xl">Matchday Systems</h3>
-                <p class="prose-body mt-4 max-w-md text-stone">Social graphics for clubs — fixtures, scorelines, line-ups, and transfers. A consistent system that builds a recognisable identity, week after week.</p>
+                <h3 class="font-display text-d3 font-black uppercase text-paper">Matchday Systems</h3>
+                <p class="prose-body mt-4 max-w-md text-base text-ash" style="text-wrap:pretty">Social graphics for clubs — fixtures, scorelines, line-ups, and transfers. A consistent system that builds a recognisable identity, week after week.</p>
               </div>
-            </div>
-            <div class="grid gap-4 border-t border-line py-9 sm:grid-cols-12 sm:items-baseline">
-              <span class="font-display text-2xl font-black text-clay-deep sm:col-span-1">II</span>
+            </article>
+            <article class="grid gap-4 border-t border-line py-9 sm:grid-cols-12 sm:items-baseline">
+              <span aria-hidden="true" class="font-display text-d4 font-black text-volt sm:col-span-1">II</span>
               <div class="sm:col-span-11">
-                <h3 class="font-display text-2xl font-black uppercase leading-none tracking-tight sm:text-3xl lg:text-4xl">Athlete Branding</h3>
-                <p class="prose-body mt-4 max-w-md text-stone">A personal visual identity for professional athletes — logomark, custom backgrounds, and thumbnails that turn a player into a brand.</p>
+                <h3 class="font-display text-d3 font-black uppercase text-paper">Athlete Branding</h3>
+                <p class="prose-body mt-4 max-w-md text-base text-ash" style="text-wrap:pretty">A personal visual identity for professional athletes — logomark, custom backgrounds, and thumbnails that turn a player into a brand.</p>
               </div>
-            </div>
-            <div class="grid gap-4 border-t border-line py-9 sm:grid-cols-12 sm:items-baseline">
-              <span class="font-display text-2xl font-black text-clay-deep sm:col-span-1">III</span>
+            </article>
+            <article class="grid gap-4 border-t border-line py-9 sm:grid-cols-12 sm:items-baseline">
+              <span aria-hidden="true" class="font-display text-d4 font-black text-volt sm:col-span-1">III</span>
               <div class="sm:col-span-11">
-                <h3 class="font-display text-2xl font-black uppercase leading-none tracking-tight sm:text-3xl lg:text-4xl">Social Media Management</h3>
-                <p class="prose-body mt-4 max-w-md text-stone">End-to-end social support — a steady flow of matchday posts, stories, and reels, planned on a content calendar and delivered ready to publish, so your channels never go quiet.</p>
+                <h3 class="font-display text-d3 font-black uppercase text-paper">Social Media Management</h3>
+                <p class="prose-body mt-4 max-w-md text-base text-ash" style="text-wrap:pretty">End-to-end social support — a steady flow of matchday posts, stories, and reels, planned on a content calendar and delivered ready to publish, so your channels never go quiet.</p>
               </div>
-            </div>
+            </article>
           </div>
         </div>
       </div>
     </div>
   </section>
-
-  <!-- ================= PACKAGES / TIERS (monthly plans) ================= -->
-  <!-- EDIT: tune prices + features to your real packages -->
-  <section id="pricing" class="scroll-mt-24 border-t border-line py-20 sm:py-28">
-    <div class="mx-auto max-w-shell px-6 md:px-12">
-      <div class="reveal flex items-end justify-between">
-        <div>
-          <p class="eyebrow">Plans &amp; pricing</p>
-          <h2 class="mt-3 font-display text-4xl font-black uppercase leading-none tracking-tight sm:text-6xl">Packages</h2>
-        </div>
-        <p class="eyebrow hidden sm:block">Monthly plans</p>
-      </div>
-
-      <!-- Three columns only from lg. At the md breakpoint each column fell to
-           ~197px while "€180–220" at text-5xl with 125% stretch needs ~240px,
-           which forced a 42px horizontal scroll across the whole page. -->
-      <div class="mt-14 grid gap-12 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3 lg:gap-12">
-        <!-- STARTER -->
-        <div class="reveal border-t border-line pt-8">
-          <h3 class="font-display text-2xl font-black uppercase tracking-tight sm:text-3xl">Starter</h3>
-          <p class="mt-6 font-display text-4xl font-black tracking-tight lg:text-5xl">€90–110</p>
-          <p class="eyebrow mt-2">per month</p>
-          <p class="prose-body mt-5 text-sm text-stone">Up to 4 high-end graphics per month — the essentials, covered every week.</p>
-          <ul class="mt-7 space-y-2.5 text-sm text-stone">
-            <li class="flex gap-3"><span class="text-clay">—</span><span>Matchday + Full-time graphics</span></li>
-            <li class="flex gap-3"><span class="text-clay">—</span><span>1 fan wallpaper</span></li>
-          </ul>
-          <a href="#contact" class="link mt-9 inline-block text-sm">Start a project →</a>
-        </div>
-
-        <!-- GAMEDAY (best value) -->
-        <div class="reveal border-t-2 border-clay/60 pt-8">
-          <div class="flex items-center justify-between gap-4">
-            <h3 class="font-display text-2xl font-black uppercase tracking-tight sm:text-3xl">Gameday</h3>
-            <span class="shrink-0 text-[11px] uppercase tracking-[0.18em] text-clay-light">Best value</span>
-          </div>
-          <p class="mt-6 font-display text-4xl font-black tracking-tight lg:text-5xl">€180–220</p>
-          <p class="eyebrow mt-2">per month</p>
-          <p class="prose-body mt-5 text-sm text-stone">Up to 8 graphics per month — a full matchday presence, start to finish.</p>
-          <ul class="mt-7 space-y-2.5 text-sm text-stone">
-            <li class="flex gap-3"><span class="text-clay">—</span><span>Matchday graphics</span></li>
-            <li class="flex gap-3"><span class="text-clay">—</span><span>Line-up graphics</span></li>
-            <li class="flex gap-3"><span class="text-clay">—</span><span>Full-time graphics</span></li>
-            <li class="flex gap-3"><span class="text-clay">—</span><span>Custom brand template</span></li>
-          </ul>
-          <a href="#contact" class="link mt-9 inline-block text-sm">Start a project →</a>
-        </div>
-
-        <!-- CLUB MANAGEMENT -->
-        <div class="reveal border-t border-line pt-8">
-          <h3 class="font-display text-2xl font-black uppercase tracking-tight sm:text-3xl">Club Management</h3>
-          <p class="mt-6 font-display text-4xl font-black tracking-tight lg:text-5xl">€350–400</p>
-          <p class="eyebrow mt-2">per month</p>
-          <p class="prose-body mt-5 text-sm text-stone">Up to 15 graphics per month — your club's entire visual output, handled.</p>
-          <ul class="mt-7 space-y-2.5 text-sm text-stone">
-            <li class="flex gap-3"><span class="text-clay">—</span><span>Full club matchday support</span></li>
-            <li class="flex gap-3"><span class="text-clay">—</span><span>Transfer reveals</span></li>
-            <li class="flex gap-3"><span class="text-clay">—</span><span>Sponsor posts</span></li>
-            <li class="flex gap-3"><span class="text-clay">—</span><span>Priority support</span></li>
-          </ul>
-          <a href="#contact" class="link mt-9 inline-block text-sm">Start a project →</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ================= ABOUT + PROCESS (split, pull-quote) ================= -->
-  <section id="about" class="scroll-mt-24 border-t border-line py-20 sm:py-28">
-    <div class="mx-auto max-w-shell px-6 md:px-12">
-      <div class="grid gap-14 sm:grid-cols-12 sm:gap-12">
-        <!-- statement + bio -->
-        <div class="sm:col-span-7">
-          <p class="reveal eyebrow">The studio</p>
-          <blockquote class="reveal mt-6 font-display font-black leading-[1.06] tracking-tight text-bone" style="font-size:clamp(1.7rem,3.6vw,2.9rem)">
-            I make the brand look like it has <span class="italic text-clay">already arrived</span> — long before the budget says it should.
-          </blockquote>
-          <p class="reveal prose-body mt-8 max-w-md text-stone">
-            madebyM is a one-person sports design studio led by <span class="text-bone">Miha Pavlic</span>, working with clubs, athletes, and sports brands to turn raw ambition into a visual identity that earns sponsors and recognition.
-          </p>
-        </div>
-
-        <!-- process: a genuine sequence -->
-        <div class="reveal sm:col-span-5">
-          <p class="eyebrow">Process</p>
-          <ol class="mt-6 divide-y divide-line border-t border-line">
-            <li class="flex gap-5 py-5">
-              <span class="font-display text-lg font-black text-clay-deep">01</span>
-              <div><h3 class="font-display text-lg font-black uppercase tracking-tight">Briefing &amp; idea</h3><p class="prose-body mt-1 text-sm text-stone">We define the goal, the audience, and the look.</p></div>
-            </li>
-            <li class="flex gap-5 py-5">
-              <span class="font-display text-lg font-black text-clay-deep">02</span>
-              <div><h3 class="font-display text-lg font-black uppercase tracking-tight">Design &amp; feedback</h3><p class="prose-body mt-1 text-sm text-stone">Concepts and refinement until every detail earns its place.</p></div>
-            </li>
-            <li class="flex gap-5 py-5">
-              <span class="font-display text-lg font-black text-clay-deep">03</span>
-              <div><h3 class="font-display text-lg font-black uppercase tracking-tight">Delivery</h3><p class="prose-body mt-1 text-sm text-stone">Final assets, ready for print, social, and broadcast.</p></div>
-            </li>
-          </ol>
-        </div>
-      </div>
-    </div>
-  </section>
+  </template>
 
   <!-- ================= CONTACT (statement + underline form) ================= -->
-  <!-- EDIT: data-email + socials -->
+  <!-- Phase 6 of 7. The form internals are phase 3 work and are deliberately
+       untouched: honeypot, fill-time floor, per-visit cap, length clamps and
+       the GDPR consent all stay exactly as they were measured.
+
+       What changed is the frame around them. The heading carried its own
+       inline font-size clamp; it is on the d2 step now. The two social links
+       were 14px/20px boxes standing on their own, under the 24x24px WCAG 2.2
+       target minimum — leading-6 makes them exactly 24px tall without moving
+       the underline. "Reply within 24 hours" is Miha's existing promise, kept
+       word for word; it is a claim, not copy to rewrite. -->
   <section id="contact" class="scroll-mt-24 border-t border-line py-20 sm:py-28">
     <div class="mx-auto max-w-shell px-6 md:px-12">
       <div class="grid gap-14 sm:grid-cols-12 sm:gap-12">
         <div class="sm:col-span-5">
-          <p class="reveal eyebrow">Start a project</p>
-          <h2 class="reveal mt-6 font-display font-black uppercase leading-[0.96] tracking-tight" style="font-size:clamp(2.2rem,4.4vw,4rem)">
-            Let's build<br /><span class="italic text-clay">your edge.</span>
+          <h2 class="reveal font-display text-d2 font-black uppercase leading-[0.96] tracking-tight" style="text-wrap:balance">
+            Let's build <span class="italic text-volt">your edge.</span>
           </h2>
-          <p class="reveal prose-body mt-6 max-w-xs text-stone">Tell me about the club, the athlete, or the brand. Every brief gets a reply within 24 hours.</p>
+          <p class="reveal prose-body mt-6 max-w-xs text-base text-ash" style="text-wrap:pretty">Tell me about the club, the athlete, or the brand. Every brief gets a reply within 24 hours.</p>
           <div class="reveal mt-9 flex flex-wrap gap-7 text-sm">
-            <a href="https://www.instagram.com/made.bymp/" target="_blank" rel="noopener noreferrer" class="link">Instagram</a>
-            <a href="https://www.tiktok.com/@madebym70" target="_blank" rel="noopener noreferrer" class="link">TikTok</a>
+            <a href="https://www.instagram.com/made.bymp/" target="_blank" rel="noopener noreferrer" class="link inline-block leading-6">Instagram</a>
+            <a href="https://www.tiktok.com/@madebym70" target="_blank" rel="noopener noreferrer" class="link inline-block leading-6">TikTok</a>
           </div>
         </div>
 
@@ -667,15 +791,6 @@
               <input id="email" name="email" type="email" autocomplete="email" required maxlength="120" class="field" placeholder="you@email.com" />
             </div>
 
-            <fieldset>
-              <legend class="eyebrow mb-3">Budget range</legend>
-              <div class="flex flex-wrap gap-3">
-                <label class="budget cursor-pointer"><input type="radio" name="budget" value="Starter (€90–€110 / month)" class="sr-only" /><span class="block border border-line px-4 py-2 text-sm text-stone">Starter · €90–110/mo</span></label>
-                <label class="budget cursor-pointer"><input type="radio" name="budget" value="Gameday (€180–€220 / month)" class="sr-only" /><span class="block border border-line px-4 py-2 text-sm text-stone">Gameday · €180–220/mo</span></label>
-                <label class="budget cursor-pointer"><input type="radio" name="budget" value="Club Management (€350–€400 / month)" class="sr-only" /><span class="block border border-line px-4 py-2 text-sm text-stone">Club Management · €350–400/mo</span></label>
-              </div>
-            </fieldset>
-
             <div>
               <label for="brief" class="eyebrow mb-2 block">Project details</label>
               <textarea id="brief" name="brief" rows="3" required maxlength="2000" class="field" placeholder="What do you need, and when?"></textarea>
@@ -686,25 +801,29 @@
                  button nested inside it would also toggle the checkbox. -->
             <div>
               <label class="flex cursor-pointer items-start gap-3">
-                <input type="checkbox" name="gdpr" value="yes" required class="mt-0.5 h-4 w-4 shrink-0 cursor-pointer accent-clay" />
-                <span class="prose-body text-sm text-stone">I agree that madebyM (Miha Pavlic) may process my personal data in order to respond to this inquiry. Consent can be withdrawn at any time.</span>
+                <input type="checkbox" name="gdpr" value="yes" required class="mt-0.5 h-6 w-6 shrink-0 cursor-pointer accent-volt" />
+                <span class="prose-body text-sm text-ash">I agree that madebyM (Miha Pavlic) may process my personal data in order to respond to this inquiry. Consent can be withdrawn at any time.</span>
               </label>
               <p class="mt-3 pl-7">
-                <button type="button" id="privacyOpenForm" class="link cursor-pointer text-sm">Read the Privacy Policy</button>
+                <button type="button" id="privacyOpenForm" class="link inline-flex min-h-[24px] cursor-pointer items-center text-sm">Read the Privacy Policy</button>
               </p>
             </div>
 
             <div>
-              <button id="briefSubmit" type="submit" class="link text-base cursor-pointer">Send the brief →</button>
-              <p id="formMsg" role="alert" aria-live="polite" class="mt-4 hidden text-sm text-clay"></p>
+              <!-- The page's one conversion control. It was a .link — a ~20px
+                   text target for the single most important click on the site.
+                   The label text is unchanged because the submit handler reads
+                   it back (submitLabel) to restore it after an error. -->
+              <button id="briefSubmit" type="submit" class="btn btn-primary">Send the brief →</button>
+              <p id="formMsg" role="alert" aria-live="polite" class="mt-4 hidden text-sm text-volt"></p>
             </div>
           </form>
 
           <!-- Inline success state (shown after a successful submission) -->
           <div id="formSuccess" class="hidden" role="status">
-            <p class="eyebrow text-clay">Brief received</p>
+            <p class="eyebrow text-volt">Brief received</p>
             <h3 class="mt-5 font-display text-2xl font-black uppercase tracking-tight sm:text-3xl">Thank you.</h3>
-            <p class="prose-body mt-4 max-w-md text-stone">Your brief has been securely delivered. Expect a response within 24 hours.</p>
+            <p class="prose-body mt-4 max-w-md text-ash">Your brief has been securely delivered. Expect a response within 24 hours.</p>
           </div>
         </div>
       </div>
@@ -713,55 +832,46 @@
   </main>
 
   <!-- ================= FOOTER ================= -->
+  <!-- ⚠ STILL OUTSTANDING — THE ONE KNOWN LEGAL GAP ON THE LIVE SITE.
+       If madebyM is a registered business, ZEPT Art. 6 requires the legal
+       name, registered address, registration number and tax number to appear
+       here. They are missing. They are NOT invented or guessed: a wrong tax
+       number is a ZGD-1 breach in its own right. Miha has to supply them, and
+       the tax number and IBAN must be run through their check-digit
+       calculations before they go in — see CLAUDE.md.
+
+       2026-09-18 — a VISIBLE placeholder was added here, reading "Business
+       details pending". 2026-09-19 — Miha had it removed again, along with
+       the .blank rule that styled it.
+
+       READ THIS BEFORE ASSUMING THE FOOTER IS FINISHED. Removing the line did
+       not close the gap, it only made it invisible again. ZEPT Art. 6 is
+       still unmet and this is still the one known legal exposure on the live
+       site. The next person to look at this footer will see nothing missing,
+       which is exactly why it is written down here instead.
+
+       Layout: the row had no max-width while every section above is capped at
+       max-w-shell, so past 1600px the footer kept spreading while the page
+       stopped. The privacy button was an 11px eyebrow standing on its own,
+       about 13px tall, under the 24x24px WCAG 2.2 minimum. -->
   <footer class="border-t border-line py-10">
-    <div class="flex flex-col items-center justify-between gap-4 px-6 sm:flex-row md:px-12">
-      <a href="#top" class="group font-display text-lg font-black"><span class="text-bone">madeby</span><span class="italic text-clay-light">M</span></a>
+    <div class="mx-auto flex max-w-shell flex-col items-center justify-between gap-4 px-6 sm:flex-row md:px-12">
+      <a href="#top" class="group font-display text-lg font-black"><span class="text-paper">madeby</span><span class="italic text-paper">M</span></a>
       <p class="eyebrow">Sports Design Studio — © 2026</p>
-      <button id="privacyOpen" type="button" class="eyebrow cursor-pointer transition-colors hover:text-clay-light">Privacy Policy</button>
+      <button id="privacyOpen" type="button" class="eyebrow inline-flex min-h-[24px] cursor-pointer items-center transition-colors hover:text-volt">Privacy Policy</button>
       <p class="eyebrow">Built to look the part</p>
     </div>
   </footer>
 
-  <!-- ================= CASE-STUDY LIGHTBOX ================= -->
-  <div id="lightbox" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
-    <div data-close class="absolute inset-0 bg-bg/90"></div>
-    <div role="dialog" aria-modal="true" aria-labelledby="lbTitle" class="relative z-10 max-h-[88vh] w-full max-w-4xl overflow-y-auto bg-surface">
-      <button data-close aria-label="Close" class="absolute right-4 top-4 z-10 inline-flex h-10 w-10 items-center justify-center text-bone cursor-pointer hover:text-clay">
-        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
-      </button>
-      <div class="ph aspect-[16/10] w-full" id="lbImageWrap">
-        <img id="lbImage" src="" alt="" class="h-full w-full object-contain" />
-      </div>
-      <div class="p-7 sm:p-10">
-        <!-- clay #C26B3F measured only 4.51:1 on the #1E1A15 surface — no
-             headroom at 11px. clay-light #D68A5C gives 6.30:1. The dt labels
-             below dropped /70 for the same reason: stone/70 was 3.87:1, a
-             straight AA failure; plain stone is 6.56:1. -->
-        <div class="flex flex-wrap items-center gap-3">
-          <p id="lbCat" class="eyebrow text-clay-light">Category</p>
-          <span id="lbTag" class="tag tag-concept">Concept</span>
-        </div>
-        <h3 id="lbTitle" class="mt-4 font-display text-3xl font-black uppercase tracking-tight sm:text-4xl">Project</h3>
-         <dl class="mt-8 grid gap-7 sm:grid-cols-2">
-          <div><dt id="lbClientLabel" class="eyebrow">Subject</dt><dd id="lbClient" class="prose-body mt-2 text-bone"></dd></div>
-          <div><dt class="eyebrow">Year</dt><dd id="lbYear" class="prose-body mt-2 text-bone"></dd></div>
-          <div class="sm:col-span-2"><dt class="eyebrow">The goal</dt><dd id="lbGoal" class="prose-body mt-2 text-stone"></dd></div>
-          <div class="sm:col-span-2"><dt class="eyebrow">The approach</dt><dd id="lbApproach" class="prose-body mt-2 text-stone"></dd></div>
-        </dl>
-        <a href="#contact" data-close class="link mt-9 inline-block text-sm">Start a project like this →</a>
-      </div>
-    </div>
-  </div>
-
   <!-- ================= PRIVACY POLICY MODAL ================= -->
   <div id="privacyModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
-    <div data-privacy-close class="absolute inset-0 bg-bg/90"></div>
-    <div role="dialog" aria-modal="true" aria-labelledby="privacyTitle" class="relative z-10 max-h-[88vh] w-full max-w-2xl overflow-y-auto bg-surface p-7 sm:p-10">
-      <button data-privacy-close aria-label="Close" class="absolute right-4 top-4 inline-flex h-10 w-10 items-center justify-center text-bone cursor-pointer hover:text-clay">
+    <div data-privacy-close class="absolute inset-0 bg-ink/90"></div>
+    <div role="dialog" aria-modal="true" aria-labelledby="privacyTitle" class="relative z-10 max-h-[88vh] w-full max-w-2xl overflow-y-auto bg-carbon p-7 sm:p-10">
+      <button data-privacy-close aria-label="Close" class="absolute right-4 top-4 inline-flex h-10 w-10 items-center justify-center text-paper cursor-pointer hover:text-volt">
         <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
       </button>
 
-      <p class="eyebrow text-clay">madebyM — Sports Design Studio</p>
+      <p class="eyebrow text-volt">madebyM — Sports Design Studio</p>
       <h3 id="privacyTitle" class="mt-3 font-display text-2xl font-black uppercase tracking-tight sm:text-3xl">Privacy Policy</h3>
 
       <!-- GDPR Art. 13 checklist this covers: controller identity (1), purposes
@@ -771,28 +881,28 @@
            STILL MISSING AND ONLY MIHA CAN SUPPLY IT: the registered business
            address. It is required for the ZEPT imprint in the footer, and
            should be repeated here as the controller's postal contact. -->
-      <div class="prose-body mt-8 space-y-6 text-sm text-stone">
+      <div class="prose-body mt-8 space-y-6 text-sm text-ash">
         <div>
           <p class="eyebrow mb-2">1 — Who is responsible</p>
-          <p>The controller of your personal data is <span class="text-bone">madebyM — Miha Pavlic</span>, Slovenia. For any question about this policy or your data, write to <a href="mailto:madebymp.studio@gmail.com" class="link">madebymp.studio@gmail.com</a>.</p>
+          <p>The controller of your personal data is <span class="text-paper">madebyM — Miha Pavlic</span>, Slovenia. For any question about this policy or your data, write to <a href="mailto:madebymp.studio@gmail.com" class="link">madebymp.studio@gmail.com</a>.</p>
         </div>
         <div>
           <p class="eyebrow mb-2">2 — What data we collect</p>
-          <p>When you submit an inquiry through the contact form, we collect your name, email address, club or company name (if provided), the budget range you select, and the content of your message. Nothing else. This site sets <span class="text-bone">no cookies</span>, stores nothing on your device, and runs no analytics or tracking of any kind.</p>
+          <p>When you submit an inquiry through the contact form, we collect your name, email address, club or company name (if provided), and the content of your message. Nothing else. This site sets <span class="text-paper">no cookies</span>, stores nothing on your device, and runs no analytics or tracking of any kind.</p>
         </div>
         <div>
           <p class="eyebrow mb-2">3 — Why we process it, and on what basis</p>
-          <p>Your data is used solely to answer your inquiry and, where relevant, prepare a quote. The legal bases are your <span class="text-bone">consent</span> (Art. 6(1)(a) GDPR), given via the checkbox on the form, and <span class="text-bone">steps taken at your request before entering into a contract</span> (Art. 6(1)(b) GDPR). We send no unsolicited mail and use your data for no advertising.</p>
+          <p>Your data is used solely to answer your inquiry and, where relevant, prepare a quote. The legal bases are your <span class="text-paper">consent</span> (Art. 6(1)(a) GDPR), given via the checkbox on the form, and <span class="text-paper">steps taken at your request before entering into a contract</span> (Art. 6(1)(b) GDPR). We send no unsolicited mail and use your data for no advertising.</p>
         </div>
         <div>
           <p class="eyebrow mb-2">4 — Who else processes it</p>
           <p>We do not sell, rent, or trade your data. Three service providers necessarily handle it on our behalf:</p>
           <ul class="mt-3 space-y-2 pl-5" style="list-style:disc">
-            <li><span class="text-bone">Formspree, Inc.</span> (United States) — receives the form submission and forwards it to our mailbox over an encrypted connection.</li>
-            <li><span class="text-bone">Vercel Inc.</span> (United States) — hosts this website and processes the connection data (including your IP address) needed to deliver the page.</li>
-            <li><span class="text-bone">Google Ireland Ltd. / Google LLC</span> — the typeface used on this site is loaded from Google's servers, which receives your IP address when the page loads.</li>
+            <li><span class="text-paper">Formspree, Inc.</span> (United States) — receives the form submission and forwards it to our mailbox over an encrypted connection.</li>
+            <li><span class="text-paper">Vercel Inc.</span> (United States) — hosts this website and processes the connection data (including your IP address) needed to deliver the page.</li>
+            <li><span class="text-paper">Google Ireland Ltd. / Google LLC</span> — the typeface used on this site is loaded from Google's servers, which receives your IP address when the page loads.</li>
           </ul>
-          <p class="mt-3">This means your data is transferred to the <span class="text-bone">United States</span>. You may ask us at any time which safeguards apply to those transfers.</p>
+          <p class="mt-3">This means your data is transferred to the <span class="text-paper">United States</span>. You may ask us at any time which safeguards apply to those transfers.</p>
         </div>
         <div>
           <p class="eyebrow mb-2">5 — How long we keep it</p>
@@ -800,7 +910,7 @@
         </div>
         <div>
           <p class="eyebrow mb-2">6 — Your rights</p>
-          <p>You have the right to access your data, to have it corrected or erased, to restrict or object to its processing, and to receive it in a portable form. You may <span class="text-bone">withdraw your consent at any time</span> — this does not affect the lawfulness of processing carried out before the withdrawal. To exercise any of these, write to <a href="mailto:madebymp.studio@gmail.com" class="link">madebymp.studio@gmail.com</a>.</p>
+          <p>You have the right to access your data, to have it corrected or erased, to restrict or object to its processing, and to receive it in a portable form. You may <span class="text-paper">withdraw your consent at any time</span> — this does not affect the lawfulness of processing carried out before the withdrawal. To exercise any of these, write to <a href="mailto:madebymp.studio@gmail.com" class="link">madebymp.studio@gmail.com</a>.</p>
         </div>
         <div>
           <p class="eyebrow mb-2">7 — Right to complain</p>
@@ -812,7 +922,7 @@
   </div>
 
   <script>
-    // Broken image -> hide so the warm frame shows (clean fallback)
+    // Broken image -> hide it so the dark .ph frame shows through instead
     document.querySelectorAll('img').forEach(function (img) {
       img.addEventListener('error', function () { img.classList.add('is-broken'); });
       if (img.complete && img.naturalWidth === 0) img.classList.add('is-broken');
@@ -846,54 +956,6 @@
       }, { threshold: 0.12 });
       reveals.forEach(function (el) { io.observe(el); });
     }
-
-    // Case-study lightbox
-    var lightbox = document.getElementById('lightbox');
-    var lastFocused = null;
-    function openLightbox(item) {
-      lastFocused = item;
-      document.getElementById('lbTitle').textContent = item.dataset.title;
-      document.getElementById('lbCat').textContent = item.dataset.cat;
-      document.getElementById('lbClient').textContent = item.dataset.client;
-      document.getElementById('lbYear').textContent = item.dataset.year;
-
-      // Provenance. Anything not explicitly marked as a commission is treated
-      // as concept work, so a missing or mistyped data-kind can never upgrade a
-      // personal piece into a claimed client. The field label moves with it:
-      // only a real commission is ever printed under "Client".
-      var kind = item.dataset.kind === 'client' ? 'client' : 'concept';
-      var tagEl = document.getElementById('lbTag');
-      tagEl.textContent = kind === 'client' ? 'Client work' : 'Concept';
-      tagEl.className = 'tag tag-' + kind;
-      document.getElementById('lbClientLabel').textContent = kind === 'client' ? 'Client' : 'Subject';
-      document.getElementById('lbGoal').textContent = item.dataset.goal;
-      document.getElementById('lbApproach').textContent = item.dataset.approach;
-      var img = item.querySelector('img'), lbImg = document.getElementById('lbImage');
-      lbImg.classList.remove('is-broken');
-      lbImg.src = img.getAttribute('src'); lbImg.alt = img.getAttribute('alt');
-      if (img.classList.contains('is-broken')) lbImg.classList.add('is-broken');
-      lightbox.classList.remove('hidden'); lightbox.classList.add('flex');
-      document.body.style.overflow = 'hidden'; 
-      // Must be the close BUTTON: the first [data-close] is the backdrop div,
-      // which cannot take focus, so focus stayed on the card behind the open
-      // dialog. The privacy modal below already qualifies its selector this way.
-      lightbox.querySelector('button[data-close]').focus();
-    }
-    function closeLightbox() {
-      lightbox.classList.add('hidden'); lightbox.classList.remove('flex');
-      document.body.style.overflow = '';
-      if (lastFocused) lastFocused.focus();
-    }
-    document.querySelectorAll('.work-item').forEach(function (item) {
-      item.addEventListener('click', function () { openLightbox(item); });
-      item.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openLightbox(item); }
-      });
-    });
-    lightbox.querySelectorAll('[data-close]').forEach(function (el) { el.addEventListener('click', closeLightbox); });
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && !lightbox.classList.contains('hidden')) closeLightbox();
-    });
 
     // Privacy policy modal
     var privacyModal = document.getElementById('privacyModal');

@@ -11,3 +11,23 @@ __pycache__/
 # OS / editor cruft
 .DS_Store
 Thumbs.db
+
+# Generirano s pripravi-objavo.ps1 — ne urejaj ročno, nastane iz index.html
+gostilna-ob-crncu/_za-objavo/
+
+# portfolio_madebym — izvorniki plakatov (231 MB). Repozitorij je JAVEN in
+# Vercel objavlja iz gita, zato je to edini gate, ki res drži: kar ni tu
+# ignorirano in gre v `main`, je v isti minuti javno na GitHubu IN na
+# www.madebymstudio.com. Stran servira izključno mape *-web/ — izmerjeno
+# 82 datotek, ~5 MB (album-web 40+9, covers-web 9+9, hero-web 15).
+# Če kdaj potrebuješ izvornik, je na disku; v repozitorij ne sodi.
+portfolio_madebym/Slike/album/
+portfolio_madebym/Slike/covers/
+portfolio_madebym/Slike/hero/
+
+# Izpeljanki znaka iz heroja, ki ju je zamenjal napis — ne kliče ju nobena stran.
+portfolio_madebym/Slike/logo/logo-mark.png
+portfolio_madebym/Slike/logo/logo-mark.webp
+
+# Lokalni profil predogleda (strezi SAMO mapo projekta, ne delovnega prostora).
+portfolio_madebym/.claude/

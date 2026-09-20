@@ -42,3 +42,9 @@ Slike/logo/logo-mark.webp
 # browser and can be skipped, and flags that the real gate still has to be
 # switched on in the dashboard. None of that belongs on a public URL.
 README.txt
+
+# Build inputs for tailwind.css, not assets the site needs. They stay in Git so
+# the CSS can be regenerated, but there is no reason to serve them: measured
+# 2026-09-20, tailwind.config.js answered 200 on the live domain.
+tailwind.config.js
+tailwind.input.css

@@ -4,14 +4,38 @@ madebyM — Sports Design Studio
 Rewritten 2026-09-18. The previous README described a single page with six
 images and a warm palette; none of that has been true since 2026-09-15.
 
-Three static pages, no framework, no build step, no package manager.
+Four static pages, no framework, no package manager. Tailwind is compiled
+once into tailwind.css and committed; serving the site runs nothing.
 
-  index.html          home — hero, work covers, services, pricing, about, contact
+  index.html          home — hero, work covers, contact
   client-work.html    album of commissioned work           9 images
   demo-projects.html  album of personal work              40 images
+  404.html            served by Vercel for any path that does not resolve
+  tailwind.css        compiled utilities, 14 kB — DO NOT hand-edit
+  tailwind.config.js  the design tokens, with their measurements
+  tailwind.input.css  the three @tailwind lines the compile reads
   vercel.json         response headers (CSP, HSTS, frame/MIME/referrer policy)
   .vercelignore       what Vercel must NOT upload
   Slike/              images — see IMAGES below
+
+
+TAILWIND IS A FILE, NOT A CDN
+-----------------------------
+It used to be the Play CDN plus an inline config. That cost three things: a
+render-blocking script from a third party (Cloudflare, which saw every
+visitor's IP and was missing from the privacy policy), NO STYLING AT ALL
+whenever that script did not run, and CSS generated in the browser on every
+load. Measured after the change: with scripting blocked entirely the page
+still renders at full fidelity and the page height is identical, 2976px.
+
+Regenerate after changing classes in the markup or tokens in the config:
+
+  npx -y tailwindcss@3 -c tailwind.config.js -i tailwind.input.css -o tailwind.css --minify
+
+The <link> sits AFTER the inline <style> in every page, deliberately. The CDN
+injected its rules at the end of <head> at runtime, so at equal specificity
+the utilities won, and several rules in these files are written around that.
+Move the link above the <style> block and the order flips, silently.
 
 Header, footer and the whole <style> block are duplicated across the three
 pages on purpose: no build step means no include. Change one, change all three,
@@ -33,7 +57,7 @@ the site stays dark throughout and every green surface takes black text. A
 light section would leave the accent with nowhere legible to go. Do not add one
 without re-measuring all four directions first.
 
-Tokens live in tailwind.config in each page:
+Tokens live in tailwind.config.js, one file for all pages:
   ink #000000 · carbon #101010 · paper #FFFFFF · ash #A3A3A3 ·
   volt #84FF00 · line rgba(255,255,255,0.14)
 
@@ -124,9 +148,14 @@ layout choice — presenting personal work as a commission is a misleading
 commercial practice under ZVPot.
 
   client-work.html    9 pieces, order fixed by Miha — do not re-sort
-  demo-projects.html  40 pieces, grouped by subject since 2026-09-18:
-                      clubs (30) -> national teams (6) -> Formula 1 (4),
-                      alphabetical within each group
+  demo-projects.html  40 pieces, grouped by COLOUR since 2026-09-19. This
+                      replaced a grouping by subject that lasted one day; do
+                      not restore that. Six families round the colour wheel -
+                      red 12, orange 4, sepia 7, green 3, blue 9, pink 5 - and
+                      inside each family the order is measured relative
+                      luminance, brightest first. The full method and the four
+                      placements the eye overruled are in the comment above
+                      the album in demo-projects.html.
 
 Confirmed by Miha 2026-09-18: `arsenal watermark` and `saka watermark` ARE
 commissioned work and belong on client-work.html. The question had been open

@@ -12,7 +12,7 @@
 
   <!-- ============================================================= -->
   <!--  madebyM · Sports Design Studio — Wide Athletic Editorial      -->
-  <!--  Stack: HTML + Tailwind (Play CDN) + Google Fonts (Archivo/Inter) -->
+  <!--  Stack: HTML + Tailwind compiled to tailwind.css + Google Fonts   -->
   <!--  Display face: Archivo variable, expanded width (125%) + Black -->
   <!--  Selected-work images live in /Slike · Email: <form data-email="…"> -->
   <!-- ============================================================= -->
@@ -22,57 +22,29 @@
   <!-- Archivo: heavy expanded grotesque (athletic display). Inter: clean body. -->
   <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
 
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          // Palette sampled from Slike/logo/logo.png, not chosen by eye: the mark
-          // is 89.3% #84FF00, 8.3% #FFFFFF, 2.2% #000000. The measured contrast
-          // between those three decides the whole site:
-          //     black on #84FF00 = 16.29:1      #84FF00 on black = 16.29:1
-          //     white on #84FF00 =  1.29:1      #84FF00 on white =  1.29:1
-          // So green can never carry white text and can never BE text on a light
-          // surface. Every green surface takes BLACK text, and the page stays
-          // dark throughout — a light section would leave the accent with nowhere
-          // legible to go. This is the same trap CLAUDE.md records for amber,
-          // only far wider. Do not add a light section without re-measuring.
-          colors: {
-            ink:     '#000000', // canvas — the logo's own black
-            carbon:  '#101010', // raised surface — white on it is 19.03:1
-            paper:   '#FFFFFF', // primary text — 21:1 on ink
-            ash:     '#A3A3A3', // muted text — 8.33:1 on ink (floor: #757575 at 4.56:1)
-            volt:    '#84FF00', // brand green. Accent only, never body text.
-            line:    'rgba(255,255,255,0.14)',
-          },
-          fontFamily: {
-            display: ['Archivo', '"Archivo Black"', 'system-ui', 'sans-serif'],
-            sans:    ['Inter', 'system-ui', 'sans-serif'],
-          },
-          maxWidth: { shell: '1600px', prose: '68ch' },
-          // No radius scale, deliberately. Miha's own matchday graphics are
-          // hard-edged poster work; rounded frames read as generic web UI
-          // against them. Every surface on this site is a right angle —
-          // images, panels, controls, tags. Do not reintroduce a radius token.
-          // Type scale — headings step by >=1.25, body by the tighter ratio the
-          // 16/14/12 range allows (documented in CLAUDE.md as expected, not a fault).
-          fontSize: {
-            // The 2.5rem floor is a measurement, not taste. Archivo at 125%
-            // stretch renders the hero's longest word, "impossible", at 7.98px
-            // per 1px of font-size. A 375px phone leaves 327px between the
-            // px-6 gutters, so anything above ~41px puts that word on the
-            // screen edge — at the previous 2.75rem it measured 351px and ran
-            // 0.2px past it. 2.5rem = 40px -> 319px, and 40/32 keeps the >=1.25
-            // step to d2 intact. Do not raise this without re-measuring at 375px.
-            'd1': ['clamp(2.5rem,7vw,6.5rem)', { lineHeight: '0.92', letterSpacing: '-0.02em' }],
-            'd2': ['clamp(2rem,4.4vw,3.75rem)', { lineHeight: '0.96', letterSpacing: '-0.015em' }],
-            'd3': ['clamp(1.5rem,2.6vw,2.25rem)', { lineHeight: '1.05', letterSpacing: '-0.01em' }],
-            'd4': ['1.375rem', { lineHeight: '1.2' }],
-          },
-        },
-      },
-    };
-  </script>
+  <!-- Tailwind is a STATIC FILE here, not the Play CDN.
+
+       It used to be a script tag pointing at the Tailwind CDN plus an inline
+       config object. That cost three things: a render-blocking script from a
+       third party (Cloudflare, which therefore saw every visitor's IP and was
+       missing from the privacy policy's list of recipients), no styling at all
+       whenever that script did not run, and CSS generated in the browser on
+       every single page load.
+
+       The design tokens now live in tailwind.config.js next to this file, with
+       every one of their measurements intact. The compiled result is
+       tailwind.css, 14 kB.
+
+       TO REGENERATE after changing classes in the markup or tokens in the
+       config - one command, no install, no package.json:
+
+         npx -y tailwindcss@3 -c tailwind.config.js -i tailwind.input.css -o tailwind.css --minify
+
+       THE <link> SITS AFTER THE INLINE <style> ON PURPOSE. The CDN injected
+       its rules at the end of head at runtime, i.e. after the inline block, so
+       at equal specificity the utilities won. CLAUDE.md records several rules
+       in this file that are written around exactly that. Move the link above
+       the style block and that order flips, silently. -->
 
   <style>
     :root {
@@ -115,12 +87,12 @@
        canvas behind it. */
     .btn-primary:focus-visible { outline-color:#FFFFFF; }
 
-    /* UNUSED SINCE 2026-09-19 — kept on purpose, do not infer a button from it.
-       Its only instance was the hero's "Who am I?", which went with the About
-       section. This is the secondary tier of the button system and a peer of
-       .btn-primary; the hover and active values below are measured, so keeping
-       three lines costs less than deriving them again. Delete it only if the
-       decision is that the site has no secondary button at all. */
+    /* The secondary tier of the button system. It went unused for a day when
+       the hero's "Who am I?" left with the About section, and was kept rather
+       than deleted because its hover and active values are measured; 404.html
+       now uses it for the "Client work" button, so it has an owner again.
+       On index.html, client-work.html and demo-projects.html it currently has
+       none - do not infer a ghost button on those pages from this rule. */
     .btn-ghost { background:#101010; color:#FFFFFF; border-color:rgba(255,255,255,0.18); }
     .btn-ghost:hover { border-color:rgba(255,255,255,0.38); background:#1A1A1A; transform: translateY(-2px); }
     .btn-ghost:active { transform: translateY(0) scale(.98); }
@@ -325,6 +297,7 @@
       html { scroll-behavior:auto; }
     }
   </style>
+  <link rel="stylesheet" href="tailwind.css" />
 </head>
 
 <body class="bg-ink font-sans text-paper antialiased selection:bg-volt selection:text-ink">

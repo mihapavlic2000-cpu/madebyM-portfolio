@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Page not found — madebyM</title>
+  <meta name="description" content="That page does not exist on madebyM." />
+  <meta name="robots" content="noindex" />
+
+  <!-- Vercel serves this automatically for any path that does not resolve on a
+       static deployment; it needs no entry in vercel.json. Before it existed the
+       visitor got Vercel's own default: 79 bytes of plain text reading "The page
+       could not be found / NOT_FOUND / fra1::...", with no palette, no typeface,
+       no wordmark and no way back into the site. On a portfolio that sells
+       design, that was the worst page on the domain.
+
+       Deliberately light: no hero strip, no album, no images at all. A visitor
+       who lands here arrived by mistake and wants out, not a second homepage.
+       It carries no script of its own, so it renders identically with
+       JavaScript off. -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      color-scheme: dark;
+      /* Motion tokens. One easing for entrances (decelerating, no overshoot),
+         one for controls (slight overshoot so presses feel physical). */
+      --ease-out: cubic-bezier(.16,1,.3,1);
+      --ease-spring: cubic-bezier(.34,1.4,.64,1);
+      --dur-fast: .18s;
+      --dur: .32s;
+      --dur-slow: .7s;
+    }
+    html, body { background:#000000; }
+
+    /* ---------- Controls ---------- */
+    .btn {
+      display:inline-flex; align-items:center; justify-content:center; gap:.55rem;
+      border-radius:0; padding:.95rem 1.85rem;
+      font-family:Inter, sans-serif; font-size:15px; font-weight:500; line-height:1;
+      white-space:nowrap; cursor:pointer; border:1px solid transparent;
+      transition: transform var(--dur) var(--ease-spring),
+                  background-color var(--dur) var(--ease-out),
+                  border-color var(--dur) var(--ease-out),
+                  color var(--dur) var(--ease-out);
+    }
+    /* 44px minimum touch target — the padding above clears it, this guarantees it */
+    .btn { min-height:44px; }
+    .btn:focus-visible { outline:2px solid #84FF00; outline-offset:3px; }
+
+    /* The primary control is the brand green with BLACK text — 16.29:1.
+       White on this green is 1.29:1, so a white label here is never an option,
+       at any weight or size. Hover lifts to #9BFF33 (black on it: 16.75:1);
+       the old rule faded #EDE5D6 to #fff, which after the palette swap would
+       have been a hover from white to white — a control that looks dead. */
+    .btn-primary { background:#84FF00; color:#000000; }
+    .btn-primary:hover { background:#9BFF33; transform: translateY(-2px); }
+    .btn-primary:active { transform: translateY(0) scale(.98); }
+    /* The shared .btn focus ring is volt, which would vanish against a volt
+       button even at 3px offset. White reads against both the button and the
+       canvas behind it. */
+    .btn-primary:focus-visible { outline-color:#FFFFFF; }
+
+    /* The secondary tier of the button system. It went unused for a day when
+       the hero's "Who am I?" left with the About section, and was kept rather
+       than deleted because its hover and active values are measured; 404.html
+       now uses it for the "Client work" button, so it has an owner again.
+       On index.html, client-work.html and demo-projects.html it currently has
+       none - do not infer a ghost button on those pages from this rule. */
+    .btn-ghost { background:#101010; color:#FFFFFF; border-color:rgba(255,255,255,0.18); }
+    .btn-ghost:hover { border-color:rgba(255,255,255,0.38); background:#1A1A1A; transform: translateY(-2px); }
+    .btn-ghost:active { transform: translateY(0) scale(.98); }
+
+    /* Compact variant for the header. Keeps the 44px min-height from .btn. */
+    .btn-sm { padding:.7rem 1.35rem; font-size:14px; }
+
+    /* Scroll hint — a slow, small bob. Travel stays under 6px so it reads as a
+       nudge rather than motion competing with the headline. */
+    @keyframes cue-bob { 0%,100% { transform: translate(-50%, 0); } 50% { transform: translate(-50%, 5px); } }
+    .scroll-cue { animation: cue-bob 2.6s var(--ease-out) infinite; }
+
+    /* ---------- Header ---------- */
+    /* Bare over the hero, then a blurred bar once the page moves. Hooked onto the
+       .is-scrolled class the existing script already sets — no new JS. */
+    header { transition: background-color var(--dur) var(--ease-out), border-color var(--dur) var(--ease-out); border-bottom:1px solid transparent; }
+    header.is-scrolled {
+      background:rgba(0,0,0,0.78);
+      backdrop-filter:saturate(140%) blur(14px);
+      -webkit-backdrop-filter:saturate(140%) blur(14px);
+      border-bottom-color:rgba(255,255,255,0.12);
+    }
+
+    /* Display face: Archivo pushed to its expanded cut — wide, heavy, athletic */
+    .font-display { font-stretch: 125%; }
+    .prose-body { line-height: 1.65; }
+
+    /* Eyebrow / catalogue label */
+    .eyebrow {
+      font-family: Inter, sans-serif; font-size: 11px; font-weight: 500;
+      letter-spacing: 0.24em; text-transform: uppercase; color:#A3A3A3;
+    }
+
+    /* Quiet typographic link; the underline takes the accent on hover */
+    .link {
+      position: relative; color:#FFFFFF; transition: color .25s ease;
+      padding-bottom: 2px;
+    }
+    .link::after {
+      content:''; position:absolute; left:0; bottom:0; height:1px; width:100%;
+      background:currentColor; opacity:.25; transform: scaleX(1); transform-origin:left;
+      transition: opacity .3s ease, background-color .3s ease;
+    }
+    .link:hover, .link:focus-visible { color:#84FF00; }
+    .link:hover::after, .link:focus-visible::after { opacity:1; background:#84FF00; }
+
+    /* Brand logo fades out on scroll — phones only (below md breakpoint) */
+    #brandLogo { transition: opacity .3s ease, visibility .3s ease; }
+    @media (max-width: 767px) {
+      header.is-scrolled #brandLogo { opacity: 0; visibility: hidden; }
+    }
+
+    /* Nav link: underline draws in from left */
+    .nav-link { position:relative; color:#A3A3A3; transition: color .25s ease; }
+    .nav-link::after {
+      content:''; position:absolute; left:0; bottom:-4px; height:1px; width:0; background:#84FF00; transition: width .28s cubic-bezier(.16,1,.3,1);
+    }
+    .nav-link:hover, .nav-link:focus-visible { color:#FFFFFF; }
+    .nav-link:hover::after, .nav-link:focus-visible::after { width:100%; }
+
+    /* Underline-style form fields (no boxes) */
+    .field {
+      width:100%; background:transparent; border:0; border-bottom:1px solid rgba(255,255,255,0.26);
+      padding:10px 0; color:#FFFFFF; font-family:Inter, sans-serif; font-size:16px;
+      transition: border-color .25s ease;
+    }
+    .field::placeholder { color:#757575; }
+    .field:focus { outline:none; border-color:#84FF00; }
+    textarea.field { resize:vertical; }
+
+    /* Image frame — neutral dark fallback if a file is missing (no text overlay) */
+    .ph { position:relative; overflow:hidden; background:linear-gradient(150deg,#141414 0%,#0A0A0A 100%); }
+    img.is-broken { display:none; }
+
+    /* Film grain. On the old warm canvas this used mix-blend-mode:overlay, which
+       is a no-op over #000000 — overlay against a black base returns black, so the
+       grain would have vanished silently the moment the canvas went black.
+       screen lightens instead, so it survives. Keep the opacity low: this sits
+       over the hero photography too. */
+    .grain {
+      position:fixed; inset:0; z-index:1; pointer-events:none; opacity:.06; mix-blend-mode:screen;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* Progressive enhancement. Content is visible by default and is only hidden
+       once JS has proven itself by setting html.js (see the head script).
+       Hiding first would strand 28 elements at opacity:0 whenever the script is
+       blocked, fails, or is switched off — measured, not assumed. */
+    .reveal { opacity:1; transform:none; }
+    html.js .reveal { opacity:0; transform: translateY(20px); transition: opacity .8s cubic-bezier(.16,1,.3,1), transform .8s cubic-bezier(.16,1,.3,1); }
+    html.js .reveal.in { opacity:1; transform:none; }
+
+    /* ---------- Work card ---------- */
+    /* The cover frame lifts on hover. The paired .work-img zoom went with the
+       case-study cards — a cover holds a moving strip, not a single image. */
+    .work-frame { transition: transform var(--dur) var(--ease-out); }
+    .work-item:hover .work-frame { transform: translateY(-6px); }
+
+    /* The card carries role="button", so it is a control. Without this rule a
+       keyboard visitor gets no visible focus anywhere in the grid. */
+    .work-item:focus-visible { outline:2px solid #84FF00; outline-offset:8px; border-radius:0; }
+    .work-item:focus-visible .work-cta { color:#84FF00; }
+    .work-item:focus-visible .work-cta::after { opacity:1; background:#84FF00; }
+
+    /* Contact form submission states */
+    #briefForm { transition: opacity .35s ease; }
+    #briefForm.is-sending { opacity:.6; pointer-events:none; }
+    #briefForm.is-leaving { opacity:0; }
+    #formSuccess { opacity:0; transform: translateY(12px); transition: opacity .5s ease, transform .5s ease; }
+    #formSuccess.show { opacity:1; transform:none; }
+
+    /* ---------- Hero strip ----------
+       A marquee of the work moving left to right behind the headline. Pure CSS,
+       so it still runs when the script is blocked or switched off.
+
+       The scrim over it is measured, not judged by eye. Every one of the 15
+       tiles passes behind the copy, so it has to survive the brightest band of
+       the brightest tile rather than an average. Untouched, that worst case was
+       P99 = 1.0000 (the white block in the Bruno poster) and white text would
+       have needed a 0.55 black veil — which buries the work the hero exists to
+       show. So the highlights are compressed in the tiles themselves at build
+       time instead (y = x(1 - 0.45x²), saturation 0.88), which drops it to
+       0.2874, and 0.25 of scrim then gives white 5.17:1. The halftone adds
+       roughly another 8% on top of that.
+
+       The band matters as much as the number. The first pass measured 28%-72%
+       of the tile and was wrong; the figures above are for 16%-80%, which is
+       what the copy actually occupies. Re-measured after the headline became
+       the mark: at 1265x900 the mark sits at 21.3%-60.6% and the lead at
+       63.7%-73%, both inside it. The buttons reach 83.1%, past the band, but
+       they carry their own solid backgrounds and do not lean on the scrim.
+       Move the copy, or regenerate the tiles, and this measurement is void —
+       redo it rather than trusting this comment.
+
+       Tiles are 720px wide because that is what they actually render at: the
+       track is height:100% of the hero, so a 900px-tall hero draws each 4:5 tile
+       at 720x900. One width, no srcset, deliberately — CLAUDE.md records that a
+       scrim proven at one width silently stops holding at another, and a single
+       file removes that whole family of bugs. 15 tiles, 795 KB total, down from
+       38.9 MB of source PNGs. */
+    /* The hero wordmark.
+       Archivo is already loaded across its whole variable range (wdth 62..125,
+       wght 100..900), so a light, normal-width cut costs no extra request. This
+       is deliberately the opposite of .font-display, which pushes the same
+       family to 125% width at weight 900 for the athletic headings — and it is
+       why font-stretch is stated explicitly here. Inherit that 125% and the
+       wordmark stops being elegant and becomes another poster headline.
+
+       Weight 300, not 200: the strip of photography moves behind this. Hairline
+       strokes over moving pictures are hard to read even where the contrast
+       measures fine, and white over the scrim measures 5.17:1 at worst.
+
+       Sized in CSS rather than a Tailwind arbitrary value — clamp() with commas
+       is exactly the kind of class the CDN can fail to generate with nothing in
+       the console to say so, and this one decides whether the hero has a
+       centrepiece at all. */
+    .wordmark {
+      font-family: Archivo, system-ui, sans-serif;
+      font-stretch: 100%;
+      font-weight: 300;
+      /* Measured, not guessed. "madebyM" at weight 300 renders 4.45x its own
+         font-size wide, so at 375px the 327px between the gutters allows about
+         73px before it wraps; 3.5rem leaves 78px of clearance on one line. The
+         first pass used 2.75rem/9rem, which was needlessly timid at both ends -
+         196px on a phone and only 25% of the viewport at 2560px. Re-measure the
+         3.5rem floor at 375px if the weight or the width axis ever changes. */
+      font-size: clamp(3.5rem, 9vw, 11rem);
+      line-height: 1;
+      letter-spacing: 0.005em;
+    }
+    /* The M is the mark. Heavier and italic, the way it is set in the header. */
+    .wordmark-m { font-weight: 700; font-style: italic; }
+
+    .hero-strip { position:absolute; inset:0; z-index:0; overflow:hidden; }
+    .hero-track { display:flex; width:max-content; height:100%; animation: hero-slide 96s linear infinite; }
+    .hero-track img { display:block; flex:0 0 auto; height:100%; width:auto; }
+    /* A full-height 4:5 tile is 0.8 x the hero height, which on a portrait phone
+       is wider than the screen: at 375x812 one tile came out 650px and 0.58 of a
+       single poster was visible — a fragment, not a showcase. A breakpoint was
+       the wrong tool here; at 640x900 the tile was still 720px and 0.89 visible,
+       just above the cutoff. max-width is width-independent and holds at every
+       size: roughly 1.8 posters at 375px, 640px and 1265px, and on wide screens
+       the natural size wins and more fit anyway.
+       Cropping does not invalidate the scrim measurement — a centre crop is a
+       subset of the full-width band that was measured, so its P99 can only be
+       lower than the figure the scrim was set from. */
+    .hero-track img { max-width:56vw; object-fit:cover; object-position:center; }
+    /* The track holds the 15 tiles twice, so -50% is exactly one full set and
+       the loop has no seam. Running from -50% to 0 carries the work rightwards. */
+    @keyframes hero-slide { from { transform: translate3d(-50%,0,0); } to { transform: translate3d(0,0,0); } }
+
+    /* Top and bottom go much darker than the middle. The header sits over this
+       section with no background of its own until the page scrolls, and its
+       11px nav links have nothing else to stand on. */
+    /* ---------- Cover strips ----------
+       The two work covers run the same idea as the hero, turned 90 degrees.
+       Vertical is not decoration: the card is a 4:5 portrait, so a horizontal
+       strip of 4:5 posters would show about half of one tile - an offcut rather
+       than a piece of work. Running it vertically at the card's full width means
+       each tile is exactly the card, and a whole poster is on screen at a time.
+
+       No scrim here, unlike the hero. Nothing is written over these cards - the
+       title and the tag sit underneath the frame - so there is no contrast floor
+       to hold and the work can run at full strength. For the same reason the
+       cover tiles skip the highlight curve the hero tiles are built with.
+       If a label is ever put ON these cards, that changes: measure first. */
+    .cover-strip { position:absolute; inset:0; z-index:0; overflow:hidden; }
+    .cover-track { display:flex; flex-direction:column; width:100%; animation: cover-slide 54s linear infinite; }
+    .cover-track img { display:block; flex:0 0 auto; width:100%; height:auto; }
+    /* Each track holds its tiles twice, so -50% is exactly one full set and the
+       loop has no seam - the same arithmetic as the hero. */
+    @keyframes cover-slide { from { transform: translate3d(0,0,0); } to { transform: translate3d(0,-50%,0); } }
+    /* Both covers hold 9 tiles, so one duration gives them the same per-tile
+       pace. Add a per-cover animation-duration again if the counts ever diverge
+       — otherwise one card visibly crawls next to the other. */
+
+    .hero-scrim {
+      position:absolute; inset:0; z-index:0; pointer-events:none;
+      background: linear-gradient(to bottom,
+        rgba(0,0,0,.92) 0, rgba(0,0,0,.25) 18%, rgba(0,0,0,.25) 78%, rgba(0,0,0,.90) 100%);
+    }
+    /* Dots rather than a flat film, so the photography reads as printed matter. */
+    .halftone {
+      position:absolute; inset:0; z-index:0; pointer-events:none;
+      /* Softened from .55 to .30 on 2026-09-20: on a phone the dot grid read
+         as texture over the work rather than under it. The dots are a fixed
+         5px CSS grid while the artwork shrinks, so the pattern gets coarser
+         relative to the image the smaller the screen gets.
+
+         Safe, and measured rather than assumed. An older comment claimed the
+         halftone carried about 8% of the hero's scrim; recomputed over all 15
+         tiles in the band where the copy actually sits (21%-73%), compositing
+         in sRGB as CSS does, white measures 5.90:1 at .55, 5.38:1 at .30, and
+         4.82:1 with no halftone at all. Even removing it entirely clears
+         4.5:1, so this is a look decision, not a contrast one. */
+      background-image: radial-gradient(circle at center, rgba(0,0,0,.30) 1.1px, transparent 1.5px);
+      background-size: 5px 5px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      /* Must match html.js specificity (0,2,0) or the reveal rule above wins
+         and reduced-motion visitors get a permanently invisible page. */
+      html.js .reveal, .reveal { opacity:1; transform:none; transition:none; }
+      /* Must match the .work-item:hover selectors' specificity (0,3,0) — a
+         weaker rule here would lose and the lift would still snap into place. */
+      .work-frame { transition:none; }
+      .work-item:hover .work-frame { transform:none; }
+      #briefForm, #formSuccess { transition:none; }
+      #brandLogo { transition:none; }
+      /* Colour still changes so hover/press stay legible; only travel is removed. */
+      .btn { transition: background-color var(--dur-fast) linear, border-color var(--dur-fast) linear, color var(--dur-fast) linear; }
+      .btn:hover, .btn:active { transform:none; }
+      .scroll-cue { animation:none; }
+      .hero-track, .cover-track { animation:none; }
+      header { transition:none; }
+      html { scroll-behavior:auto; }
+    }
+  </style>
+  <link rel="stylesheet" href="tailwind.css" />
+</head>
+
+<body class="bg-ink font-sans text-paper antialiased">
+  <div class="grain" aria-hidden="true"></div>
+
+  <main class="flex min-h-[100svh] flex-col items-center justify-center px-6 text-center md:px-12">
+    <p class="eyebrow">Error 404</p>
+
+    <h1 class="mt-6 font-display text-d1 font-black uppercase leading-none tracking-tight text-paper">
+      Nothing here
+    </h1>
+
+    <p class="prose-body mx-auto mt-6 max-w-[46ch] text-base text-ash" style="text-wrap:pretty">
+      That address does not exist — it may have been renamed, or the link that
+      brought you here was wrong. The work is still where it was.
+    </p>
+
+    <div class="mt-11 flex flex-wrap items-center justify-center gap-4">
+      <a href="/" class="btn btn-primary">Back to madebyM</a>
+      <a href="/client-work.html" class="btn btn-ghost">Client work</a>
+    </div>
+
+    <p class="eyebrow mt-14"><span class="text-paper">madeby</span><span class="italic text-paper">M</span> — Sports Design Studio</p>
+  </main>
+</body>
+</html>

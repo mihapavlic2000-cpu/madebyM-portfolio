@@ -3,7 +3,11 @@
  *  se commita in stran ga servira kot navaden slogovni list.
  */
 module.exports = {
-  content: ['./index.html', './client-work.html', './demo-projects.html'],
+  // EVERY page that uses utilities has to be listed. 404.html was missing on
+  // first compile and its h1 carries text-d1, which nothing else uses - so the
+  // class was never generated and the heading rendered at the base 16px
+  // instead of the ~114px clamp. Add a page here the moment you create it.
+  content: ['./index.html', './client-work.html', './demo-projects.html', './404.html'],
   theme: {
       theme: {
         extend: {

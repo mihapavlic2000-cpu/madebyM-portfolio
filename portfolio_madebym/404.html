@@ -21,7 +21,10 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <!-- No Archivo here: this page has no wordmark (see note above), so the
+       .wordmark rule below is unused dead CSS kept only for parity with the
+       other pages — nothing on this page actually requests the family. -->
+  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
 
   <style>
     :root {
@@ -93,8 +96,9 @@
       border-bottom-color:rgba(255,255,255,0.12);
     }
 
-    /* Display face: Archivo pushed to its expanded cut — wide, heavy, athletic */
-    .font-display { font-stretch: 125%; }
+    /* Display face: Big Shoulders Display carries no width axis, so — unlike
+       Archivo before it — .font-display needs no hand-written override here;
+       font-family comes entirely from the Tailwind utility in tailwind.css. */
     .prose-body { line-height: 1.65; }
 
     /* Eyebrow / catalogue label */
@@ -210,13 +214,10 @@
        scrim proven at one width silently stops holding at another, and a single
        file removes that whole family of bugs. 15 tiles, 795 KB total, down from
        38.9 MB of source PNGs. */
-    /* The hero wordmark.
-       Archivo is already loaded across its whole variable range (wdth 62..125,
-       wght 100..900), so a light, normal-width cut costs no extra request. This
-       is deliberately the opposite of .font-display, which pushes the same
-       family to 125% width at weight 900 for the athletic headings — and it is
-       why font-stretch is stated explicitly here. Inherit that 125% and the
-       wordmark stops being elegant and becomes another poster headline.
+    /* The hero wordmark — unused on this page (see the top-of-file note: no
+       wordmark, no way back in beyond the two links below). Kept, like
+       .reveal elsewhere, as inert copy-pasted CSS matching index.html; unlike
+       there, Archivo isn't even loaded here, so treat this block as dead.
 
        Weight 300, not 200: the strip of photography moves behind this. Hairline
        strokes over moving pictures are hard to read even where the contrast

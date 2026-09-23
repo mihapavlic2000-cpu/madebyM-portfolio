@@ -13,14 +13,16 @@
   <!-- ============================================================= -->
   <!--  madebyM · Sports Design Studio — Wide Athletic Editorial      -->
   <!--  Stack: HTML + Tailwind compiled to tailwind.css + Google Fonts   -->
-  <!--  Display face: Archivo variable, expanded width (125%) + Black -->
+  <!--  Display face: Big Shoulders Display, narrow + Black. -->
   <!--  Selected-work images live in /Slike · Email: <form data-email="…"> -->
   <!-- ============================================================= -->
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <!-- Archivo: heavy expanded grotesque (athletic display). Inter: clean body. -->
-  <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <!-- Big Shoulders Display: narrow, tall industrial grotesque (athletic
+       display, no italic cut — the brand-mark M below uses a browser-
+       synthesized oblique). Inter: clean body. -->
+  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
 
   <!-- Tailwind is a STATIC FILE here, not the Play CDN.
 
@@ -116,8 +118,9 @@
       border-bottom-color:rgba(255,255,255,0.12);
     }
 
-    /* Display face: Archivo pushed to its expanded cut — wide, heavy, athletic */
-    .font-display { font-stretch: 125%; }
+    /* Display face: Big Shoulders Display carries no width axis, so — unlike
+       Archivo before it — .font-display needs no hand-written override here;
+       font-family comes entirely from the Tailwind utility in tailwind.css. */
     .prose-body { line-height: 1.65; }
 
     /* Eyebrow / catalogue label */
@@ -564,6 +567,33 @@
         entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
       }, { threshold: 0.12 });
       reveals.forEach(function (el) { io.observe(el); });
+
+      // Elements already in view when observe() runs never trigger the
+      // callback, so check synchronously here too — not inside
+      // requestAnimationFrame, which never runs in a background tab and would
+      // leave a middle-clicked/new-tab visitor's hero permanently empty. No
+      // r.bottom check: content already scrolled past on a restored scroll
+      // position must reveal too, or it stays empty forever.
+      var revealVisible = function () {
+        reveals.forEach(function (el) {
+          if (el.classList.contains('in')) return;
+          if (el.getBoundingClientRect().top < window.innerHeight) {
+            el.classList.add('in');
+            io.unobserve(el);
+          }
+        });
+      };
+      revealVisible();
+      document.addEventListener('visibilitychange', revealVisible);
+      window.addEventListener('load', revealVisible);
+
+      // Nothing revealed after 3s means the mechanism is broken somehow —
+      // a static page beats a blank one.
+      setTimeout(function () {
+        if (!document.querySelector('.reveal.in')) {
+          reveals.forEach(function (el) { el.classList.add('in'); });
+        }
+      }, 3000);
     }
 
     // Privacy policy modal

@@ -30,7 +30,7 @@ module.exports = {
             line:    'rgba(255,255,255,0.14)',
           },
           fontFamily: {
-            display: ['Archivo', '"Archivo Black"', 'system-ui', 'sans-serif'],
+            display: ['"Big Shoulders Display"', 'system-ui', 'sans-serif'],
             sans:    ['Inter', 'system-ui', 'sans-serif'],
           },
           maxWidth: { shell: '1600px', prose: '68ch' },
@@ -41,13 +41,17 @@ module.exports = {
           // Type scale — headings step by >=1.25, body by the tighter ratio the
           // 16/14/12 range allows (documented in CLAUDE.md as expected, not a fault).
           fontSize: {
-            // The 2.5rem floor is a measurement, not taste. Archivo at 125%
-            // stretch renders the hero's longest word, "impossible", at 7.98px
-            // per 1px of font-size. A 375px phone leaves 327px between the
-            // px-6 gutters, so anything above ~41px puts that word on the
-            // screen edge — at the previous 2.75rem it measured 351px and ran
-            // 0.2px past it. 2.5rem = 40px -> 319px, and 40/32 keeps the >=1.25
-            // step to d2 intact. Do not raise this without re-measuring at 375px.
+            // The 2.5rem floor was set for Archivo at 125% stretch rendering the
+            // hero's longest word, "impossible" — that word and that hero copy
+            // are both gone now. text-d1 has exactly one user left, 404.html's
+            // "Nothing here", now in Big Shoulders Display (narrow, no width
+            // axis). Re-measured 23. 9. 2026 at 375px: 40px floor renders it
+            // 195.9px wide against 327px of clearance — 131px to spare, one
+            // line. Far safer than the old number implied; the floor could go
+            // higher without breaking anything, but wasn't raised since no one
+            // asked for a bigger 404 heading. Whoever next changes text-d1's
+            // user or the display face must re-measure at 375px again — this
+            // number is a fact about today's content and font, not a constant.
             'd1': ['clamp(2.5rem,7vw,6.5rem)', { lineHeight: '0.92', letterSpacing: '-0.02em' }],
             'd2': ['clamp(2rem,4.4vw,3.75rem)', { lineHeight: '0.96', letterSpacing: '-0.015em' }],
             'd3': ['clamp(1.5rem,2.6vw,2.25rem)', { lineHeight: '1.05', letterSpacing: '-0.01em' }],
